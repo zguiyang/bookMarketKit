@@ -1,0 +1,116 @@
+---
+description: 项目开发规范
+globs: 
+alwaysApply: false
+---
+# 项目开发规范
+
+## 技术栈与架构
+
+**前端技术栈**:
+- Next.js 作为 React 框架
+- TypeScript 确保类型安全
+- React 用于 UI 组件开发
+- Tailwind CSS 进行样式设计
+- Shadcn UI 和 Radix UI 作为组件库
+- Zustand 管理客户端状态
+- SWR 处理数据获取
+- Zod 进行数据验证
+
+**后端技术栈**:
+- Node.js 作为运行环境
+- NestJS 作为后端框架
+- TypeScript 确保类型安全
+- PostgreSQL 作为主要关系型数据库
+- MongoDB 用于非结构化数据
+- Drizzle ORM 处理数据库操作
+- Zod 进行数据验证
+- Redis 用于缓存和会话管理
+
+**测试框架**:
+- Vitest 用于单元测试和集成测试
+
+**项目架构**:
+- 基于 Monorepo 结构管理前后端应用
+- 使用 pnpm workspace 管理依赖
+
+## Monorepo 结构
+```
+root/
+├── apps/
+│   ├── client/     # 前端应用代码
+│   └── backend/    # 后端服务代码
+├── pnpm-workspace.yaml
+├── package.json
+├── tsconfig.base.json
+└── README.md
+```
+
+## 开发规范指南
+
+1. **类型安全**
+   - 所有代码必须使用 TypeScript
+   - 避免使用 `any` 类型
+   - 为函数参数和返回值定义明确类型
+   - 使用 Zod 验证外部数据
+
+2. **命名约定**
+   - 文件名: kebab-case
+   - 组件/类: PascalCase
+   - 函数/变量: camelCase
+   - 常量: UPPER_SNAKE_CASE
+   - 数据库表: snake_case
+
+3. **前端开发**
+   - 使用函数式组件和 React Hooks
+   - 采用 Tailwind CSS 进行样式设计
+   - 使用 Shadcn UI 和 Radix UI 作为基础组件
+   - 状态管理优先使用 Zustand
+   - 数据获取使用 SWR
+
+4. **后端开发**
+   - 遵循 NestJS 模块化架构
+   - 使用 Drizzle ORM 进行数据库操作
+   - 实现 Repository 模式封装数据访问
+   - API 遵循 RESTful 设计原则
+   - 使用 DTO 定义请求和响应结构
+
+5. **测试策略**
+   - 使用 Vitest 编写测试
+   - 单元测试覆盖核心逻辑
+   - 集成测试验证组件交互
+
+## 代码生成要求
+
+当生成代码时，请遵循以下规则:
+
+1. **技术选择**
+   - 前端组件使用 React 函数式组件
+   - 样式使用 Tailwind CSS 类
+   - 状态管理使用 Zustand
+   - 数据获取使用 SWR
+   - 后端使用 NestJS 结构
+   - 数据库操作使用 Drizzle ORM
+   - 数据验证使用 Zod
+
+2. **代码风格**
+   - 使用 TypeScript 类型注解
+   - 避免副作用，优先使用纯函数
+   - 组件 props 使用接口定义
+   - 使用解构赋值提取属性
+   - 使用异步/等待而非回调
+
+3. **最佳实践**
+   - 组件应小而专注
+   - 逻辑与视图分离
+   - 使用自定义 hooks 封装复杂逻辑
+   - 实现适当的错误处理
+   - 考虑性能优化（memo、useMemo、useCallback）
+
+4. **架构模式**
+   - 遵循模块化设计
+   - 使用依赖注入管理服务
+   - 实现关注点分离
+   - 避免紧耦合组件
+
+请根据这些规范生成符合项目技术栈和架构的代码。
