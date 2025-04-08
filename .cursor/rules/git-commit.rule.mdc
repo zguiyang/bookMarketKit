@@ -1,6 +1,6 @@
 ---
 description: 
-globs: */**
+globs: 
 alwaysApply: false
 ---
 ---
@@ -13,7 +13,7 @@ globs: */**
 
 ### 提交信息格式
 
-使用规范化的提交信息格式，遵循[Conventional Commits](mdc:https:/www.conventionalcommits.org)规范：
+使用规范化的提交信息格式，：
 
 ```
 <类型>[可选的作用域]: <描述>
