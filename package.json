@@ -1,13 +1,27 @@
 {
   "name": "book-market-kit",
   "version": "1.0.0",
-  "description": "",
-   "private": true,
+  "description": "图书交易平台",
+  "private": true,
   "scripts": {
     "client:dev": "pnpm --filter client dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "client:build": "pnpm --filter client build",
+    "client:start": "pnpm --filter client start",
+    "backend:dev": "pnpm --filter backend start:dev",
+    "backend:build": "pnpm --filter backend build",
+    "backend:start": "pnpm --filter backend start:prod",
+    "dev": "pnpm run --parallel client:dev backend:dev",
+    "build": "pnpm run --sequential client:build backend:build",
+    "start": "pnpm run --parallel client:start backend:start",
+    "test": "pnpm run --parallel test",
+    "lint": "pnpm run --parallel lint",
+    "format": "pnpm run --parallel format"
   },
-  "keywords": [],
+  "keywords": ["book", "market", "trading"],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
 }

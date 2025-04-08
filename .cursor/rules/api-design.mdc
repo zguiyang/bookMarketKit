@@ -1,0 +1,75 @@
+---
+description: 
+globs: apps/backend/**/*.ts
+alwaysApply: false
+---
+# API接口设计规范
+
+## 1. 数据模型和数据库表
+
+### 1.1 用户表 (Users)
+- `id`: UUID (主键)
+- `username`: VARCHAR(50) (唯一)
+- `email`: VARCHAR(255) (唯一)
+- `password_hash`: VARCHAR(255)
+- `created_at`: TIMESTAMP
+- `updated_at`: TIMESTAMP
+
+### 1.2 分类表 (Categories)
+- `id`: UUID (主键)
+- `name`: VARCHAR(100)
+- `user_id`: UUID (外键关联到users.id)
+- `parent_id`: UUID (外键关联到categories.id，用于层级分类)
+- `created_at`: TIMESTAMP
+- `updated_at`: TIMESTAMP
+
+### 1.3 标签表 (Tags)
+- `id`: UUID (主键)
+- `name`: VARCHAR(50)
+- `user_id`: UUID (外键关联到users.id)
+- `created_at`: TIMESTAMP
+
+### 1.4 书签表 (Bookmarks)
+- `id`: UUID (主键)
+- `title`: VARCHAR(255)
+- `url`: TEXT
+- `description`: TEXT
+- `thumbnail_url`: TEXT
+- `ai_summary`: TEXT
+- `is_in_collection_box`: BOOLEAN
+- `user_id`: UUID (外键关联到users.id)
+- `category_id`: UUID (外键关联到categories.id)
+- `created_at`: TIMESTAMP
+- `updated_at`: TIMESTAMP
+- `last_visited_at`: TIMESTAMP
+
+### 1.5 书签标签关联表 (Bookmark_Tags) (连接表)
+- `bookmark_id`: UUID (外键关联到bookmarks.id)
+- `tag_id`: UUID (外键关联到tags.id)
+- 主键: (bookmark_id, tag_id)
+
+### 1.6 AI推荐表 (AI_Suggestions)
+- `id`: UUID (主键)
+- `bookmark_id`: UUID (外键关联到bookmarks.id)
+- `suggested_category_id`: UUID (外键关联到categories.id)
+- `suggested_tags`: TEXT[] (标签名称数组)
+- `confidence_score`: FLOAT
+- `is_applied`: BOOLEAN
+- `created_at`: TIMESTAMP
+
+## 2. 标准API响应结构
+
+所有API端点将遵循以下一致的响应结构:
+
+```js
+{
+  "success": // true或false,
+  "data": {}, // 当success为true时的响应数据
+  "error": {  // 当success为false时的错误信息
+    "code": "ERROR_CODE",
+    "message": "人类可读的错误消息",
+    "details": {} // 可选的额外错误详情
+  },
+  "message": "" // API操作结果消息
+}
+```
