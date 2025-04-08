@@ -1,5 +1,5 @@
 ---
-description: 
+description: git commit rule
 globs: 
 alwaysApply: false
 ---
@@ -8,6 +8,8 @@ name: git.rule.mdc
 description: Git提交规范，包括提交信息格式、分支管理和工作流程
 globs: */**
 ---
+
+所有生成的提交信息采用英文，不遵循中文规范
 
 ## Git Commit 规范
 
