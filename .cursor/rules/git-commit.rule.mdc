@@ -11,7 +11,7 @@ globs: */**
 
 所有生成的提交信息采用英文，不遵循中文规范
 
-## Git Commit 规范
+## generate Git Commit message 规范
 
 ### 提交信息格式
 
