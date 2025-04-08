@@ -9,7 +9,8 @@ description: Git提交规范，包括提交信息格式、分支管理和工作�
 globs: */**
 ---
 
-所有生成的提交信息采用英文，不遵循中文规范
+所有生成的提交信息不遵循中文规范,遵循Conventional Commits规范, Conventional Commits 是第一优先级
+
 
 ## generate Git Commit message 规范
 
