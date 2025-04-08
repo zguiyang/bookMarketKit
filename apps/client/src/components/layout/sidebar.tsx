@@ -1,18 +1,28 @@
 "use client"
 
 import { useState } from "react"
-import { Plus } from "lucide-react"
+import { Star, Bookmark as BookmarkIcon, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { UserMenu } from "@/components/user-menu"
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu"
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu"
+import { tagColors, getColorIndexFromName } from "@/config/tag-colors"
+import { AddCategoryDialog } from "@/components/category/add-category-dialog"
+import { AddTagDialog } from "@/components/tag/add-tag-dialog"
 
 interface Category {
   name: string
   icon: string
   count: number
-  expanded: boolean
-  subcategories: {
-    name: string
-    count: number
-  }[]
 }
 
 interface Tag {
@@ -20,71 +30,98 @@ interface Tag {
   count: number
 }
 
-const mockCategories = [
+const mockCategories: Category[] = [
   {
     name: '开发工具',
     icon: '🛠️',
-    count: 8,
-    expanded: true,
-    subcategories: [
-      { name: 'IDE & 编辑器', count: 3 },
-      { name: '版本控制', count: 2 },
-      { name: '文档工具', count: 3 }
-    ]
+    count: 8
   },
   {
     name: '技术学习',
     icon: '📚',
-    count: 12,
-    expanded: false,
-    subcategories: [
-      { name: '官方文档', count: 5 },
-      { name: '教程博客', count: 4 },
-      { name: '视频课程', count: 3 }
-    ]
+    count: 12
   },
   {
     name: '设计资源',
     icon: '🎨',
-    count: 6,
-    expanded: false,
-    subcategories: [
-      { name: 'UI/UX', count: 2 },
-      { name: '素材库', count: 2 },
-      { name: '配色工具', count: 2 }
-    ]
+    count: 6
   }
 ]
 
-const mockTags = [
-  { name: 'JavaScript', count: 15 },
-  { name: 'Vue', count: 12 },
-  { name: 'React', count: 8 },
-  { name: 'TypeScript', count: 10 },
-  { name: 'Python', count: 6 },
-  { name: 'Docker', count: 5 },
-  { name: 'Git', count: 7 },
-  { name: 'CSS', count: 9 }
-]
+const mockTags: (Tag & { colorIndex: number })[] = [
+  { name: 'JavaScript', count: 15, colorIndex: 0 },
+  { name: 'Vue', count: 12, colorIndex: 1 },
+  { name: 'React', count: 8, colorIndex: 2 },
+  { name: 'TypeScript', count: 10, colorIndex: 3 },
+  { name: 'Python', count: 6, colorIndex: 4 },
+  { name: 'Docker', count: 5, colorIndex: 5 },
+  { name: 'Git', count: 7, colorIndex: 6 },
+  { name: 'CSS', count: 9, colorIndex: 7 }
+].map(tag => ({
+  ...tag,
+  colorIndex: getColorIndexFromName(tag.name)
+}))
 
-// 模拟用户数据
+// 用户资料
 const mockUser = {
-  name: "Joy Zhao",
-  email: "joy@example.com",
-  avatar: ""
+  name: "张三",
+  email: "zhangsan@example.com",
+  avatar: "https://github.com/shadcn.png"
 }
+
+// 定义视图类型
+type ViewType = 'all' | 'starred'
 
 export function Sidebar() {
   const [categories, setCategories] = useState(mockCategories)
+  const [tags, setTags] = useState(mockTags)
+  const [activeView, setActiveView] = useState<ViewType>('all')
 
   const handleCategoryClick = (category: Category) => {
-    setCategories(categories.map(cat => 
-      cat.name === category.name ? { ...cat, expanded: !cat.expanded } : cat
-    ))
+    console.log("Category clicked:", category)
   }
 
   const handleTagClick = (tag: Tag) => {
     console.log("Tag clicked:", tag)
+  }
+
+  const handleViewChange = (view: ViewType) => {
+    setActiveView(view)
+    // 发送事件或通过上下文通知主内容区域切换视图
+    window.dispatchEvent(new CustomEvent('viewChange', { detail: { view } }))
+  }
+
+  const handleEditCategory = (category: Category) => {
+    console.log("编辑分类:", category)
+    // TODO: 实现编辑分类的逻辑
+  }
+
+  const handleDeleteCategory = (category: Category) => {
+    console.log("删除分类:", category)
+    // TODO: 实现删除分类的逻辑
+  }
+
+  const handleTagEdit = (tag: Tag) => {
+    console.log("编辑标签:", tag)
+    // TODO: 实现标签编辑逻辑
+  }
+
+  const handleTagDelete = (tag: Tag) => {
+    console.log("删除标签:", tag)
+    // TODO: 实现标签删除逻辑
+  }
+
+  const handleAddCategory = (values: { name: string; icon: string }) => {
+    const newCategory = {
+      name: values.name,
+      icon: values.icon,
+      count: 0
+    }
+    setCategories([...categories, newCategory])
+  }
+
+  const handleAddTag = (newTag: { name: string; colorIndex: number }) => {
+    setTags([...tags, { ...newTag, count: 0 }])
   }
 
   return (
@@ -101,40 +138,82 @@ export function Sidebar() {
 
       {/* 可滚动的内容区域 */}
       <div className="flex-1 overflow-y-auto">
+        {/* 视图选择 */}
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase mb-4">我的书签</h2>
+          
+          <div className="space-y-1">
+            <button
+              onClick={() => handleViewChange('all')}
+              className={`flex items-center w-full p-2 rounded-lg text-sm ${
+                activeView === 'all' 
+                  ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium' 
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
+            >
+              <BookmarkIcon className="w-4 h-4 mr-2" />
+              所有书签
+            </button>
+            
+            <button
+              onClick={() => handleViewChange('starred')}
+              className={`flex items-center w-full p-2 rounded-lg text-sm ${
+                activeView === 'starred' 
+                  ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium' 
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
+            >
+              <Star className="w-4 h-4 mr-2 text-yellow-500" />
+              收藏夹
+            </button>
+          </div>
+        </div>
+
         {/* 分类列表 */}
         <div className="p-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase">分类</h2>
-            <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-              <Plus className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            </button>
+            <AddCategoryDialog onAddCategory={handleAddCategory} />
           </div>
           
           {categories.map((category, index) => (
-            <div key={index} className="mb-2">
+            <div 
+              key={index} 
+              className="group flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg mb-1"
+            >
               <div 
-                className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer"
+                className="flex-1 flex items-center cursor-pointer"
                 onClick={() => handleCategoryClick(category)}
               >
                 <div className="flex items-center">
                   <span className="mr-2">{category.icon}</span>
                   <span className="text-sm text-gray-700 dark:text-gray-300">{category.name}</span>
                 </div>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{category.count}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">{category.count}</span>
               </div>
-              {category.expanded && (
-                <div className="ml-8 space-y-1">
-                  {category.subcategories.map((sub, subIndex) => (
-                    <div 
-                      key={subIndex}
-                      className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer"
+              
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
+                      <MoreHorizontal className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-36">
+                    <DropdownMenuItem onClick={() => handleEditCategory(category)}>
+                      <Pencil className="w-4 h-4 mr-2" />
+                      编辑
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => handleDeleteCategory(category)}
+                      className="text-red-500 focus:text-red-500"
                     >
-                      <span className="text-sm text-gray-600 dark:text-gray-400">{sub.name}</span>
-                      <span className="text-xs text-gray-500">{sub.count}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      删除
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           ))}
         </div>
@@ -143,21 +222,38 @@ export function Sidebar() {
         <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase">标签</h2>
-            <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-              <Plus className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            </button>
+            <AddTagDialog onAddTag={handleAddTag} />
           </div>
           <div className="flex flex-wrap gap-2">
-            {mockTags.map((tag, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
-                onClick={() => handleTagClick(tag)}
-              >
-                {tag.name}
-                <span className="ml-1 text-gray-500 dark:text-gray-400">{tag.count}</span>
-              </span>
-            ))}
+            {tags.map((tag, index) => {
+              const colorScheme = tagColors[tag.colorIndex]
+              return (
+                <ContextMenu key={index}>
+                  <ContextMenuTrigger>
+                    <span
+                      className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${colorScheme.bg} ${colorScheme.text} ${colorScheme.hover} cursor-pointer transition-colors duration-200`}
+                      onClick={() => handleTagClick(tag)}
+                    >
+                      {tag.name}
+                      <span className="ml-1 opacity-75">{tag.count}</span>
+                    </span>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent className="w-32">
+                    <ContextMenuItem onClick={() => handleTagEdit(tag)}>
+                      <Pencil className="w-4 h-4 mr-2" />
+                      编辑
+                    </ContextMenuItem>
+                    <ContextMenuItem 
+                      onClick={() => handleTagDelete(tag)}
+                      className="text-red-500 focus:text-red-500"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      删除
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
+              )
+            })}
           </div>
         </div>
       </div>

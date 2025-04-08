@@ -33,6 +33,118 @@ globs: apps/client/**/*.{ts,tsx,js,jsx}
   - 实现防护条款，提前处理前置条件和无效状态。
   - 使用自定义错误类型进行一致的错误处理。
 
+  ## 界面风格与主题设计规范
+
+### 主题设计原则
+
+- **一致性**：所有组件和界面元素必须保持风格一致
+- **可配置性**：通过配置文件管理主题而非硬编码样式
+- **可扩展性**：设计应支持未来主题的扩展和修改
+- **可访问性**：确保在所有主题模式下都保持良好的可读性和对比度
+
+### 主题配置管理
+
+- **使用Tailwind配置**：通过tailwind.config.js集中管理颜色、间距、字体等样式变量
+- **避免硬编码**：严禁在组件中直接硬编码颜色值（如`#ffffff`、`rgb(0,0,0)`）
+- **使用语义化变量**：使用语义化的变量名定义颜色和样式（如`primary`、`secondary`、`background`）
+- **扩展默认主题**：示例配置：
+
+```js
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: 'var(--primary-50)',
+          100: 'var(--primary-100)',
+          // ...其他色阶
+          900: 'var(--primary-900)',
+        },
+        // ...其他颜色系列
+      },
+    },
+  },
+  // ...其他配置
+};
+```
+
+### 组件库使用规范
+
+- **优先使用组件库**：优先使用shadcn-ui、Radix UI等组件库构建界面
+- **组件定制**：通过组件库提供的配置API进行定制，而非直接修改组件源码
+- **组件扩展**：创建基于基础组件的高级组件，保持风格一致性
+- **组件主题集成**：确保自定义组件与主题系统完全集成
+
+```tsx
+// 正确示例：使用主题变量
+const Button = ({ children, ...props }) => (
+  <button 
+    className="bg-primary-500 hover:bg-primary-600 text-primary-foreground" 
+    {...props}
+  >
+    {children}
+  </button>
+);
+
+// 错误示例：硬编码颜色
+const Button = ({ children, ...props }) => (
+  <button 
+    className="bg-[#3b82f6] hover:bg-[#2563eb] text-white" 
+    {...props}
+  >
+    {children}
+  </button>
+);
+```
+
+### 设计审查与验证
+
+- **跨主题测试**：在开发过程中定期在不同主题下测试UI组件
+- **对比度检查**：确保文本与背景的对比度符合WCAG标准
+- **视觉一致性**：定期审查组件在不同主题下的视觉一致性
+- **用户测试**：收集用户对不同主题的反馈，持续改进
+
+## 样式编写最佳实践
+
+- **优先使用Tailwind类**：优先使用Tailwind提供的工具类
+- **组合而非覆盖**：通过组合类实现样式，避免覆盖默认样式
+- **响应式设计**：使用Tailwind的响应式前缀（sm:, md:, lg:等）
+- **避免内联样式**：不要使用内联style属性
+- **模块化CSS**：必要时使用CSS Modules或styled-components
+- **注释复杂样式**：为复杂的样式组合添加注释说明
+
+```tsx
+{/* 推荐: 使用Tailwind类和主题变量 */}
+<div className="bg-background text-foreground p-4 rounded-lg shadow-md">
+  <h2 className="text-xl font-semibold text-primary-600 dark:text-primary-400">
+    标题
+  </h2>
+  <p className="mt-2 text-muted-foreground">
+    内容描述
+  </p>
+</div>
+
+{/* 不推荐: 硬编码样式 */}
+<div style={{ backgroundColor: '#ffffff', color: '#000000', padding: '16px' }}>
+  <h2 style={{ color: '#3b82f6', fontSize: '1.25rem' }}>
+    标题
+  </h2>
+  <p style={{ marginTop: '8px', color: '#6b7280' }}>
+    内容描述
+  </p>
+</div>
+```
+
+## 组件开发规范
+
+- **原子设计**：遵循原子设计原则，从小组件构建复杂界面
+- **组件文档**：为每个组件提供清晰的文档和使用示例
+- **主题适配**：确保组件在所有主题下都能正常工作
+- **可访问性**：遵循ARIA规范，确保组件可访问性
+- **性能优化**：避免不必要的渲染和计算
+
+
 ## UI和样式
 - 使用现代UI框架（如Tailwind CSS、Shadcn UI、Radix UI）进行样式设计。
 - 在各平台上实现一致的设计和响应式模式。
@@ -43,6 +155,7 @@ globs: apps/client/**/*.{ts,tsx,js,jsx}
 - 始终使用官方提供的安装命令添加组件，例如：`pnpm dlx shadcn@latest add button`
 - 安装后再根据项目需求对组件进行自定义修改
 - 保持组件结构与 Shadcn UI 文档一致，便于后续升级和维护
+- 不要重复安装组件，安装前先检查是否已经存在相同的Shadcn UI组件
 - 组件安装命令格式：`pnpm dlx shadcn@latest add [组件名称]`
 - 常用组件安装示例：
   - 按钮：`pnpm dlx shadcn@latest add button`
@@ -61,7 +174,6 @@ globs: apps/client/**/*.{ts,tsx,js,jsx}
 - 组件自定义应通过 Tailwind 类或主题配置进行，而非修改组件核心逻辑
 - 遵循组件文档中推荐的用法和最佳实践
 - 确保组件的无障碍性(a11y)符合项目要求
-
 
 ## 状态管理与数据获取
 - 使用现代状态管理解决方案（如Zustand、TanStack React Query）处理全局状态和数据获取。
