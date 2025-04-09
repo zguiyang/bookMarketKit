@@ -97,9 +97,8 @@ project-root/
 
 ## 测试规范
 ### 测试框架
-- 统一使用 Vitest
-- 前端配合使用 React Testing Library
-- 后端配合使用 Supertest 进行 API 测试
+- 前端配合Vitest + React Testing Library
+- 后端配合使用Jest + Supertest 进行 API 测试
 
 ### 测试要求
 - 业务代码覆盖率 > 80%

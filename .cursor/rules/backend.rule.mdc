@@ -4,41 +4,128 @@ globs: apps/backend/**/*.ts
 alwaysApply: false
 ---
 ---
-description: 本规范提供了NestJS最佳实践、编码标准和架构模式的全面指导。旨在通过涵盖代码组织、安全性、测试和其他关键方面，帮助开发者构建可扩展、可维护和高性能的NestJS应用。
+name: backend.rule.mdc
+description: 本规范提供了后端开发的最佳实践、编码标准和架构模式的全面指导。旨在通过涵盖代码组织、安全性、测试和其他关键方面，帮助开发者构建可扩展、可维护和高性能的NestJS应用。
 globs: apps/backend/**/*.{ts}
 ---
+# 后端技术栈规范
 
-# NestJS后端开发规范
+## 技术栈概览
+
+我们的后端应用基于以下核心技术栈构建：
+
+- **框架**：NestJS
+- **数据库**：PostgreSQL
+- **ORM**：drizzle-orm
+- **缓存**：Redis
+- **认证**：Passport
+- **验证**：Zod
+- **API文档**：Swagger/OpenAPI
+
+## 组件创建规则
+
+1. **必须使用NestJS CLI创建组件**，不要手动创建文件：
+   ```bash
+   # 创建模块
+   nest g module users
+   
+   # 创建控制器
+   nest g controller users
+   
+   # 创建服务
+   nest g service users
+   
+   # 创建资源(包含CRUD)
+   nest g resource products
+   ```
+
+2. **文件命名**：
+   - 使用kebab-case（烤肉串命名法）
+   - 格式：`feature.type.ts`（例如：user.controller.ts）
+
+3. **类命名**：
+   - 使用PascalCase（大驼峰命名法）
+   - 格式：`FeatureType`（例如：UserController）
+
+## 代码组织原则
+
+1. **职责分离**：
+   - Controller处理HTTP请求和响应
+   - Service包含业务逻辑
+   - Module组织和连接组件
+
+2. **依赖注入**：
+   - 正确使用@Injectable()装饰器
+   - 在module中正确注册providers
+
+3. **避免手动创建实例**：
+   - 使用依赖注入而不是new关键字创建服务实例
+
+## PostgreSQL 数据库规范
+
+### 数据库设计原则
+
+1. **命名规范**：
+   - 表名使用复数形式（例如：`users`, `products`）
+   - 字段名使用蛇形命名法（例如：`created_at`, `user_id`）
+   - 主键统一命名为 `id`
+   - 外键命名格式为 `<表名单数>_id`（例如：`user_id`, `product_id`）
+
+2. **索引规范**：
+   - 外键字段必须创建索引
+   - 经常用于查询条件的字段应创建索引
+   - 索引命名格式：`idx_<表名>_<字段名>`
+
+3. **字段设计**：
+   - 所有表必须包含 `created_at` 和 `updated_at` 时间戳字段
+   - 使用软删除策略，添加 `deleted_at` 字段而非直接删除数据
+   - 避免使用 `TEXT` 类型，除非确实需要存储大量文本
+   - 枚举值使用 PostgreSQL 的 `ENUM` 类型
+
+4. **关系设计**：
+   - 明确定义外键约束
+   - 使用级联操作时需谨慎，避免意外数据删除
+
+### 迁移管理
+
+1. **使用Prisma迁移**：
+   - 所有数据库变更通过Prisma迁移实现
+   - 执行命令：`npx prisma migrate dev --name <描述性名称>`
+
+2. **迁移命名**：
+   - 使用描述性名称，例如：`add_user_role_column`
+   - 名称应反映变更的实际内容
+
+3. **迁移审核**：
+   - 所有迁移脚本必须经过代码审核
+   - 在生产环境应用前，先在测试环境验证
+
+4. **回滚策略**：
+   - 为每个迁移设计回滚策略
+   - 关键迁移应提供手动回滚SQL脚本
+
 
 ## 代码组织与结构
 ### 目录结构
 - 采用反映应用程序领域或功能的模块化结构。常见方法包括将代码组织为模块、服务、控制器、DTO和实体，每个都在自己的目录中。
 - 示例：
   ```
-  src/
-  ├── app.module.ts
-  ├── auth/
-  │   ├── auth.module.ts
-  │   ├── auth.controller.ts
-  │   ├── auth.service.ts
-  │   ├── strategies/
-  │   │   └── jwt.strategy.ts
-  │   ├── dtos/
-  │   │   └── create-user.dto.ts
-  │   └── entities/
-  │       └── user.entity.ts
-  ├── users/
-  │   ├── users.module.ts
-  │   ├── users.controller.ts
-  │   ├── users.service.ts
-  │   └── ...
-  ├── core/
-  │   ├── filters/
-  │   │   └── http-exception.filter.ts
-  │   ├── interceptors/
-  │   │   └── logging.interceptor.ts
-  │   └── ...
-  └── main.ts
+src/                    # 源代码目录
+│   ├── app.module.ts       # 根模块
+│   ├── app.controller.ts   # 根控制器
+│   ├── app.service.ts      # 根服务
+│   ├── main.ts             # 应用入口点
+│   ├── modules/            # 功能模块目录
+│   ├── common/             # 共享资源目录
+│   └── config/             # 配置文件目录
+├── test/                   # 测试目录
+├── dist/                   # 编译输出目录
+├── nest-cli.json           # Nest CLI配置
+├── package.json            # 项目依赖和脚本
+├── tsconfig.json           # TypeScript配置
+├── tsconfig.build.json     # 构建专用TS配置
+└── README.md               # 项目文档
+
   ```
 
 ### 文件命名约定

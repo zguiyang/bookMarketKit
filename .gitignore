@@ -171,4 +171,7 @@ prd
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
+docker-compose.yaml
+!docker-compose.yaml.example
