@@ -8,5 +8,6 @@ export interface Bookmark {
   subcategory: string
   tags: string[]
   starred: boolean
+  pinned: boolean
   lastVisited: string
 } 

@@ -95,14 +95,14 @@ export function UserMenu({ user }: UserMenuProps) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={handleProfile}>
+          {/* <DropdownMenuItem onClick={handleProfile}>
             <User className="mr-2 h-4 w-4" />
             <span>个人资料</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleSettings}>
             <Settings className="mr-2 h-4 w-4" />
             <span>设置</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem onClick={toggleTheme}>
             {mounted && (actualTheme === "dark" ? (
               <Sun className="mr-2 h-4 w-4" />

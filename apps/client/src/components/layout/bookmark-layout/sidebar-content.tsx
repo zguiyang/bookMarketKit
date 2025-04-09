@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
 import { Star, Bookmark as BookmarkIcon, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { UserMenu } from "@/components/user-menu"
 import { 
@@ -72,23 +73,26 @@ const mockUser = {
 // 定义视图类型
 type ViewType = 'all' | 'starred'
 
-export function Sidebar() {
+export function SidebarContent() {
   const [categories, setCategories] = useState(mockCategories)
   const [tags, setTags] = useState(mockTags)
-  const [activeView, setActiveView] = useState<ViewType>('all')
+  const router = useRouter()
+  const pathname = usePathname()
 
   const handleCategoryClick = (category: Category) => {
-    console.log("Category clicked:", category)
+    router.push(`/my-bookmarks/category/${encodeURIComponent(category.name)}`)
   }
 
   const handleTagClick = (tag: Tag) => {
-    console.log("Tag clicked:", tag)
+    router.push(`/my-bookmarks/tag/${encodeURIComponent(tag.name)}`)
   }
 
-  const handleViewChange = (view: ViewType) => {
-    setActiveView(view)
-    // 发送事件或通过上下文通知主内容区域切换视图
-    window.dispatchEvent(new CustomEvent('viewChange', { detail: { view } }))
+  const handleViewClick = (view: ViewType) => {
+    if (view === 'all') {
+      router.push('/my-bookmarks')
+    } else if (view === 'starred') {
+      router.push('/my-bookmarks/starred')
+    }
   }
 
   const handleEditCategory = (category: Category) => {
@@ -129,10 +133,10 @@ export function Sidebar() {
       {/* Logo和产品名称 */}
       <div className="flex-none p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <span className="text-white text-lg">📚</span>
           </div>
-          <span className="text-xl font-bold text-gray-900 dark:text-white">BookMind</span>
+          <span className="text-xl font-bold text-gray-900 dark:text-white">BookMarketKit</span>
         </div>
       </div>
 
@@ -144,21 +148,21 @@ export function Sidebar() {
           
           <div className="space-y-1">
             <button
-              onClick={() => handleViewChange('all')}
+              onClick={() => handleViewClick('all')}
               className={`flex items-center w-full p-2 rounded-lg text-sm ${
-                activeView === 'all' 
+                pathname === '/my-bookmarks'
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium' 
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <BookmarkIcon className="w-4 h-4 mr-2" />
-              所有书签
+              全部书签
             </button>
             
             <button
-              onClick={() => handleViewChange('starred')}
+              onClick={() => handleViewClick('starred')}
               className={`flex items-center w-full p-2 rounded-lg text-sm ${
-                activeView === 'starred' 
+                pathname === '/my-bookmarks/starred'
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium' 
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
@@ -176,46 +180,57 @@ export function Sidebar() {
             <AddCategoryDialog onAddCategory={handleAddCategory} />
           </div>
           
-          {categories.map((category, index) => (
-            <div 
-              key={index} 
-              className="group flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg mb-1"
-            >
+          {categories.map((category, index) => {
+            const categoryPath = `/category/${encodeURIComponent(category.name)}`
+            const isActive = pathname === categoryPath
+
+            return (
               <div 
-                className="flex-1 flex items-center cursor-pointer"
-                onClick={() => handleCategoryClick(category)}
+                key={index} 
+                className={`group flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg mb-1 ${
+                  isActive ? 'bg-gray-200 dark:bg-gray-700' : ''
+                }`}
               >
-                <div className="flex items-center">
-                  <span className="mr-2">{category.icon}</span>
-                  <span className="text-sm text-gray-700 dark:text-gray-300">{category.name}</span>
+                <div 
+                  className="flex-1 flex items-center cursor-pointer"
+                  onClick={() => handleCategoryClick(category)}
+                >
+                  <div className="flex items-center">
+                    <span className="mr-2">{category.icon}</span>
+                    <span className={`text-sm ${
+                      isActive 
+                        ? 'text-gray-900 dark:text-white font-medium' 
+                        : 'text-gray-700 dark:text-gray-300'
+                    }`}>{category.name}</span>
+                  </div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">{category.count}</span>
                 </div>
-                <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">{category.count}</span>
+                
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
+                        <MoreHorizontal className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-36">
+                      <DropdownMenuItem onClick={() => handleEditCategory(category)}>
+                        <Pencil className="w-4 h-4 mr-2" />
+                        编辑
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleDeleteCategory(category)}
+                        className="text-red-500 focus:text-red-500"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        删除
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
-              
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full">
-                      <MoreHorizontal className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-36">
-                    <DropdownMenuItem onClick={() => handleEditCategory(category)}>
-                      <Pencil className="w-4 h-4 mr-2" />
-                      编辑
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => handleDeleteCategory(category)}
-                      className="text-red-500 focus:text-red-500"
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      删除
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {/* 标签云 */}

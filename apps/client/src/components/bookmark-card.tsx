@@ -1,25 +1,31 @@
-import { Star, StarOff, ExternalLink, Clock, MoreHorizontal } from "lucide-react"
+import { Star, StarOff, ExternalLink, Clock, MoreHorizontal, Copy, Pin } from "lucide-react"
 import { Bookmark } from "@/types/bookmark"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+import { cn } from "@/lib/utils"
 
 interface BookmarkCardProps {
   bookmark: Bookmark
   onStarClick: (bookmark: Bookmark) => void
   onDeleteClick?: (bookmark: Bookmark) => void
   onEditClick?: (bookmark: Bookmark) => void
+  onPinClick: () => void
 }
 
 export function BookmarkCard({ 
   bookmark, 
   onStarClick, 
   onDeleteClick, 
-  onEditClick 
+  onEditClick, 
+  onPinClick 
 }: BookmarkCardProps) {
   // 格式化最后访问日期
   const formattedDate = new Date(bookmark.lastVisited).toLocaleDateString("zh-CN", {
@@ -27,6 +33,15 @@ export function BookmarkCard({
     month: "short",
     day: "numeric"
   });
+
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(bookmark.url)
+      toast.success("已复制链接地址")
+    } catch (err) {
+      toast.error("复制失败，请重试")
+    }
+  }
 
   return (
     <Card className="group relative overflow-hidden transition-all duration-300 hover:-translate-y-1 border-gray-200 dark:border-gray-700">
@@ -57,54 +72,75 @@ export function BookmarkCard({
           </div>
           
           <div className="flex items-center space-x-1">
-            <button 
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => onStarClick(bookmark)}
-              className="text-gray-400 hover:text-yellow-400 transition-colors p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+              className={cn(
+                "size-8",
+                bookmark.starred && "text-yellow-500"
+              )}
               title={bookmark.starred ? "取消收藏" : "收藏"}
-              aria-label={bookmark.starred ? "取消收藏" : "收藏"}
             >
               {bookmark.starred ? (
-                <Star className="w-4 h-4 fill-current text-yellow-400" />
+                <Star className="size-4 fill-current" />
               ) : (
-                <StarOff className="w-4 h-4" />
+                <StarOff className="size-4" />
               )}
-            </button>
+            </Button>
             
-            <a 
-              href={bookmark.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-              title="访问链接"
-              aria-label="访问链接"
+            <Button
+              variant="ghost"
+              size="icon"
+              asChild
+              className="size-8"
             >
-              <ExternalLink className="w-4 h-4" />
-            </a>
+              <a 
+                href={bookmark.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="访问链接"
+              >
+                <ExternalLink className="size-4" />
+              </a>
+            </Button>
             
-            {(onEditClick || onDeleteClick) && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <MoreHorizontal className="w-4 h-4" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {onEditClick && (
-                    <DropdownMenuItem onClick={() => onEditClick(bookmark)}>
-                      编辑
-                    </DropdownMenuItem>
-                  )}
-                  {onDeleteClick && (
-                    <DropdownMenuItem 
-                      onClick={() => onDeleteClick(bookmark)}
-                      className="text-red-500 focus:text-red-500"
-                    >
-                      删除
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                >
+                  <MoreHorizontal className="size-4" />
+                  <span className="sr-only">更多操作</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleCopyUrl}>
+                  <Copy className="size-4 mr-2" />
+                  复制链接
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onPinClick}>
+                  <Pin className="size-4 mr-2" />
+                  {bookmark.pinned ? "取消置顶" : "置顶"}
+                </DropdownMenuItem>
+                {(onEditClick || onDeleteClick) && <DropdownMenuSeparator />}
+                {onEditClick && (
+                  <DropdownMenuItem onClick={() => onEditClick(bookmark)}>
+                    编辑
+                  </DropdownMenuItem>
+                )}
+                {onDeleteClick && (
+                  <DropdownMenuItem 
+                    onClick={() => onDeleteClick(bookmark)}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    删除
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
         
@@ -137,12 +173,12 @@ export function BookmarkCard({
       </CardContent>
       
       <CardFooter className="px-4 py-2 border-t border-gray-100 dark:border-gray-800 flex items-center text-xs text-gray-500 dark:text-gray-500">
-        <Clock className="w-3 h-3 mr-1 inline-flex" />
+        <Clock className="size-3 mr-1 inline-flex" />
         <span>最后访问：{formattedDate}</span>
       </CardFooter>
       
       {/* 悬停效果 */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
     </Card>
   )
 } 
