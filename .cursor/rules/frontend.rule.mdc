@@ -155,13 +155,54 @@ const Button = ({ children, ...props }) => (
 - 始终使用官方提供的安装命令添加组件，例如：`pnpm dlx shadcn@latest add button`
 - 安装后再根据项目需求对组件进行自定义修改
 - 保持组件结构与 Shadcn UI 文档一致，便于后续升级和维护
-- 不要重复安装组件，安装前先检查是否已经存在相同的Shadcn UI组件
+
+## shadcn-ui 组件安装规范
+
+### 安装前检查
+
+**检查组件是否已存在**：
+   在安装任何新组件前，首先检查组件是否已在项目中存在：
+
+   ```bash
+   # 检查组件目录
+   ls apps/client/components/ui/[组件名]
+   ```
+
+   或检查组件文件：
+
+   ```bash
+   # 检查组件文件
+   ls apps/client/components/ui/[组件名].tsx
+   ```
+
+**组件已存在**：
+   - 如果组件已存在，直接使用现有组件，**不要重新安装**
+   - 查看组件的使用方法：`apps/client/components/ui/[组件名].tsx`
+
+**组件不存在**：
+   - 只有在确认组件不存在的情况下，才进行安装
+
+### 安装流程
+
+**确保在正确目录**：
+   安装命令**必须**在 `apps/client` 目录下执行：
+
+   ```bash
+   # 确保在正确的目录
+   cd apps/client
+   ```
+
+**安装依赖组件**：
+   某些组件可能需要其他组件作为依赖，CLI 会提示安装，请按照提示操作。
+
+**安装命令示例**
 - 组件安装命令格式：`pnpm dlx shadcn@latest add [组件名称]`
 - 常用组件安装示例：
   - 按钮：`pnpm dlx shadcn@latest add button`
   - 表单：`pnpm dlx shadcn@latest add form`
   - 对话框：`pnpm dlx shadcn@latest add dialog`
   - 下拉菜单：`pnpm dlx shadcn@latest add dropdown-menu`
+
 
 ## 组件使用优先级
 
