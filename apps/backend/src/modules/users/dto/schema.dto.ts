@@ -1,4 +1,8 @@
-import { createInsertSchema, createUpdateSchema } from 'drizzle-zod';
+import {
+  createInsertSchema,
+  createUpdateSchema,
+  createSelectSchema,
+} from 'drizzle-zod';
 import { z } from 'zod';
 
 import { usersTable } from '@/db/schemas';
@@ -25,3 +29,4 @@ export const insertUserSchema = createInsertSchema(usersTable, {
 });
 
 export const updateUserSchema = createUpdateSchema(usersTable);
+export const selectUserSchema = createSelectSchema(usersTable);

@@ -1,26 +1,71 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+
+import { comparePassword } from '@/shared/bcrypt';
+import { JwtService } from '@/core/jwt/jwt.service';
+import { RedisService } from '@/core/redis/redis.service';
+import { ResponseService } from '@/core/response/response.service';
+import { UsersService } from '../users/users.service';
+import { LoginParamsDTO } from './dto/request.dto';
+
+import { usersCodeMessages } from '@/settings/code-message.setting';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly redisService: RedisService,
+    private readonly responseService: ResponseService,
+  ) {}
+
+  /**
+   * user login
+   * @param { LoginParamsDTO } params - login params
+   * * **/
+  async login(params: LoginParamsDTO) {
+    const { email, password } = params;
+    const user = await this.usersService.findUserByFields('email', email);
+    if (!user) {
+      return this.responseService.error(usersCodeMessages.notFoundUser);
+    }
+
+    const checkedPassword = await comparePassword(password, user.password);
+
+    if (!checkedPassword) {
+      return {
+        success: false,
+        code: 'LOGIN_FAILED',
+        message: '密码错误，登录失败',
+      };
+    }
+
+    const accessToken = this.jwtService.generateAccessToken({
+      email: user.email,
+      userId: user.id,
+    });
+    /* 
+    const refreshToken = this.jwtService.generateRefreshToken({
+      id: user.id,
+      type: 'REFRESH',
+    }) */
+
+    await this.redisService.setAssessToken(user.email, accessToken);
+
+    return {
+      message: '登录成功',
+      code: 'LOGIN_SUCCESS',
+      data: {
+        accessToken,
+        refreshToken: null,
+      },
+    };
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async refreshToken() {
+    // TODO: 刷新token
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async logout() {
+    // TODO: 登出
   }
 }
