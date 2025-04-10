@@ -1,13 +1,28 @@
-import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+} from '@nestjs/common';
+
+import { DrizzleValidationPipe } from '@/common/pipes/drizzle.validation';
+
 import { UsersService } from './users.service';
+import { insertUserSchema } from './dto/schema.dto';
+import { CreateUserDTO } from './dto/request.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create() {
-    return this.usersService.create();
+  create(
+    @Body(new DrizzleValidationPipe(insertUserSchema)) body: CreateUserDTO,
+  ) {
+    return this.usersService.create(body);
   }
 
   @Get()
@@ -17,16 +32,6 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string) {
-    return this.usersService.update(+id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.findOne(id);
   }
 }

@@ -7,6 +7,7 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiResponse } from '@/dto/response.dto';
+import { commonCodeMessages } from '@/settings/code-message.setting';
 
 @Injectable()
 export class TransformResponseInterceptor<T>
@@ -20,18 +21,19 @@ export class TransformResponseInterceptor<T>
       map((data) => {
         if (this.isApiResponse(data)) {
           return {
-            code: data.code ?? '200',
-            success: data.success ?? data.code === '200',
+            code: data.code ?? commonCodeMessages.success.code,
+            success:
+              data.success ?? data.code === commonCodeMessages.success.code,
             data: data.data ?? null,
-            message: data.message ?? 'Request successful',
+            message: data.message ?? commonCodeMessages.success.message,
           };
         }
 
         return {
           success: true,
           data,
-          message: 'Request successful',
-          code: '200',
+          message: commonCodeMessages.success.message,
+          code: commonCodeMessages.success.code,
         };
       }),
     );

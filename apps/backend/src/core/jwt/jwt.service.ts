@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
+
+import { jwtConstants } from '@/settings/constant.setting';
+
 import { JwtSignTokenPayload } from './jwt.dto';
 
 @Injectable()
@@ -11,14 +14,13 @@ export class JwtService {
   ) {}
 
   generateToken(payload: Record<string, any>): string {
-    const token = this.jwtService.sign(payload);
-    return token;
+    return this.jwtService.sign(payload);
   }
 
   // 生成访问Token
   generateAccessToken(payload: JwtSignTokenPayload) {
     return this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+      secret: this.configService.get<string>(jwtConstants.JWT_ACCESS_SECRET),
       expiresIn: '7d',
     });
   }
@@ -26,7 +28,7 @@ export class JwtService {
   // 生成刷新Token
   generateRefreshToken(payload: JwtSignTokenPayload) {
     return this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+      secret: this.configService.get<string>(jwtConstants.JWT_REFRESH_SECRET),
       expiresIn: '7d',
     });
   }
@@ -34,14 +36,14 @@ export class JwtService {
   // 验证访问Token
   verifyAccessToken(token: string) {
     return this.jwtService.verify(token, {
-      secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+      secret: this.configService.get<string>(jwtConstants.JWT_ACCESS_SECRET),
     });
   }
 
   // 验证刷新jkToken
   verifyRefreshToken(token: string) {
     return this.jwtService.verify(token, {
-      secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+      secret: this.configService.get<string>(jwtConstants.JWT_REFRESH_SECRET),
     });
   }
 

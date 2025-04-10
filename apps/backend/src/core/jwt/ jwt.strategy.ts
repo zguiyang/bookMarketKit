@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '@/modules/users/users.service';
+import { jwtConstants } from '@/settings/constant.setting';
 import { RequestUser } from '@/dto/request.dto';
 import { JwtSignTokenPayload } from './jwt.dto';
 
@@ -15,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_ACCESS_SECRET'),
+      secretOrKey: configService.get<string>(jwtConstants.JWT_ACCESS_SECRET),
     });
   }
 
@@ -32,7 +33,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       userId: user.id,
       email: user.email,
       username: user.username,
-      role: user.role,
     };
   }
 }
