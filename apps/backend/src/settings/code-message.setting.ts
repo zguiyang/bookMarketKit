@@ -6,6 +6,14 @@ export const commonCodeMessages = {
   serverError: { code: 'server_error', message: '服务器错误' },
 };
 
+export const authCodeMessages = {
+  passwordError: { code: 'password_error', message: '密码错误' },
+  emailCodeError: { code: 'email_code_error', message: '邮箱验证码错误' },
+  notFoundToken: { code: 'token_not_found', message: 'token不存在' },
+  tokenExpired: { code: 'token_expired', message: 'token已过期' },
+  tokenError: { code: 'token_error', message: 'token错误' },
+};
+
 export const usersCodeMessages = {
   createError: { code: 'user_create_error', message: '创建用户失败' },
   notFoundUser: { code: 'user_not_found', message: '用户不存在' },

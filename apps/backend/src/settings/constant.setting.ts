@@ -4,3 +4,11 @@ export const jwtConstants = {
   WT_EXPIRES_IN: 'JWT_EXPIRES_IN',
   JWT_REFRESH_SECRET: 'JWT_REFRESH_SECRET',
 };
+
+export const redisConstants = {
+  EMAIL_CODE_PREFIX: 'email:code:',
+};
+
+export const queueMessageConstants = {
+  EMAIL_VERIFICATION_QUEUE: 'email:verification:queue',
+};
