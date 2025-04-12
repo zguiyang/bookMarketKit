@@ -91,10 +91,18 @@ export class RedisService implements OnModuleDestroy {
    * Push an item to the end of a queue
    * @param queueName - Name of the queue
    * @param data - Data to push to the queue
+   * @param expireInSeconds - Optional expiration time in seconds, default 60s
    */
-  async pushToQueue(queueName: string, data: any): Promise<void> {
+  async pushToQueue(
+    queueName: string,
+    data: any,
+    expireInSeconds: number = 60,
+  ): Promise<void> {
     const serializedData = JSON.stringify(data);
-    await this.client.rpush(queueName, serializedData);
+    const multi = this.client.multi();
+    multi.rpush(queueName, serializedData);
+    multi.expire(queueName, expireInSeconds);
+    await multi.exec();
   }
 
   /**
@@ -120,15 +128,17 @@ export class RedisService implements OnModuleDestroy {
    * Push an item to a queue with distributed lock protection
    * @param queueName - Name of the queue
    * @param data - Data to push to the queue
+   * @param expireInSeconds - Optional expiration time in seconds, default 60s
    */
-  async pushToQueueWithLock(queueName: string, data: any): Promise<void> {
+  async pushToQueueWithLock(
+    queueName: string,
+    data: any,
+    expireInSeconds: number = 60,
+  ): Promise<void> {
     const lockKey = `lock:${queueName}`;
-    try {
-      await this.acquireLock(lockKey);
-      await this.pushToQueue(queueName, data);
-    } finally {
-      await this.releaseLock(lockKey);
-    }
+    await this.acquireLock(lockKey);
+    await this.pushToQueue(queueName, data, expireInSeconds);
+    await this.releaseLock(lockKey);
   }
 
   /**
@@ -138,18 +148,10 @@ export class RedisService implements OnModuleDestroy {
    */
   async popFromQueueWithLock(queueName: string): Promise<any> {
     const lockKey = `lock:${queueName}`;
-    try {
-      await this.acquireLock(lockKey);
-      return await this.popFromQueue(queueName);
-    } catch (error) {
-      this.logger.error(
-        `Failed to pop data from queue [${queueName}] with lock: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    } finally {
-      await this.releaseLock(lockKey);
-    }
+    await this.acquireLock(lockKey);
+    const result = await this.popFromQueue(queueName);
+    await this.releaseLock(lockKey);
+    return result;
   }
 
   /**
@@ -192,25 +194,22 @@ export class RedisService implements OnModuleDestroy {
    * Push multiple items to a queue in a single operation
    * @param queueName - Name of the queue
    * @param items - Array of items to push to the queue
+   * @param expireInSeconds - Optional expiration time in seconds, default 60s
    */
-  async pushBulkToQueue(queueName: string, items: any[]): Promise<void> {
+  async pushBulkToQueue(
+    queueName: string,
+    items: any[],
+    expireInSeconds: number = 60,
+  ): Promise<void> {
     const lockKey = `lock:${queueName}`;
-    try {
-      await this.acquireLock(lockKey);
-      const pipeline = this.client.pipeline();
-      items.forEach((item) => {
-        pipeline.rpush(queueName, JSON.stringify(item));
-      });
-      await pipeline.exec();
-    } catch (error) {
-      this.logger.error(
-        `Failed to bulk push data to queue [${queueName}]: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    } finally {
-      await this.releaseLock(lockKey);
-    }
+    await this.acquireLock(lockKey);
+    const multi = this.client.multi();
+    items.forEach((item) => {
+      multi.rpush(queueName, JSON.stringify(item));
+    });
+    multi.expire(queueName, expireInSeconds);
+    await multi.exec();
+    await this.releaseLock(lockKey);
   }
 
   /**
@@ -225,16 +224,8 @@ export class RedisService implements OnModuleDestroy {
     start: number = 0,
     end: number = -1,
   ): Promise<any[]> {
-    try {
-      const items = await this.client.lrange(queueName, start, end);
-      return items.map((item) => JSON.parse(item));
-    } catch (error) {
-      this.logger.error(
-        `Failed to get items from queue [${queueName}] range [${start},${end}]: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
+    const items = await this.client.lrange(queueName, start, end);
+    return items.map((item) => JSON.parse(item));
   }
 
   /**
@@ -243,18 +234,35 @@ export class RedisService implements OnModuleDestroy {
    */
   async clearQueue(queueName: string): Promise<void> {
     const lockKey = `lock:${queueName}`;
-    try {
-      await this.acquireLock(lockKey);
-      await this.client.del(queueName);
-    } catch (error) {
-      this.logger.error(
-        `Failed to clear queue [${queueName}]: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    } finally {
-      await this.releaseLock(lockKey);
+    await this.acquireLock(lockKey);
+    await this.client.del(queueName);
+    await this.releaseLock(lockKey);
+  }
+
+  /**
+   * 获取队列的过期时间
+   * @param queueName - 队列名称
+   * @returns 过期时间（秒），-1表示没有过期时间，-2表示队列不存在
+   */
+  async getQueueTTL(queueName: string): Promise<number> {
+    return await this.client.ttl(queueName);
+  }
+
+  /**
+   * 更新队列的过期时间
+   * @param queueName - 队列名称
+   * @param expireInSeconds - 新的过期时间（秒），默认 60s
+   * @returns 是否设置成功
+   */
+  async updateQueueExpire(
+    queueName: string,
+    expireInSeconds: number = 60,
+  ): Promise<boolean> {
+    const exists = await this.client.exists(queueName);
+    if (exists) {
+      return (await this.client.expire(queueName, expireInSeconds)) === 1;
     }
+    return false;
   }
 
   /**

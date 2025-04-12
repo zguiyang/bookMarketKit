@@ -6,6 +6,7 @@ import { ResponseService } from '@/core/response/response.service';
 import { usersCodeMessages } from '@/settings/code-message.setting';
 
 import { usersTable } from '@/db/schemas';
+import { hashPassword } from '@/shared/bcrypt';
 
 import { CreateUserDTO } from './dto/request.dto';
 
@@ -49,10 +50,11 @@ export class UsersService {
       return this.responseService.error(usersCodeMessages.existedUser);
     }
 
+    const userHashPassword = await hashPassword(data.password);
     const newUser = await this.databaseService.db.insert(usersTable).values({
       username: data.username,
       email: data.email,
-      password: data.password,
+      password: userHashPassword,
     });
 
     if (newUser.rowCount > 0) {

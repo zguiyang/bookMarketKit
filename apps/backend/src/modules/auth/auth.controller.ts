@@ -13,13 +13,13 @@ import { DrizzleValidationPipe } from '@/common/pipes/drizzle.validation';
 import { PublicAPI } from '@/common/decorator/public.decorator';
 import { GetCurrentUser } from '@/common/decorator/get-user.decorator';
 import { RequestUser } from '@/dto/request.dto';
+import { AuthService } from './auth.service';
 import {
   authRegisterSchema,
   AuthRegisterDTO,
   authLoginSchema,
   AuthLoginDTO,
 } from './dto/request.dto';
-import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +28,7 @@ export class AuthController {
   @PublicAPI()
   @Get('getEmailCode')
   async getEmailCode(@Query('email') email: string) {
-    await this.authService.getEmailVerificationCode(email);
+    return await this.authService.getEmailVerificationCode(email);
   }
 
   @PublicAPI()

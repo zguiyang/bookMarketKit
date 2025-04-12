@@ -6,20 +6,18 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build":  "NODE_ENV=prod nest build",
+    "start": "NODE_ENV=local nest start",
     "start:dev": "NODE_ENV=local nest start --watch",
     "start:debug": "NODE_ENV=local nest start --debug --watch",
-    "start": "nest start",
     "start:prod": "NODE_ENV=prod node dist/main",
-    "start:test": "NODE_ENV=test nest start --watch",
-    "db:push": "npx drizzle-kit push",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",
@@ -92,6 +90,9 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
+    }
   }
 }

@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { RedisService } from '@/core/redis/redis.service';
-import { MailerService } from '@/core/mailer/mailer.service';
 import { Cron } from '@nestjs/schedule';
 
+import { RedisService } from '@/core/redis/redis.service';
+import { MailerService } from '@/core/mailer/mailer.service';
+
+import { queueMessageConstants } from '@/settings/constant.setting';
+
 @Injectable()
-export class SchedulerEmailService {
-  private readonly logger = new Logger(SchedulerEmailService.name);
-  private readonly EMAIL_QUEUE = 'email:verification:queue';
+export class TasksEmailService {
+  private readonly logger = new Logger(TasksEmailService.name);
 
   constructor(
     private readonly redisService: RedisService,
@@ -21,14 +23,12 @@ export class SchedulerEmailService {
     name: 'processEmailQueue',
   })
   async processEmailQueue() {
-    this.logger.debug('处理邮件队列消息');
-    try {
-      const message = await this.redisService.popFromQueue(this.EMAIL_QUEUE);
-      if (message) {
-        await this.processEmailVerification(message);
-      }
-    } catch (error) {
-      this.logger.error('处理邮件队列消息失败', error.stack);
+    const message = await this.redisService.popFromQueue(
+      queueMessageConstants.EMAIL_VERIFICATION_QUEUE,
+    );
+    this.logger.log('处理邮件队列消息监听', message);
+    if (message) {
+      await this.processEmailVerification(message);
     }
   }
 

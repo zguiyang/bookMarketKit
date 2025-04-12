@@ -7,7 +7,8 @@ export const jwtConstants = {
 
 export const redisConstants = {
   EMAIL_CODE_PREFIX: 'email:code:',
-};
+  EMAIL_RATE_LIMIT_PREFIX: 'email:rate:',
+} as const;
 
 export const queueMessageConstants = {
   EMAIL_VERIFICATION_QUEUE: 'email:verification:queue',

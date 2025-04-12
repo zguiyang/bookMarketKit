@@ -4,7 +4,7 @@ import { DatabaseModule } from '@/core/database/database.module';
 import { ResponseModule } from '@/core/response/response.module';
 import { JwtModule } from '@/core/jwt/jwt.module';
 import { RedisModule } from '@/core/redis/redis.modules';
-import { SchedulerModule } from '@/modules/scheduler/scheduler.module';
+import { TasksModule } from '@/modules/tasks/tasks.module';
 import { UsersModule } from '@/modules/users/users.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 
@@ -21,7 +21,7 @@ import { AppService } from './app.service';
     JwtModule,
     RedisModule,
     ResponseModule,
-    SchedulerModule,
+    TasksModule,
 
     UsersModule,
     AuthModule,

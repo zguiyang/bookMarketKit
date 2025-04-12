@@ -18,6 +18,8 @@ import {
   redisConstants,
 } from '@/settings/constant.setting';
 
+import { emailSettings } from '@/settings/system.setting';
+
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
@@ -32,7 +34,7 @@ export class AuthService {
   async register(data: AuthRegisterDTO) {
     const { username, email, password, emailCode } = data;
     const emailCodeValidateRes = await this.verifyEmailCode(email, emailCode);
-    if (emailCodeValidateRes) {
+    if (!emailCodeValidateRes) {
       return this.responseService.error(authCodeMessages.emailCodeError);
     }
 
@@ -74,13 +76,28 @@ export class AuthService {
     return await this.redisService.removeAssessToken(email);
   }
 
-  async getEmailVerificationCode(email: string): Promise<void> {
+  async getEmailVerificationCode(email: string) {
+    if (!email) {
+      return this.responseService.error(authCodeMessages.emailNotFound);
+    }
+
+    const codeKey = `${redisConstants.EMAIL_CODE_PREFIX}${email}`;
+    const rateLimitKey = `${redisConstants.EMAIL_RATE_LIMIT_PREFIX}${email}`;
+
+    // 检查发送频率限制
+    const lastSentTime = await this.redisService.get(rateLimitKey);
+    if (lastSentTime) {
+      return this.responseService.error(authCodeMessages.emailCodeTooFrequent);
+    }
+
     // 生成6位数字验证码
     const code = generateRandomCode(6);
 
-    // 将验证码保存到Redis，设置5分钟过期
-    const key = `${redisConstants.EMAIL_CODE_PREFIX}${email}`;
-    await this.redisService.set(key, code, 5 * 60);
+    // 将验证码保存到Redis，设置3分钟过期
+    await this.redisService.set(codeKey, code, emailSettings.emailCodeExpire);
+
+    // 设置发送频率限制, 1分钟
+    await this.redisService.set(rateLimitKey, new Date().toISOString(), 60);
 
     // 将发送任务加入队列
     await this.redisService.pushToQueue(
@@ -93,6 +110,9 @@ export class AuthService {
     );
 
     this.logger.log(`验证码已生成并加入发送队列: ${email}`);
+    return this.responseService.success({
+      message: '验证码已发送，请查收!',
+    });
   }
 
   async verifyEmailCode(email: string, code: string): Promise<boolean> {

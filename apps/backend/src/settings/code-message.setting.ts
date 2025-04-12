@@ -7,12 +7,39 @@ export const commonCodeMessages = {
 };
 
 export const authCodeMessages = {
-  passwordError: { code: 'password_error', message: '密码错误' },
-  emailCodeError: { code: 'email_code_error', message: '邮箱验证码错误' },
-  notFoundToken: { code: 'token_not_found', message: 'token不存在' },
-  tokenExpired: { code: 'token_expired', message: 'token已过期' },
-  tokenError: { code: 'token_error', message: 'token错误' },
-};
+  passwordError: {
+    code: 'auth_password-error',
+    message: '密码错误',
+  },
+  emailNotFound: {
+    code: 'auth_email-not-found',
+    message: '邮箱不存在',
+  },
+  emailCodeError: {
+    code: 'auth_email-code-error',
+    message: '验证码错误',
+  },
+  emailCodeExist: {
+    code: 'auth_email-code-exist',
+    message: '验证码已发送，请查收邮件或等待验证码过期后重试',
+  },
+  emailCodeTooFrequent: {
+    code: 'auth_email-code-too-frequent',
+    message: '发送太频繁，请稍后再试',
+  },
+  notFoundToken: {
+    code: 'auth_not-found-token',
+    message: '未找到Token',
+  },
+  tokenExpired: {
+    code: 'auth_token-expired',
+    message: 'Token已过期',
+  },
+  tokenError: {
+    code: 'auth_token-error',
+    message: 'Token错误',
+  },
+} as const;
 
 export const usersCodeMessages = {
   createError: { code: 'user_create_error', message: '创建用户失败' },

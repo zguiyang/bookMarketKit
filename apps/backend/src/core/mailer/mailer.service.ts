@@ -13,21 +13,16 @@ export class MailerService {
    * @returns 发送结果
    */
   async sendVerificationCode(to: string, code: string) {
-    try {
-      await this.nestMailerService.sendMail({
-        to,
-        subject: '验证码',
-        template: 'verification-code',
-        context: {
-          code,
-          expireTime: '10分钟',
-        },
-      });
-      return code;
-    } catch (error) {
-      this.logger.error(error);
-      return null;
-    }
+    await this.nestMailerService.sendMail({
+      to,
+      subject: '验证码',
+      template: 'verification-code',
+      context: {
+        code,
+        expireTime: '5分钟',
+      },
+    });
+    return code;
   }
 
   /**
@@ -44,15 +39,12 @@ export class MailerService {
     template: string,
     context: Record<string, any>,
   ) {
-    try {
-      return await this.nestMailerService.sendMail({
-        to,
-        subject,
-        template,
-        context,
-      });
-    } catch (error) {
-      this.logger.error(error);
-    }
+    console.log(subject, template, context);
+    return await this.nestMailerService.sendMail({
+      to,
+      subject,
+      template,
+      context,
+    });
   }
 }
