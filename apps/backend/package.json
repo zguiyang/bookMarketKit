@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build":  "NODE_ENV=prod nest build",
+    "build": "NODE_ENV=prod nest build",
     "start": "NODE_ENV=local nest start",
     "start:dev": "NODE_ENV=local nest start --watch",
     "start:debug": "NODE_ENV=local nest start --debug --watch",
@@ -28,7 +28,6 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/schedule": "^5.0.1",
-    "@nestjs/swagger": "^11.1.1",
     "@types/nodemailer": "^6.4.17",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
