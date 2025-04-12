@@ -36,19 +36,26 @@ export class AuthController {
   async register(
     @Body(new DrizzleValidationPipe(authRegisterSchema)) body: AuthRegisterDTO,
   ) {
-    return this.authService.register(body);
+    return await this.authService.register(body);
   }
 
   @PublicAPI()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  login(@Body(new DrizzleValidationPipe(authLoginSchema)) body: AuthLoginDTO) {
-    return this.authService.login(body);
+  async login(
+    @Body(new DrizzleValidationPipe(authLoginSchema)) body: AuthLoginDTO,
+  ) {
+    return await this.authService.login(body);
+  }
+
+  @Get('currentUser')
+  async getCurrentUser(@GetCurrentUser() user: RequestUser) {
+    return await this.authService.getCurrentUser(user);
   }
 
   @Delete('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUser() user: RequestUser) {
-    return this.authService.logout(user);
+  async logout(@GetCurrentUser() user: RequestUser) {
+    return await this.authService.logout(user);
   }
 }

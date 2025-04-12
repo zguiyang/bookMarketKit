@@ -46,3 +46,26 @@ export const usersCodeMessages = {
   notFoundUser: { code: 'user_not_found', message: '用户不存在' },
   existedUser: { code: 'user_existed', message: '用户已存在' },
 };
+
+export const bookmarksCodeMessages = {
+  notFoundBookmark: {
+    code: 'BOOKMARK_NOT_FOUND',
+    message: '书签不存在',
+  },
+  existedBookmark: {
+    code: 'BOOKMARK_EXISTED',
+    message: '该URL已被收藏',
+  },
+  createError: {
+    code: 'BOOKMARK_CREATE_ERROR',
+    message: '创建书签失败',
+  },
+  updateError: {
+    code: 'BOOKMARK_UPDATE_ERROR',
+    message: '更新书签失败',
+  },
+  deleteError: {
+    code: 'BOOKMARK_DELETE_ERROR',
+    message: '删除书签失败',
+  },
+};

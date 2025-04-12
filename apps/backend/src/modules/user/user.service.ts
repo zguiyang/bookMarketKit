@@ -11,7 +11,7 @@ import { hashPassword } from '@/shared/bcrypt';
 import { CreateUserDTO } from './dto/request.dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly responseService: ResponseService,
@@ -29,6 +29,7 @@ export class UsersService {
     if (!user) {
       return this.responseService.error(usersCodeMessages.notFoundUser);
     }
+    return this.responseService.success({ data: user });
   }
 
   async findUserByFields(

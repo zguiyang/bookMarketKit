@@ -2,13 +2,13 @@ import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 
 import { DrizzleValidationPipe } from '@/common/pipes/drizzle.validation';
 
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 import { insertUserSchema } from './dto/schema.dto';
 import { CreateUserDTO } from './dto/request.dto';
 
-@Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+@Controller('user')
+export class UserController {
+  constructor(private readonly usersService: UserService) {}
 
   @Post()
   create(

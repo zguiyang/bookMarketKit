@@ -7,8 +7,8 @@ import { MailerService } from '@/core/mailer/mailer.service';
 import { queueMessageConstants } from '@/settings/constant.setting';
 
 @Injectable()
-export class TasksEmailService {
-  private readonly logger = new Logger(TasksEmailService.name);
+export class TaskEmailService {
+  private readonly logger = new Logger(TaskEmailService.name);
 
   constructor(
     private readonly redisService: RedisService,

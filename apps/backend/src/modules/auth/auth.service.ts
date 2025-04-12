@@ -5,7 +5,7 @@ import { JwtService } from '@/core/jwt/jwt.service';
 import { RedisService } from '@/core/redis/redis.service';
 import { ResponseService } from '@/core/response/response.service';
 import { generateRandomCode } from '@/shared/code';
-import { UsersService } from '@/modules/users/users.service';
+import { UserService } from '@/modules/user/user.service';
 import { RequestUser } from '@/dto/request.dto';
 import { AuthRegisterDTO, AuthLoginDTO } from './dto/request.dto';
 
@@ -25,7 +25,7 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    private readonly usersService: UsersService,
+    private readonly usersService: UserService,
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
     private readonly responseService: ResponseService,
@@ -112,6 +112,21 @@ export class AuthService {
     this.logger.log(`验证码已生成并加入发送队列: ${email}`);
     return this.responseService.success({
       message: '验证码已发送，请查收!',
+    });
+  }
+
+  async getCurrentUser({ userId }: RequestUser) {
+    const { data } = await this.usersService.findOne(userId);
+
+    if (!data) {
+      return this.responseService.error(usersCodeMessages.notFoundUser);
+    }
+    const authToken = await this.redisService.getAssessToken(data.email);
+    return this.responseService.success({
+      data: {
+        ...data,
+        authToken,
+      },
     });
   }
 

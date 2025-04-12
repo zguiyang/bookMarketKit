@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertUserSchema } from '@/modules/users/dto/schema.dto';
+import { insertUserSchema } from '@/modules/user/dto/schema.dto';
 
 export const authRegisterSchema = insertUserSchema.merge(
   z

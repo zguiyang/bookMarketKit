@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 // import { ScheduleModule } from '@nestjs/schedule';
-import { TasksEmailService } from './tasks.email.service';
+import { TaskEmailService } from './task.email.service';
 import { MailerModule } from '@/core/mailer/mailer.module';
 
 @Module({
@@ -8,7 +8,7 @@ import { MailerModule } from '@/core/mailer/mailer.module';
     // ScheduleModule.forRoot(),
     MailerModule,
   ],
-  providers: [TasksEmailService],
-  exports: [TasksEmailService],
+  providers: [TaskEmailService],
+  exports: [TaskEmailService],
 })
-export class TasksModule {}
+export class TaskModule {}

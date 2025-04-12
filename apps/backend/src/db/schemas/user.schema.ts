@@ -1,8 +1,9 @@
-import { pgTable, varchar, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
 
-export const usersTable = pgTable('users', {
+// 用户表定义
+export const usersTable = pgTable('user', {
   id: uuid().primaryKey().defaultRandom(),
-  nickname: varchar({ length: 50 }), // 移除 .default(null)，允许为 null 但不设置默认值
+  nickname: varchar({ length: 50 }),
   username: varchar({ length: 64 }).notNull().unique(),
   email: varchar({ length: 255 }).notNull().unique(),
   password: varchar({ length: 255 }).notNull(),
