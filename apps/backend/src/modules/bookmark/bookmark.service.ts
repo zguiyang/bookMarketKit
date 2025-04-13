@@ -1,72 +1,65 @@
 import type { InsertBookmark, SelectBookmark } from '@/db/schemas';
-
-import { Injectable } from '@nestjs/common';
-import { eq, and, sql } from 'drizzle-orm';
-import { DatabaseService } from '@/core/database/database.service';
-import { ResponseService } from '@/core/response/response.service';
-import { bookmarksCodeMessages } from '@/settings/code-message.setting';
 import { bookmarksTable } from '@/db/schemas';
+
+import { Inject, Injectable } from '@nestjs/common';
+import { and, eq, sql } from 'drizzle-orm';
+import { DB_PROVIDER, type DbType } from '@/core/database/database-provider';
+import { BusinessException } from '@/common/exceptions/business.exception';
+import { bookmarksCodeMessages } from '@/settings/code-message.setting';
 import {
-  UpdateBookmarkDTO,
+  BookmarkPageListRequestDTO,
   SetFavoriteDTO,
   SetPinnedTopDTO,
-  BookmarkPageListRequestDTO,
+  UpdateBookmarkDTO,
 } from './dto/request.dto';
+import { PageListData } from '@/dto/pagination.dto';
 
 @Injectable()
 export class BookmarkService {
-  constructor(
-    private readonly databaseService: DatabaseService,
-    private readonly responseService: ResponseService,
-  ) {}
+  constructor(@Inject(DB_PROVIDER) private readonly database: DbType) {}
 
   async create(data: InsertBookmark) {
-    const newBookmark = await this.databaseService.db
-      .insert(bookmarksTable)
-      .values({
-        user_id: data.user_id,
-        title: data.title,
-        url: data.url,
-      });
+    const newBookmark = await this.database.insert(bookmarksTable).values({
+      user_id: data.user_id,
+      title: data.title,
+      url: data.url,
+    });
 
-    if (newBookmark.rowCount > 0) {
-      return this.responseService.success<null>({});
+    if (newBookmark.rowCount < 1) {
+      throw new BusinessException(bookmarksCodeMessages.createError);
     }
-    return this.responseService.error(bookmarksCodeMessages.createError);
   }
 
   async update(userId: string, data: UpdateBookmarkDTO) {
     const { id, ...updateData } = data;
-    const { data: bookmark } = await this.findOne(userId, id);
+    const bookmark = await this.findOne(userId, id);
 
     if (!bookmark) {
-      return this.responseService.error(bookmarksCodeMessages.notFoundBookmark);
+      throw new BusinessException(bookmarksCodeMessages.notFoundBookmark);
     }
 
-    const result = await this.databaseService.db
+    const result = await this.database
       .update(bookmarksTable)
       .set(updateData)
       .where(
         and(eq(bookmarksTable.id, id), eq(bookmarksTable.user_id, userId)),
       );
 
-    if (result.rowCount > 0) {
-      return this.responseService.success<null>({});
+    if (result.rowCount < 1) {
+      throw new BusinessException(bookmarksCodeMessages.updateError);
     }
-    return this.responseService.error(bookmarksCodeMessages.updateError);
   }
 
   async delete(userId: string, id: string) {
-    const result = await this.databaseService.db
+    const result = await this.database
       .delete(bookmarksTable)
       .where(
         and(eq(bookmarksTable.id, id), eq(bookmarksTable.user_id, userId)),
       );
 
-    if (result.rowCount > 0) {
-      return this.responseService.success<null>({});
+    if (result.rowCount < 1) {
+      throw new BusinessException(bookmarksCodeMessages.deleteError);
     }
-    return this.responseService.error(bookmarksCodeMessages.deleteError);
   }
 
   async favorite(userId: string, data: SetFavoriteDTO) {
@@ -85,41 +78,40 @@ export class BookmarkService {
     });
   }
 
-  async findAll(userId: string) {
-    const bookmarks =
-      await this.databaseService.db.query.bookmarksTable.findMany({
-        where: (bookmarks, { eq }) => eq(bookmarks.user_id, userId),
-        orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
-      });
-
-    return this.responseService.success<SelectBookmark[]>({ data: bookmarks });
+  async findAll(userId: string): Promise<SelectBookmark[]> {
+    return this.database.query.bookmarksTable.findMany({
+      where: (bookmarks, { eq }) => eq(bookmarks.user_id, userId),
+      orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
+    });
   }
 
-  async findOne(userId: string, id: string) {
-    const bookmark =
-      await this.databaseService.db.query.bookmarksTable.findFirst({
-        where: (bookmarks, { eq, and }) =>
-          and(eq(bookmarks.id, id), eq(bookmarks.user_id, userId)),
-      });
+  async findOne(userId: string, id: string): Promise<SelectBookmark> {
+    const bookmark = await this.database.query.bookmarksTable.findFirst({
+      where: (bookmarks, { eq, and }) =>
+        and(eq(bookmarks.id, id), eq(bookmarks.user_id, userId)),
+    });
 
     if (!bookmark) {
-      return this.responseService.error(bookmarksCodeMessages.notFoundBookmark);
+      throw new BusinessException(bookmarksCodeMessages.notFoundBookmark);
     }
-    return this.responseService.success<SelectBookmark>({ data: bookmark });
+    return bookmark;
   }
 
-  async pageList(userId: string, query: BookmarkPageListRequestDTO) {
+  async pageList(
+    userId: string,
+    query: BookmarkPageListRequestDTO,
+  ): Promise<PageListData<SelectBookmark>> {
     const { page, pageSize } = query;
     const offset = (page - 1) * pageSize;
 
     const [total, bookmarks] = await Promise.all([
-      this.databaseService.db
+      this.database
         .select({ count: sql<number>`count(*)` })
         .from(bookmarksTable)
         .where(eq(bookmarksTable.user_id, userId))
         .then((result) => Number(result[0].count)),
 
-      this.databaseService.db.query.bookmarksTable.findMany({
+      this.database.query.bookmarksTable.findMany({
         where: (bookmarks, { eq }) => eq(bookmarks.user_id, userId),
         orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
         limit: pageSize,
@@ -128,13 +120,12 @@ export class BookmarkService {
     ]);
 
     const totalPages = Math.ceil(total / pageSize);
-
-    return this.responseService.pagination<SelectBookmark>({
+    return {
       content: bookmarks,
       pages: totalPages,
       page,
       pageSize,
       total,
-    });
+    };
   }
 }

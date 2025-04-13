@@ -9,17 +9,11 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { DrizzleValidationPipe } from '@/common/pipes/drizzle.validation';
 import { PublicAPI } from '@/common/decorator/public.decorator';
 import { CurrentUser } from '@/common/decorator/get-user.decorator';
 import { RequestUser } from '@/dto/request.dto';
 import { AuthService } from './auth.service';
-import {
-  authRegisterSchema,
-  AuthRegisterDTO,
-  authLoginSchema,
-  AuthLoginDTO,
-} from './dto/request.dto';
+import { AuthRegisterDTO, AuthLoginDTO } from './dto/request.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,18 +27,14 @@ export class AuthController {
 
   @PublicAPI()
   @Post('register')
-  async register(
-    @Body(new DrizzleValidationPipe(authRegisterSchema)) body: AuthRegisterDTO,
-  ) {
+  async register(@Body() body: AuthRegisterDTO) {
     return await this.authService.register(body);
   }
 
   @PublicAPI()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(
-    @Body(new DrizzleValidationPipe(authLoginSchema)) body: AuthLoginDTO,
-  ) {
+  async login(@Body() body: AuthLoginDTO) {
     return await this.authService.login(body);
   }
 

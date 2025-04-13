@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-
-import { DatabaseService } from '@/core/database/database.service';
-import { ResponseService } from '@/core/response/response.service';
+import type { SelectUser } from '@/db/schemas';
+import { Inject, Injectable } from '@nestjs/common';
+import { DB_PROVIDER, type DbType } from '@/core/database/database-provider';
+import { BusinessException } from '@/common/exceptions/business.exception';
 
 import { usersCodeMessages } from '@/settings/code-message.setting';
 
@@ -10,65 +10,68 @@ import { hashPassword } from '@/shared/bcrypt';
 
 import { CreateUserDTO } from './dto/request.dto';
 
+// 定义不包含密码的用户类型
+type UserWithoutPassword = Omit<SelectUser, 'password'>;
+
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly databaseService: DatabaseService,
-    private readonly responseService: ResponseService,
-  ) {}
-
-  async findAll() {
-    return this.databaseService.db.query.usersTable.findMany({});
-  }
-
-  async findOne(id: string) {
-    const user = await this.databaseService.db.query.usersTable.findFirst({
-      where: (user, { eq }) => eq(user.id, id),
-    });
-
-    if (!user) {
-      return this.responseService.error(usersCodeMessages.notFoundUser);
-    }
-    return this.responseService.success({ data: user });
-  }
-
-  async findUserByFields(
-    key: keyof Pick<typeof usersTable, 'email' | 'username'>,
-    value: string,
-  ) {
-    return this.databaseService.db.query.usersTable.findFirst({
-      where: (users, { eq }) => eq(users[key], value),
-    });
-  }
+  constructor(@Inject(DB_PROVIDER) private readonly database: DbType) {}
 
   async create(data: CreateUserDTO) {
-    const existingUser =
-      await this.databaseService.db.query.usersTable.findFirst({
-        where: (users, { eq, or }) =>
-          or(eq(users.username, data.username), eq(users.email, data.email)),
-      });
+    const existingUser = await this.database.query.usersTable.findFirst({
+      where: (users, { eq, or }) =>
+        or(eq(users.username, data.username), eq(users.email, data.email)),
+    });
     if (existingUser) {
-      return this.responseService.error(usersCodeMessages.existedUser);
+      throw new BusinessException(usersCodeMessages.existedUser);
     }
 
     const userHashPassword = await hashPassword(data.password);
-    const newUser = await this.databaseService.db.insert(usersTable).values({
+    const newUser = await this.database.insert(usersTable).values({
       username: data.username,
       email: data.email,
       password: userHashPassword,
     });
 
-    if (newUser.rowCount > 0) {
-      return this.responseService.success<null>({});
+    if (newUser.rowCount < 1) {
+      throw new BusinessException(usersCodeMessages.createError);
     }
-    return this.responseService.error(usersCodeMessages.createError);
   }
 
   update(id: string) {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async findAll(): Promise<UserWithoutPassword[]> {
+    return this.database.query.usersTable.findMany({
+      columns: {
+        id: true,
+        nickname: true,
+        username: true,
+        email: true,
+        created_at: true,
+        updated_at: true,
+      },
+    });
+  }
+
+  async findOne(id: string): Promise<SelectUser> {
+    const user = await this.database.query.usersTable.findFirst({
+      where: (user, { eq }) => eq(user.id, id),
+    });
+
+    if (!user) {
+      throw new BusinessException(usersCodeMessages.notFoundUser);
+    }
+    return user;
+  }
+
+  async findUserByFields(
+    key: keyof Pick<typeof usersTable, 'email' | 'username'>,
+    value: string,
+  ) {
+    return this.database.query.usersTable.findFirst({
+      where: (users, { eq }) => eq(users[key], value),
+    });
   }
 }

@@ -4,6 +4,8 @@ export const commonCodeMessages = {
   notLogin: { code: 'not_login', message: '用户未登录' },
   paramsError: { code: 'params_error', message: '参数错误' },
   serverError: { code: 'server_error', message: '服务器错误' },
+  validationError: { code: 'validation_error', message: '数据验证失败' },
+  badRequest: { code: 'bad_request', message: '无效的请求' },
 };
 
 export const authCodeMessages = {

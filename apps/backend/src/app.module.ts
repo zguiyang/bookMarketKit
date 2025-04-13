@@ -1,12 +1,9 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { HttpExceptionFilter } from '@/common/filters/http-exception';
-import { DatabaseExceptionFilter } from '@/common/filters/database-exception';
-import { OtherExceptionFilter } from '@/common/filters/other-exception';
+import { GlobalExceptionFilter } from '@/common/filters/global-exception.filter';
 import { TransformResponseInterceptor } from '@/common/interceptors/transform-response';
 import { DatabaseModule } from '@/core/database/database.module';
-import { ResponseModule } from '@/core/response/response.module';
 import { JwtModule } from '@/core/jwt/jwt.module';
 import { JwtAuthGuard } from '@/core/jwt/jwt-auth.guard';
 import { RedisModule } from '@/core/redis/redis.modules';
@@ -27,7 +24,6 @@ import { AppService } from './app.service';
     DatabaseModule,
     JwtModule,
     RedisModule,
-    ResponseModule,
     TaskModule,
 
     UserModule,
@@ -43,15 +39,7 @@ import { AppService } from './app.service';
     },
     {
       provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: DatabaseExceptionFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: OtherExceptionFilter,
+      useClass: GlobalExceptionFilter,
     },
     {
       provide: APP_INTERCEPTOR,
