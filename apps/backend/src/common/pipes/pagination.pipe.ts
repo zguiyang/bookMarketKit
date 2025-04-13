@@ -1,7 +1,7 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { PageDirectionEnum, PageListRequestDto } from '@/dto/pagination.dto';
+import { PageDirectionEnum, PageListRequest } from '@/dto/pagination.dto';
 
-type FormatParams = Partial<Omit<PageListRequestDto, 'pageSize' | 'page'>>;
+type FormatParams = Partial<Omit<PageListRequest, 'pageSize' | 'page'>>;
 @Injectable()
 export class PaginationParamsFormatPipe implements PipeTransform {
   private defaultParams: FormatParams = {};
@@ -21,7 +21,7 @@ export class PaginationParamsFormatPipe implements PipeTransform {
     return parseInt(val, 10);
   }
 
-  transform(values: PageListRequestDto) {
+  transform(values: PageListRequest) {
     const { page, pageSize, orderBy, direction, ...other } = values;
 
     return {

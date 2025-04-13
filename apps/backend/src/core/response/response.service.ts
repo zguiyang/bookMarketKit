@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { ApiResponse } from '@/dto/response.dto';
+import { PageListData, PageListResponse } from '@/dto/pagination.dto';
 import { commonCodeMessages } from '@/settings/code-message.setting';
 
 @Injectable()
@@ -18,6 +19,15 @@ export class ResponseService {
       success: true,
       code: code || commonCodeMessages.success.code,
       message: message || commonCodeMessages.success.message,
+      data,
+    };
+  }
+
+  pagination<T>(data: PageListData<T>): PageListResponse<T> {
+    return {
+      success: true,
+      code: commonCodeMessages.success.code,
+      message: commonCodeMessages.success.message,
       data,
     };
   }

@@ -1,10 +1,17 @@
+import type { InsertBookmark, SelectBookmark } from '@/db/schemas';
+
 import { Injectable } from '@nestjs/common';
 import { eq, and, sql } from 'drizzle-orm';
 import { DatabaseService } from '@/core/database/database.service';
 import { ResponseService } from '@/core/response/response.service';
 import { bookmarksCodeMessages } from '@/settings/code-message.setting';
 import { bookmarksTable } from '@/db/schemas';
-import { CreateBookmarkDTO, UpdateBookmarkDTO } from './dto/request.dto';
+import {
+  UpdateBookmarkDTO,
+  SetFavoriteDTO,
+  SetPinnedTopDTO,
+  BookmarkPageListRequestDTO,
+} from './dto/request.dto';
 
 @Injectable()
 export class BookmarkService {
@@ -13,11 +20,11 @@ export class BookmarkService {
     private readonly responseService: ResponseService,
   ) {}
 
-  async create(userId: string, data: CreateBookmarkDTO) {
+  async create(data: InsertBookmark) {
     const newBookmark = await this.databaseService.db
       .insert(bookmarksTable)
       .values({
-        user_id: userId,
+        user_id: data.user_id,
         title: data.title,
         url: data.url,
       });
@@ -30,8 +37,7 @@ export class BookmarkService {
 
   async update(userId: string, data: UpdateBookmarkDTO) {
     const { id, ...updateData } = data;
-    // 检查书签是否存在且属于当前用户
-    const bookmark = await this.findOne(userId, id);
+    const { data: bookmark } = await this.findOne(userId, id);
 
     if (!bookmark) {
       return this.responseService.error(bookmarksCodeMessages.notFoundBookmark);
@@ -63,6 +69,22 @@ export class BookmarkService {
     return this.responseService.error(bookmarksCodeMessages.deleteError);
   }
 
+  async favorite(userId: string, data: SetFavoriteDTO) {
+    const { id, isFavorite } = data;
+    return await this.update(userId, {
+      id,
+      is_favorite: isFavorite,
+    });
+  }
+
+  async pinnedTop(userId: string, data: SetPinnedTopDTO) {
+    const { id, isPinned } = data;
+    return await this.update(userId, {
+      id,
+      is_pinned: isPinned,
+    });
+  }
+
   async findAll(userId: string) {
     const bookmarks =
       await this.databaseService.db.query.bookmarksTable.findMany({
@@ -70,7 +92,7 @@ export class BookmarkService {
         orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
       });
 
-    return this.responseService.success({ data: bookmarks });
+    return this.responseService.success<SelectBookmark[]>({ data: bookmarks });
   }
 
   async findOne(userId: string, id: string) {
@@ -83,10 +105,11 @@ export class BookmarkService {
     if (!bookmark) {
       return this.responseService.error(bookmarksCodeMessages.notFoundBookmark);
     }
-    return this.responseService.success({ data: bookmark });
+    return this.responseService.success<SelectBookmark>({ data: bookmark });
   }
 
-  async pageList(userId: string, page: number = 1, pageSize: number = 10) {
+  async pageList(userId: string, query: BookmarkPageListRequestDTO) {
+    const { page, pageSize } = query;
     const offset = (page - 1) * pageSize;
 
     const [total, bookmarks] = await Promise.all([
@@ -104,15 +127,14 @@ export class BookmarkService {
       }),
     ]);
 
-    return this.responseService.success({
-      data: {
-        list: bookmarks,
-        pagination: {
-          current: page,
-          pageSize,
-          total,
-        },
-      },
+    const totalPages = Math.ceil(total / pageSize);
+
+    return this.responseService.pagination<SelectBookmark>({
+      content: bookmarks,
+      pages: totalPages,
+      page,
+      pageSize,
+      total,
     });
   }
 }

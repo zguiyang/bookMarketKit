@@ -29,6 +29,8 @@ export const bookmarksTable = pgTable('bookmarks', {
     .defaultNow()
     .$onUpdateFn(() => new Date()),
 });
+export type InsertBookmark = typeof bookmarksTable.$inferInsert;
+export type SelectBookmark = typeof bookmarksTable.$inferSelect;
 
 // =================== 分类表 ===================
 

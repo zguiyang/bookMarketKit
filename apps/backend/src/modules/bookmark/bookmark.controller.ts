@@ -1,9 +1,24 @@
-import { Controller, Post, Put, Get, Delete, Body } from '@nestjs/common';
-import { GetCurrentUser } from '@/common/decorator/get-user.decorator';
-import { DrizzleValidationPipe } from '@/common/pipes/drizzle.validation';
+import {
+  Controller,
+  Post,
+  Put,
+  Get,
+  Delete,
+  Patch,
+  Body,
+  Param,
+  Query,
+} from '@nestjs/common';
+import { CurrentUser } from '@/common/decorator/get-user.decorator';
+import { PaginationParamsFormatPipe } from '@/common/pipes/pagination.pipe';
 import { BookmarkService } from './bookmark.service';
-import { insertBookmarkSchema, updateBookmarkSchema } from './dto/schema.dto';
-import { CreateBookmarkDTO, UpdateBookmarkDTO } from './dto/request.dto';
+import {
+  CreateBookmarkDTO,
+  UpdateBookmarkDTO,
+  SetFavoriteDTO,
+  SetPinnedTopDTO,
+  BookmarkPageListRequestDTO,
+} from './dto/request.dto';
 
 @Controller('bookmark')
 export class BookmarkController {
@@ -11,39 +26,63 @@ export class BookmarkController {
 
   @Post('create')
   async create(
-    @GetCurrentUser('userId') userId: string,
-    @Body(new DrizzleValidationPipe(insertBookmarkSchema))
+    @CurrentUser('userId') userId: string,
+    @Body()
     body: CreateBookmarkDTO,
   ) {
-    return await this.bookmarkService.create(userId, body);
+    return await this.bookmarkService.create({
+      user_id: userId,
+      ...body,
+    });
   }
 
   @Put('update')
   async update(
-    @GetCurrentUser('userId') userId: string,
-    @Body(new DrizzleValidationPipe(updateBookmarkSchema))
+    @CurrentUser('userId') userId: string,
+    @Body()
     body: UpdateBookmarkDTO,
   ) {
     return await this.bookmarkService.update(userId, body);
   }
 
   @Delete('delete/:id')
-  async delete() {
-    return await this.bookmarkService.delete();
+  async delete(@CurrentUser('userId') userId: string, @Param('id') id: string) {
+    return await this.bookmarkService.delete(userId, id);
+  }
+
+  @Patch('favorite')
+  async favorite(
+    @CurrentUser('userId') userId: string,
+    @Body()
+    body: SetFavoriteDTO,
+  ) {
+    return await this.bookmarkService.favorite(userId, body);
+  }
+
+  @Patch('pinned')
+  async pinned(
+    @CurrentUser('userId') userId: string,
+    @Body()
+    body: SetPinnedTopDTO,
+  ) {
+    return await this.bookmarkService.pinnedTop(userId, body);
   }
 
   @Get('all')
-  async all() {
-    return await this.bookmarkService.findAll();
+  async all(@CurrentUser('userId') userId: string) {
+    return await this.bookmarkService.findAll(userId);
   }
 
   @Get('detail/:id')
-  async get() {
-    return await this.bookmarkService.findOne();
+  async get(@CurrentUser('userId') userId: string, @Param('id') id: string) {
+    return await this.bookmarkService.findOne(userId, id);
   }
 
   @Get('pageList')
-  async pageList() {
-    return await this.bookmarkService.pageList();
+  async pageList(
+    @CurrentUser('userId') userId: string,
+    @Query(new PaginationParamsFormatPipe()) query: BookmarkPageListRequestDTO,
+  ) {
+    return await this.bookmarkService.pageList(userId, query);
   }
 }

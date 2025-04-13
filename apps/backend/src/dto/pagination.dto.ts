@@ -4,17 +4,17 @@ export enum PageDirectionEnum {
   DESC = 'DESC',
 }
 
-export interface PageListRequestDto {
+export class PageListRequest {
   page: number;
   pageSize: number;
   orderBy?: string;
   direction?: PageDirectionEnum;
 }
-export interface PageListDataDto<T = any> {
+export class PageListData<T = any> {
   content: T[];
   page: number;
   pages: number;
   pageSize: number;
   total: number;
 }
-export type PageListResponseDto<T = any> = ApiResponse<PageListDataDto<T>>;
+export type PageListResponse<T = any> = ApiResponse<PageListData<T>>;

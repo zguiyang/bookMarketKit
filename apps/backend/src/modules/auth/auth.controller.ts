@@ -11,7 +11,7 @@ import {
 
 import { DrizzleValidationPipe } from '@/common/pipes/drizzle.validation';
 import { PublicAPI } from '@/common/decorator/public.decorator';
-import { GetCurrentUser } from '@/common/decorator/get-user.decorator';
+import { CurrentUser } from '@/common/decorator/get-user.decorator';
 import { RequestUser } from '@/dto/request.dto';
 import { AuthService } from './auth.service';
 import {
@@ -49,13 +49,13 @@ export class AuthController {
   }
 
   @Get('currentUser')
-  async getCurrentUser(@GetCurrentUser() user: RequestUser) {
+  async getCurrentUser(@CurrentUser() user: RequestUser) {
     return await this.authService.getCurrentUser(user);
   }
 
   @Delete('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@GetCurrentUser() user: RequestUser) {
+  async logout(@CurrentUser() user: RequestUser) {
     return await this.authService.logout(user);
   }
 }

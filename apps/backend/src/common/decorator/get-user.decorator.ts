@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { RequestUser } from '@/dto/request.dto';
 
-export const GetCurrentUser = createParamDecorator(
+export const CurrentUser = createParamDecorator(
   (key: keyof RequestUser | undefined, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const user = request.user as RequestUser;
