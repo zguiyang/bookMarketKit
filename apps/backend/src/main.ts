@@ -11,6 +11,17 @@ async function bootstrap() {
     .setDescription('Book Market Kit Backend')
     .setVersion('1.0')
     .addTag('BookMarketKit')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: '输入JWT token',
+        in: 'header',
+      },
+      'jwt', // 这个是security scheme的名字，后面会用到
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
