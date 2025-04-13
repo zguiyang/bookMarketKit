@@ -61,6 +61,7 @@ export class UserService {
     });
 
     if (!user) {
+      console.error(`User with id ${id} not found`);
       throw new BusinessException(usersCodeMessages.notFoundUser);
     }
     return user;

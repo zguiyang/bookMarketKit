@@ -31,6 +31,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     };
 
+    this.logger.error(exception);
+
     // 处理验证错误
     if (exception instanceof BadRequestException) {
       const exceptionResponse = exception.getResponse() as any;
@@ -82,9 +84,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       };
       return response.status(exception.getStatus()).json(errorResponse);
     }
-
-    // 记录未知错误
-    this.logger.error('Unexpected error:', exception);
 
     // 处理其他未知异常
     errorResponse.error = {
