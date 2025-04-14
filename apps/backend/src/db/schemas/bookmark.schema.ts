@@ -93,3 +93,13 @@ export const bookmarkTagRelationsTable = pgTable(
   },
   (table) => [unique().on(table.bookmark_id, table.tag_id)],
 );
+
+// 标签类型定义
+export type InsertBookmarkTag = typeof bookmarkTagsTable.$inferInsert;
+export type SelectBookmarkTag = typeof bookmarkTagsTable.$inferSelect;
+
+// 分类类型定义
+export type InsertBookmarkCategory =
+  typeof bookmarkCategoriesTable.$inferInsert;
+export type SelectBookmarkCategory =
+  typeof bookmarkCategoriesTable.$inferSelect;

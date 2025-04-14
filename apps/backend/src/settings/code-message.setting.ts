@@ -1,52 +1,52 @@
 export const commonCodeMessages = {
-  success: { code: 'successful', message: '操作成功' },
-  fail: { code: 'failed', message: '操作失败' },
-  notLogin: { code: 'not_login', message: '用户未登录' },
-  paramsError: { code: 'params_error', message: '参数错误' },
-  serverError: { code: 'server_error', message: '服务器错误' },
-  validationError: { code: 'validation_error', message: '数据验证失败' },
-  badRequest: { code: 'bad_request', message: '无效的请求' },
+  success: { code: 'COMMON_SUCCESSFUL', message: '操作成功' },
+  fail: { code: 'COMMON_FAILED', message: '操作失败' },
+  notLogin: { code: 'COMMON_NOT_LOGIN', message: '用户未登录' },
+  paramsError: { code: 'COMMON_PARAMS_ERROR', message: '参数错误' },
+  serverError: { code: 'COMMON_SERVER_ERROR', message: '服务器错误' },
+  validationError: { code: 'COMMON_VALIDATION_ERROR', message: '数据验证失败' },
+  badRequest: { code: 'COMMON_BAD_REQUEST', message: '无效的请求' },
 };
 
 export const authCodeMessages = {
   passwordError: {
-    code: 'auth_password-error',
+    code: 'AUTH_PASSWORD_ERROR',
     message: '密码错误',
   },
   emailNotFound: {
-    code: 'auth_email-not-found',
+    code: 'AUTH_EMAIL_NOT_FOUND',
     message: '邮箱不存在',
   },
   emailCodeError: {
-    code: 'auth_email-code-error',
+    code: 'AUTH_EMAIL_CODE_ERROR',
     message: '验证码错误',
   },
   emailCodeExist: {
-    code: 'auth_email-code-exist',
+    code: 'AUTH_EMAIL_CODE_EXIST',
     message: '验证码已发送，请查收邮件或等待验证码过期后重试',
   },
   emailCodeTooFrequent: {
-    code: 'auth_email-code-too-frequent',
+    code: 'AUTH_EMAIL_CODE_TOO_FREQUENT',
     message: '发送太频繁，请稍后再试',
   },
   notFoundToken: {
-    code: 'auth_not-found-token',
+    code: 'AUTH_NOT_FOUND_TOKEN',
     message: '未找到Token',
   },
   tokenExpired: {
-    code: 'auth_token-expired',
+    code: 'AUTH_TOKEN_EXPIRED',
     message: 'Token已过期',
   },
   tokenError: {
-    code: 'auth_token-error',
+    code: 'AUTH_TOKEN_ERROR',
     message: 'Token错误',
   },
 } as const;
 
 export const usersCodeMessages = {
-  createError: { code: 'user_create_error', message: '创建用户失败' },
-  notFoundUser: { code: 'user_not_found', message: '用户不存在' },
-  existedUser: { code: 'user_existed', message: '用户已存在' },
+  createError: { code: 'USER_CREATE_ERROR', message: '创建用户失败' },
+  notFoundUser: { code: 'USER_NOT_FOUND', message: '用户不存在' },
+  existedUser: { code: 'USER_ALREADY_EXISTS', message: '用户已存在' },
 };
 
 export const bookmarksCodeMessages = {
@@ -55,7 +55,7 @@ export const bookmarksCodeMessages = {
     message: '书签不存在',
   },
   existedBookmark: {
-    code: 'BOOKMARK_EXISTED',
+    code: 'BOOKMARK_ALREADY_EXISTS',
     message: '该URL已被收藏',
   },
   createError: {
@@ -69,5 +69,53 @@ export const bookmarksCodeMessages = {
   deleteError: {
     code: 'BOOKMARK_DELETE_ERROR',
     message: '删除书签失败',
+  },
+};
+
+// 书签标签相关错误码
+export const bookmarkTagCodeMessages = {
+  notFoundTag: {
+    code: 'BOOKMARK_TAG_NOT_FOUND',
+    message: '标签不存在',
+  },
+  existedTag: {
+    code: 'BOOKMARK_TAG_ALREADY_EXISTS',
+    message: '标签已存在',
+  },
+  createTagError: {
+    code: 'BOOKMARK_TAG_CREATE_ERROR',
+    message: '创建标签失败',
+  },
+  updateTagError: {
+    code: 'BOOKMARK_TAG_UPDATE_ERROR',
+    message: '更新标签失败',
+  },
+  deleteTagError: {
+    code: 'BOOKMARK_TAG_DELETE_ERROR',
+    message: '删除标签失败',
+  },
+};
+
+// 书签分类相关错误码
+export const bookmarkCategoryCodeMessages = {
+  notFoundCategory: {
+    code: 'BOOKMARK_CATEGORY_NOT_FOUND',
+    message: '分类不存在',
+  },
+  existedCategory: {
+    code: 'BOOKMARK_CATEGORY_ALREADY_EXISTS',
+    message: '分类已存在',
+  },
+  createCategoryError: {
+    code: 'BOOKMARK_CATEGORY_CREATE_ERROR',
+    message: '创建分类失败',
+  },
+  updateCategoryError: {
+    code: 'BOOKMARK_CATEGORY_UPDATE_ERROR',
+    message: '更新分类失败',
+  },
+  deleteCategoryError: {
+    code: 'BOOKMARK_CATEGORY_DELETE_ERROR',
+    message: '删除分类失败',
   },
 };

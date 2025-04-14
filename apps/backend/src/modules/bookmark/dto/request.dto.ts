@@ -38,6 +38,22 @@ export class CreateBookmarkDTO {
     required: true,
   })
   url: string;
+
+  @ApiProperty({
+    description: '分类ID列表',
+    example: ['uuid-category-id-1', 'uuid-category-id-2'],
+    required: false,
+    type: [String],
+  })
+  categoryIds?: string[];
+
+  @ApiProperty({
+    description: '标签ID列表',
+    example: ['uuid-tag-id-1', 'uuid-tag-id-2'],
+    required: false,
+    type: [String],
+  })
+  tagIds?: string[];
 }
 
 export class UpdateBookmarkDTO {
@@ -112,6 +128,22 @@ export class UpdateBookmarkDTO {
     required: false,
   })
   last_visited_at?: string;
+
+  @ApiProperty({
+    description: '分类ID列表',
+    example: ['uuid-category-id-1', 'uuid-category-id-2'],
+    required: false,
+    type: [String],
+  })
+  categoryIds?: string[];
+
+  @ApiProperty({
+    description: '标签ID列表',
+    example: ['uuid-tag-id-1', 'uuid-tag-id-2'],
+    required: false,
+    type: [String],
+  })
+  tagIds?: string[];
 }
 
 export class SetFavoriteDTO {

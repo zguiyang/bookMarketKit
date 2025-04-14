@@ -11,27 +11,50 @@ import {
   SetFavoriteDTO,
   SetPinnedTopDTO,
   UpdateBookmarkDTO,
+  CreateBookmarkDTO,
 } from './dto/request.dto';
 import { PageListData } from '@/dto/pagination.dto';
+import { BookmarkRelationService } from './bookmark.rel.service';
 
 @Injectable()
 export class BookmarkService {
-  constructor(@Inject(DB_PROVIDER) private readonly database: DbType) {}
+  constructor(
+    @Inject(DB_PROVIDER) private readonly database: DbType,
+    private readonly bookmarkRelationService: BookmarkRelationService,
+  ) {}
 
-  async create(data: InsertBookmark) {
-    const newBookmark = await this.database.insert(bookmarksTable).values({
-      user_id: data.user_id,
-      title: data.title,
-      url: data.url,
-    });
+  async create(
+    data: InsertBookmark & Pick<CreateBookmarkDTO, 'categoryIds' | 'tagIds'>,
+  ) {
+    const { categoryIds, tagIds, ...bookmarkData } = data;
 
-    if (newBookmark.rowCount < 1) {
+    const newBookmark = await this.database
+      .insert(bookmarksTable)
+      .values({
+        user_id: bookmarkData.user_id,
+        title: bookmarkData.title,
+        url: bookmarkData.url,
+      })
+      .returning();
+
+    if (newBookmark.length < 1) {
       throw new BusinessException(bookmarksCodeMessages.createError);
     }
+
+    const bookmarkId = newBookmark[0].id;
+
+    // 处理分类和标签关联
+    await this.bookmarkRelationService.handleRelations(
+      bookmarkId,
+      categoryIds,
+      tagIds,
+    );
+
+    return bookmarkId;
   }
 
   async update(userId: string, data: UpdateBookmarkDTO) {
-    const { id, ...updateData } = data;
+    const { id, categoryIds, tagIds, ...updateData } = data;
     const bookmark = await this.findOne(userId, id);
 
     if (!bookmark) {
@@ -48,9 +71,16 @@ export class BookmarkService {
     if (result.rowCount < 1) {
       throw new BusinessException(bookmarksCodeMessages.updateError);
     }
+
+    // 处理分类和标签关联
+    await this.bookmarkRelationService.handleRelations(id, categoryIds, tagIds);
   }
 
   async delete(userId: string, id: string) {
+    // 先删除关联关系
+    await this.bookmarkRelationService.removeAllRelations(id);
+
+    // 再删除书签
     const result = await this.database
       .delete(bookmarksTable)
       .where(
@@ -85,10 +115,17 @@ export class BookmarkService {
     });
   }
 
-  async findOne(userId: string, id: string): Promise<SelectBookmark> {
+  async findOne(
+    userId: string,
+    id: string,
+  ): Promise<SelectBookmark & { categories?: any[]; tags?: any[] }> {
     const bookmark = await this.database.query.bookmarksTable.findFirst({
       where: (bookmarks, { eq, and }) =>
         and(eq(bookmarks.id, id), eq(bookmarks.user_id, userId)),
+      with: {
+        categories: true,
+        tags: true,
+      },
     });
 
     if (!bookmark) {
