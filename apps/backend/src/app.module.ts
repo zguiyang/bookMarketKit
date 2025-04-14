@@ -12,9 +12,6 @@ import { AuthModule } from '@/modules/auth/auth.module';
 import { UserModule } from '@/modules/user/user.module';
 import { BookmarkModule } from '@/modules/bookmark/bookmark.module';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,9 +27,8 @@ import { AppService } from './app.service';
     AuthModule,
     BookmarkModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
