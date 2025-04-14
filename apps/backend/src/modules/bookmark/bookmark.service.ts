@@ -14,7 +14,7 @@ import {
   CreateBookmarkDTO,
 } from './dto/request.dto';
 import { PageListData } from '@/dto/pagination.dto';
-import { BookmarkRelationService } from './bookmark.rel.service';
+import { BookmarkRelationService } from './rel/bookmark.rel.service';
 
 @Injectable()
 export class BookmarkService {
@@ -22,6 +22,17 @@ export class BookmarkService {
     @Inject(DB_PROVIDER) private readonly database: DbType,
     private readonly bookmarkRelationService: BookmarkRelationService,
   ) {}
+
+  private _processBookmarkRelations(data: any) {
+    if (!data) return null;
+
+    const { categories = [], tags = [], ...rest } = data;
+    return {
+      ...rest,
+      categories: categories.map((item: any) => item.category),
+      tags: tags.map((item: any) => item.tag),
+    };
+  }
 
   async create(
     data: InsertBookmark & Pick<CreateBookmarkDTO, 'categoryIds' | 'tagIds'>,
@@ -109,29 +120,51 @@ export class BookmarkService {
   }
 
   async findAll(userId: string): Promise<SelectBookmark[]> {
-    return this.database.query.bookmarksTable.findMany({
+    const bookmarks = await this.database.query.bookmarksTable.findMany({
       where: (bookmarks, { eq }) => eq(bookmarks.user_id, userId),
       orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
+      with: {
+        categories: {
+          with: {
+            category: true,
+          },
+        },
+        tags: {
+          with: {
+            tag: true,
+          },
+        },
+      },
     });
+
+    return bookmarks.map((bookmark) =>
+      this._processBookmarkRelations(bookmark),
+    );
   }
 
-  async findOne(
-    userId: string,
-    id: string,
-  ): Promise<SelectBookmark & { categories?: any[]; tags?: any[] }> {
+  async findOne(userId: string, id: string): Promise<SelectBookmark> {
     const bookmark = await this.database.query.bookmarksTable.findFirst({
       where: (bookmarks, { eq, and }) =>
         and(eq(bookmarks.id, id), eq(bookmarks.user_id, userId)),
       with: {
-        categories: true,
-        tags: true,
+        categories: {
+          with: {
+            category: true,
+          },
+        },
+        tags: {
+          with: {
+            tag: true,
+          },
+        },
       },
     });
 
     if (!bookmark) {
       throw new BusinessException(bookmarksCodeMessages.notFoundBookmark);
     }
-    return bookmark;
+
+    return this._processBookmarkRelations(bookmark);
   }
 
   async pageList(
@@ -153,12 +186,26 @@ export class BookmarkService {
         orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
         limit: pageSize,
         offset,
+        with: {
+          categories: {
+            with: {
+              category: true,
+            },
+          },
+          tags: {
+            with: {
+              tag: true,
+            },
+          },
+        },
       }),
     ]);
 
     const totalPages = Math.ceil(total / pageSize);
     return {
-      content: bookmarks,
+      content: bookmarks.map((bookmark) =>
+        this._processBookmarkRelations(bookmark),
+      ),
       pages: totalPages,
       page,
       pageSize,

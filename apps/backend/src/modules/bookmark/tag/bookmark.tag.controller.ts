@@ -17,7 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/decorator/get-user.decorator';
 import { BookmarkTagService } from './bookmark.tag.service';
-import { CreateTagDTO, UpdateTagDTO } from './dto/tag.dto';
+import { CreateTagDTO, UpdateTagDTO } from './dto/request.dto';
 
 @ApiTags('书签标签')
 @ApiBearerAuth('jwt')

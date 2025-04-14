@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { BookmarkService } from './bookmark.service';
 import { BookmarkController } from './bookmark.controller';
-import { BookmarkRelationService } from './bookmark.rel.service';
-import { BookmarkTagService } from './bookmark.tag.service';
-import { BookmarkCategoryService } from './bookmark.category.service';
-import { BookmarkTagController } from './bookmark.tag.controller';
-import { BookmarkCategoryController } from './bookmark.category.controller';
+import { BookmarkRelationService } from './rel/bookmark.rel.service';
+import { BookmarkCategoryController } from './category/bookmark.category.controller';
+import { BookmarkCategoryService } from './category/bookmark.category.service';
+import { BookmarkTagController } from './tag/bookmark.tag.controller';
+import { BookmarkTagService } from './tag/bookmark.tag.service';
 
 @Module({
   controllers: [

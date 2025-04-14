@@ -16,13 +16,6 @@ export class CreateCategoryDTO {
   description?: string;
 
   @ApiProperty({
-    description: '分类颜色',
-    example: '#FF0000',
-    required: false,
-  })
-  color?: string;
-
-  @ApiProperty({
     description: '分类图标',
     example: 'icon-frontend',
     required: false,
@@ -58,13 +51,6 @@ export class UpdateCategoryDTO {
     required: false,
   })
   description?: string;
-
-  @ApiProperty({
-    description: '分类颜色',
-    example: '#FF0000',
-    required: false,
-  })
-  color?: string;
 
   @ApiProperty({
     description: '分类图标',

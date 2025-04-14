@@ -17,7 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/decorator/get-user.decorator';
 import { BookmarkCategoryService } from './bookmark.category.service';
-import { CreateCategoryDTO, UpdateCategoryDTO } from './dto/category.dto';
+import { CreateCategoryDTO, UpdateCategoryDTO } from './dto/request.dto';
 
 @ApiTags('书签分类')
 @ApiBearerAuth('jwt')
