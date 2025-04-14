@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import {  useRequest } from 'alova/client'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -16,10 +17,21 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { LoginFormValues, loginSchema } from "@/lib/validations/auth"
+
+import { AuthApi } from '@/api/auth';
+import { useAuthStore } from '@/store/auth.store';
+
+import { LoginFormValues, loginSchema } from "./validation"
 
 export default function LoginPage() {
   const router = useRouter()
+  const { setToken, setUserInfo } = useAuthStore();
+  const { send: postLogin } = useRequest(AuthApi.login, {
+    immediate: false,
+  });
+  const { send: getLoginUserInfo } = useRequest(AuthApi.queryCurrentUser, {
+    immediate: false,
+  });
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<LoginFormValues>({
@@ -33,9 +45,15 @@ export default function LoginPage() {
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true)
     try {
-      // TODO: 实现登录逻辑
-      console.log(data)
-      router.push("/dashboard")
+    const res =  await postLogin(data)
+      if (res.success) {
+        setToken(res.data);
+
+        const userRes = await getLoginUserInfo();
+        setUserInfo(userRes.data);
+
+        router.push("/")
+      }
     } catch (error) {
       console.error(error)
     } finally {
@@ -94,9 +112,9 @@ export default function LoginPage() {
               </FormItem>
             )}
           />
-          <Button 
-            type="submit" 
-            className="h-11 w-full bg-gradient-to-r from-primary to-primary/80" 
+          <Button
+            type="submit"
+            className="h-11 w-full bg-gradient-to-r from-primary to-primary/80"
             disabled={isLoading}
           >
             {isLoading ? "登录中..." : "登录"}
@@ -118,8 +136,8 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-muted-foreground">
           还没有账号？{" "}
-          <Link 
-            href="/auth/register" 
+          <Link
+            href="/auth/register"
             className="font-medium text-primary hover:text-primary/80"
           >
             立即注册
@@ -128,4 +146,4 @@ export default function LoginPage() {
       </div>
     </div>
   )
-} 
+}

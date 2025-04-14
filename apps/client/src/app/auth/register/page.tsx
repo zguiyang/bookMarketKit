@@ -16,7 +16,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { RegisterFormValues, registerSchema } from "@/lib/validations/auth"
+
+import { RegisterFormValues, registerSchema } from "./validation"
 
 export default function RegisterPage() {
   const router = useRouter()

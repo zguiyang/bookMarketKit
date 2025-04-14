@@ -14,7 +14,7 @@ alwaysApply: false
 - **ORM**：Drizzle ORM
 - **缓存**：Redis
 - **认证**：Passport / JWT
-- **验证**：Zod / class-validator
+- **验证** class-validator class-transform
 - **API文档**：Swagger/OpenAPI
 
 ## 目录结构规范

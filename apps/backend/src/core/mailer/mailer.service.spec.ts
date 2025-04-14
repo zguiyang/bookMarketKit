@@ -11,7 +11,7 @@ describe('MailerService', () => {
       imports: [
         // 加载环境变量配置
         await ConfigModule.forRoot({
-          envFilePath: '.env.local',
+          envFilePath: '.env.development',
         }),
         MailerModule,
       ],
