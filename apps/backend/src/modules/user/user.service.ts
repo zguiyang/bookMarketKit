@@ -55,9 +55,17 @@ export class UserService {
     });
   }
 
-  async findOne(id: string): Promise<SelectUser> {
+  async findOne(
+    id: string,
+  ): Promise<Omit<SelectUser, 'password' | 'created_at' | 'updated_at'>> {
     const user = await this.database.query.usersTable.findFirst({
       where: (user, { eq }) => eq(user.id, id),
+      columns: {
+        id: true,
+        nickname: true,
+        username: true,
+        email: true,
+      },
     });
 
     if (!user) {
