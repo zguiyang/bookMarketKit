@@ -2,13 +2,14 @@
 
 import { createContext, useCallback, useContext, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuthStore } from '@/store/auth.store'
+import { LoginUserInfoResponse } from '@/api/auth'
+import { useAuthStore } from '@/store/auth.store';
 
 // 定义认证上下文类型
 interface AuthContextType {
   isLoading: boolean
+  currentUser: LoginUserInfoResponse | null
   isAuthenticated: boolean
-  checkAuth: () => Promise<void>
 }
 
 // 创建认证上下文
@@ -29,28 +30,28 @@ export function AuthProvider({
   requireAuth = true,
 }: AuthProviderProps) {
   const router = useRouter()
-  const { token, userInfo, removeToken, removeUserInfo } = useAuthStore()
+  const { authToken, userInfo, queryUserInfo } = useAuthStore();
 
-  // 检查认证状态
+
   const checkAuth = useCallback(async () => {
-    // 如果没有token或userInfo，且需要认证，则重定向到登录页
-    if ((!token || !userInfo) && requireAuth) {
-      removeToken()
-      removeUserInfo()
+    if (!authToken) {
       router.push(redirectTo)
       return
     }
-  }, [token, userInfo, requireAuth, redirectTo, router, removeToken, removeUserInfo])
+    if (!userInfo) {
+      await queryUserInfo();
+    }
+  }, [authToken, requireAuth, redirectTo, router, userInfo, queryUserInfo])
 
-  // 组件挂载时检查认证状态
+
   useEffect(() => {
-    checkAuth()
+    void checkAuth()
   }, [checkAuth])
 
   const value = {
     isLoading: false,
-    isAuthenticated: !!token && !!userInfo,
-    checkAuth,
+    isAuthenticated: !!authToken,
+    currentUser: userInfo,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

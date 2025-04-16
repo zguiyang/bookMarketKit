@@ -25,13 +25,11 @@ import { LoginFormValues, loginSchema } from "./validation"
 
 export default function LoginPage() {
   const router = useRouter()
-  const { setToken, setUserInfo } = useAuthStore();
+  const {  setAuthToken } = useAuthStore();
   const { send: postLogin } = useRequest(AuthApi.login, {
     immediate: false,
   });
-  const { send: getLoginUserInfo } = useRequest(AuthApi.queryCurrentUser, {
-    immediate: false,
-  });
+
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<LoginFormValues>({
@@ -47,11 +45,7 @@ export default function LoginPage() {
     try {
     const res =  await postLogin(data)
       if (res.success) {
-        setToken(res.data);
-
-        const userRes = await getLoginUserInfo();
-        setUserInfo(userRes.data);
-
+        setAuthToken(res.data);
         router.push("/")
       }
     } catch (error) {

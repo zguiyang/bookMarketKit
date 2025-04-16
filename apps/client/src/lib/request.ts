@@ -14,7 +14,7 @@ const alovaInstance = createAlova({
     statesHook:reactHook,
     requestAdapter: axiosRequestAdapter(),
     beforeRequest(method) {
-        const authToken = useAuthStore.getState().token;
+        const authToken = useAuthStore.getState().authToken;
         method.config.headers.Authorization = `Bearer ${authToken}`
     },
     responded: {

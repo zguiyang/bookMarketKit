@@ -1,31 +1,53 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware';
-import { LoginUserInfoResponse } from '@/api/auth';
+import { AuthApi, LoginUserInfoResponse } from '@/api/auth';
+import { getToken, saveToken, removeToken } from '@/lib/auth'
 
 export interface AuthStore {
-    token: string | null;
+    authToken: string | null;
     userInfo:null | LoginUserInfoResponse;
-    setToken: (token: string) => void;
-    removeToken: () => void;
-    setUserInfo: (userInfo: { username?: string; }) => void;
-    removeUserInfo: () => void;
+    setAuthToken: (token: string) => void;
+    removeAuthToken: () => void;
+    setUserInfo: (userInfo: LoginUserInfoResponse | null) => void;
+    queryUserInfo: () => Promise<void>;
+    clearAuthInfo: () => void;
 }
 
-const AUTH_STORE_PERSIST_KEY = 'BOOK_MARKET_KIT_AUTH_STORE';
-export const useAuthStore = create<AuthStore>()(
-    persist(
-        (set) => ({
-            token: null,
-            userInfo: null,
-            setToken: (token) => set({
-                token,
-            }),
-            removeToken: () => set({ token: null }),
-            setUserInfo: (info: any) => set({ userInfo:info }),
-            removeUserInfo: () => set({ userInfo: null }),
-        }),
-        {
-            name: AUTH_STORE_PERSIST_KEY,
-        }
-    )
-)
+export const useAuthStore = create<AuthStore>((set, get) => ({
+    authToken: getToken(),
+    userInfo: null,
+    setAuthToken: (token: string) => {
+        saveToken(token);
+        return set({
+            authToken: token,
+        })
+    },
+    removeAuthToken: () => {
+        removeToken()
+        return set({
+            authToken: null,
+        })
+
+    },
+    async queryUserInfo() {
+      try {
+          const { success, data } = await AuthApi.queryCurrentUser();
+          if (success && data) {
+             get().setUserInfo(data);
+          } else {
+              get().clearAuthInfo();
+          }
+      } catch (err) {
+          console.error(err);
+          get().clearAuthInfo();
+      }
+    },
+    setUserInfo: (userInfo: LoginUserInfoResponse | null) => {
+        return set({
+            userInfo,
+        })
+    },
+    clearAuthInfo: () => {
+        get().removeAuthToken();
+        get().setUserInfo(null);
+    }
+}))
