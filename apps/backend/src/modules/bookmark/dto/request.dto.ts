@@ -33,6 +33,20 @@ export class CreateBookmarkDTO {
   title: string;
 
   @ApiProperty({
+    description: '书签图标',
+    example: 'ico',
+    required: true,
+  })
+  icon: string;
+
+  @ApiProperty({
+    description: '书签描述',
+    example: '我的书签描述',
+    required: true,
+  })
+  description?: string;
+
+  @ApiProperty({
     description: '书签URL',
     example: 'https://example.com',
     required: true,

@@ -45,6 +45,7 @@ export class BookmarkService {
         user_id: bookmarkData.user_id,
         title: bookmarkData.title,
         url: bookmarkData.url,
+        icon: bookmarkData.icon,
       })
       .returning();
 
@@ -186,6 +187,18 @@ export class BookmarkService {
         orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
         limit: pageSize,
         offset,
+        columns: {
+          id: true,
+          title: true,
+          url: true,
+          description: true,
+          visit_count: true,
+          is_favorite: true,
+          is_pinned: true,
+          icon: true,
+          screenshot_url: true,
+          last_visited_at: true,
+        },
         with: {
           categories: {
             with: {
@@ -210,6 +223,87 @@ export class BookmarkService {
       page,
       pageSize,
       total,
+    };
+  }
+
+  /**
+   * 获取书签集合数据
+   * 目前包含：
+   * 1. 置顶书签列表
+   * 2. 最近访问书签列表（不包含置顶书签）
+   */
+  async findCollection(userId: string): Promise<{
+    pinnedBookmarks: SelectBookmark[];
+    recentBookmarks: SelectBookmark[];
+  }> {
+    const [pinnedBookmarks, recentBookmarks] = await Promise.all([
+      // 获取置顶书签
+      this.database.query.bookmarksTable.findMany({
+        where: (bookmarks, { eq, and }) =>
+          and(eq(bookmarks.user_id, userId), eq(bookmarks.is_pinned, 1)),
+        orderBy: (bookmarks, { desc }) => [desc(bookmarks.updated_at)],
+        columns: {
+          id: true,
+          title: true,
+          url: true,
+          is_favorite: true,
+          is_pinned: true,
+          last_visited_at: true,
+        },
+        with: {
+          categories: {
+            with: {
+              category: true,
+            },
+          },
+          tags: {
+            with: {
+              tag: true,
+            },
+          },
+        },
+      }),
+
+      // 获取最近访问的书签（不包括置顶的）
+      this.database.query.bookmarksTable.findMany({
+        where: (bookmarks, { eq, and, isNotNull }) =>
+          and(
+            eq(bookmarks.user_id, userId),
+            eq(bookmarks.is_pinned, 0),
+            isNotNull(bookmarks.last_visited_at),
+          ),
+        orderBy: (bookmarks, { desc }) => [desc(bookmarks.last_visited_at)],
+        columns: {
+          id: true,
+          title: true,
+          url: true,
+          is_favorite: true,
+          is_pinned: true,
+          last_visited_at: true,
+        },
+        limit: 10,
+        with: {
+          categories: {
+            with: {
+              category: true,
+            },
+          },
+          tags: {
+            with: {
+              tag: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    return {
+      pinnedBookmarks: pinnedBookmarks.map((bookmark) =>
+        this._processBookmarkRelations(bookmark),
+      ),
+      recentBookmarks: recentBookmarks.map((bookmark) =>
+        this._processBookmarkRelations(bookmark),
+      ),
     };
   }
 }

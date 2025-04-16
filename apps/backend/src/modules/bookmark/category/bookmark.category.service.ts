@@ -17,6 +17,7 @@ export class BookmarkCategoryService {
    * 创建分类
    */
   async create(data: InsertBookmarkCategory): Promise<SelectBookmarkCategory> {
+    console.log(data);
     const existingCategory = await this.findByName(data.user_id, data.name);
     if (existingCategory) {
       throw new BusinessException(bookmarkCategoryCodeMessages.existedCategory);
@@ -44,7 +45,7 @@ export class BookmarkCategoryService {
     userId: string,
     id: string,
     data: Partial<InsertBookmarkCategory>,
-  ): Promise<SelectBookmarkCategory> {
+  ) {
     const category = await this.findOne(userId, id);
     if (!category) {
       throw new BusinessException(
@@ -105,7 +106,7 @@ export class BookmarkCategoryService {
   /**
    * 获取用户所有分类
    */
-  async findAll(userId: string): Promise<SelectBookmarkCategory[]> {
+  async findAll(userId: string) {
     return this.database.query.bookmarkCategoriesTable.findMany({
       where: (categories, { eq }) => eq(categories.user_id, userId),
       orderBy: (categories, { desc }) => [desc(categories.created_at)],
@@ -115,10 +116,7 @@ export class BookmarkCategoryService {
   /**
    * 根据ID获取分类
    */
-  async findOne(
-    userId: string,
-    id: string,
-  ): Promise<SelectBookmarkCategory | null> {
+  async findOne(userId: string, id: string) {
     return this.database.query.bookmarkCategoriesTable.findFirst({
       where: (categories, { eq, and }) =>
         and(eq(categories.id, id), eq(categories.user_id, userId)),
@@ -128,10 +126,7 @@ export class BookmarkCategoryService {
   /**
    * 根据名称查找分类
    */
-  private async findByName(
-    userId: string,
-    name: string,
-  ): Promise<SelectBookmarkCategory | null> {
+  private async findByName(userId: string, name: string) {
     return this.database.query.bookmarkCategoriesTable.findFirst({
       where: (categories, { eq, and }) =>
         and(eq(categories.name, name), eq(categories.user_id, userId)),

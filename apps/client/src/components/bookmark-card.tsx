@@ -1,5 +1,6 @@
 import { Star, StarOff, ExternalLink, Clock, MoreHorizontal, Copy, Pin } from "lucide-react"
-import { Bookmark } from "@/types/bookmark"
+import dayjs from "dayjs";
+import {  Bookmark } from '@/api/bookmark';
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { 
   DropdownMenu, 
@@ -14,10 +15,10 @@ import { cn } from "@/lib/utils"
 
 interface BookmarkCardProps {
   bookmark: Bookmark
-  onStarClick: (bookmark: Bookmark) => void
+  onStarClick?: (bookmark: Bookmark) => void
   onDeleteClick?: (bookmark: Bookmark) => void
   onEditClick?: (bookmark: Bookmark) => void
-  onPinClick: () => void
+  onPinClick?: () => void
 }
 
 export function BookmarkCard({ 
@@ -28,11 +29,7 @@ export function BookmarkCard({
   onPinClick 
 }: BookmarkCardProps) {
   // 格式化最后访问日期
-  const formattedDate = new Date(bookmark.lastVisited).toLocaleDateString("zh-CN", {
-    year: "numeric",
-    month: "short",
-    day: "numeric"
-  });
+  const formattedDate = bookmark.last_visited_at ? dayjs(bookmark.last_visited_at).format('YYYY-MM-DD HH:mm:ss') : '';
 
   const handleCopyUrl = async () => {
     try {
@@ -78,11 +75,11 @@ export function BookmarkCard({
               onClick={() => onStarClick(bookmark)}
               className={cn(
                 "size-8",
-                bookmark.starred && "text-yellow-500"
+                bookmark.is_favorite && "text-yellow-500"
               )}
-              title={bookmark.starred ? "取消收藏" : "收藏"}
+              title={bookmark.is_favorite ? "取消收藏" : "收藏"}
             >
-              {bookmark.starred ? (
+              {bookmark.is_favorite ? (
                 <Star className="size-4 fill-current" />
               ) : (
                 <StarOff className="size-4" />
@@ -123,7 +120,7 @@ export function BookmarkCard({
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onPinClick}>
                   <Pin className="size-4 mr-2" />
-                  {bookmark.pinned ? "取消置顶" : "置顶"}
+                  {bookmark.is_pinned ? "取消置顶" : "置顶"}
                 </DropdownMenuItem>
                 {(onEditClick || onDeleteClick) && <DropdownMenuSeparator />}
                 {onEditClick && (
@@ -151,22 +148,19 @@ export function BookmarkCard({
         )}
         
         <div className="flex flex-wrap gap-1.5 mb-3">
-          {bookmark.category && (
-            <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-              {bookmark.category}
+          {bookmark.categories.map((category) => (
+              <span
+                  key={category.id}
+                  className="px-2 py-0.5 rounded-md text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+              {category.name}
             </span>
-          )}
-          {bookmark.subcategory && (
-            <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-              {bookmark.subcategory}
-            </span>
-          )}
-          {bookmark.tags.map((tag, index) => (
+          ))}
+          {bookmark.tags.map((tag) => (
             <span
-              key={index}
+              key={tag.id}
               className="px-2 py-0.5 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
             >
-              {tag}
+              {tag.name}
             </span>
           ))}
         </div>

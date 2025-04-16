@@ -128,4 +128,61 @@ export class BookmarkController {
   ) {
     return await this.bookmarkService.pageList(userId, query);
   }
+
+  @Get('collection')
+  @ApiOperation({
+    summary: '获取书签集合数据',
+    description: '获取用户的书签相关数据集合，包括置顶书签、最近访问书签等',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '成功获取书签集合数据',
+    schema: {
+      properties: {
+        pinnedBookmarks: {
+          type: 'array',
+          description: '置顶书签列表',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              title: { type: 'string' },
+              url: { type: 'string' },
+              description: { type: 'string' },
+              favicon_url: { type: 'string' },
+              screenshot_url: { type: 'string' },
+              visit_count: { type: 'number' },
+              is_favorite: { type: 'number' },
+              is_pinned: { type: 'number' },
+              categories: { type: 'array', items: { type: 'object' } },
+              tags: { type: 'array', items: { type: 'object' } },
+            },
+          },
+        },
+        recentBookmarks: {
+          type: 'array',
+          description: '最近访问书签列表',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              title: { type: 'string' },
+              url: { type: 'string' },
+              description: { type: 'string' },
+              favicon_url: { type: 'string' },
+              screenshot_url: { type: 'string' },
+              visit_count: { type: 'number' },
+              is_favorite: { type: 'number' },
+              is_pinned: { type: 'number' },
+              categories: { type: 'array', items: { type: 'object' } },
+              tags: { type: 'array', items: { type: 'object' } },
+            },
+          },
+        },
+      },
+    },
+  })
+  async getCollection(@CurrentUser('userId') userId: string) {
+    return await this.bookmarkService.findCollection(userId);
+  }
 }

@@ -18,12 +18,12 @@ export const bookmarksTable = pgTable('bookmarks', {
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),
   url: text().notNull(),
+  icon: text().notNull(),
   title: varchar({ length: 255 }).notNull(),
   description: text().default(null),
   visit_count: integer().default(0),
   is_favorite: integer().default(0),
   is_pinned: integer().default(0),
-  favicon_url: text().default(null),
   screenshot_url: text().default(null),
   last_visited_at: timestamp().default(null),
   created_at: timestamp().defaultNow(),
