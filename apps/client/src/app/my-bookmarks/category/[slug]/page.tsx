@@ -2,21 +2,68 @@
 
 import { useParams } from 'next/navigation'
 import { PageHeader } from '@/components/page-header'
+import { BookmarkCard } from "@/components/bookmark/bookmark-card"
+import { EmptyPlaceholder } from "@/components/empty-placeholder"
+import { FolderOpen } from "lucide-react"
+import { BookmarkSkeleton } from "@/components/bookmark/bookmark-skeleton"
+import { usePagination } from 'alova/client';
+import { BookmarkApi } from '@/api/bookmark';
 
 export default function CategoryPage() {
   const params = useParams()
-  const categorySlug = decodeURIComponent(params.slug as string)
+  const categorySlug = params.slug as string
+
+  const {
+    data: bookmarkList = [],
+    send: getPageList,
+    loading: isLoading,
+  } = usePagination(
+    (page, pageSize) => BookmarkApi.pageList({
+      page,
+      pageSize,
+      categoryId: categorySlug,
+    }),
+    {
+      append: false,
+      initialPage: 1,
+      initialPageSize: 40,
+      total: ({data: res}) => res.total,
+      data: ({data: res}) => res.content,
+    }
+  )
+
+  const handleUpdateAction = async () => {
+    await getPageList();
+  }
 
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="space-y-4 p-4 md:p-8 pt-6">
         <PageHeader 
-          title={`分类：${categorySlug}`}
-          description="查看此分类下的所有书签"
+          title={`分类：${decodeURIComponent(categorySlug)}`}
+          description={`查看分类"${decodeURIComponent(categorySlug)}"下的所有书签`}
         />
-        {/* 这里后续可以添加书签列表组件 */}
-        <div className="grid gap-4">
-          {/* BookmarkList组件将在这里添加 */}
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {isLoading ? (
+            <BookmarkSkeleton count={6} />
+          ) : bookmarkList.length === 0 ? (
+            <div className="col-span-full">
+              <EmptyPlaceholder
+                icon={FolderOpen}
+                title="暂无相关书签"
+                description={`当前分类下还没有任何书签，可以通过添加书签时选择此分类来添加内容。`}
+              />
+            </div>
+          ) : (
+            bookmarkList.map(bookmark => (
+              <BookmarkCard
+                key={bookmark.id}
+                bookmark={bookmark}
+                onUpdateBookmark={handleUpdateAction}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

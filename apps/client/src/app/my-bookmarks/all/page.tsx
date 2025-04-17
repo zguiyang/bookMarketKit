@@ -4,7 +4,9 @@ import {useState} from "react"
 import { usePagination } from 'alova/client';
 import {BookmarkApi} from '@/api/bookmark';
 import {BookmarkCard} from "@/components/bookmark/bookmark-card"
-import { BookmarkSkeleton } from "@/components/bookmark/bookmark-skeleton"
+import {BookmarkSkeleton} from "@/components/bookmark/bookmark-skeleton"
+import {EmptyPlaceholder} from "@/components/empty-placeholder"
+import {BookmarkPlus} from "lucide-react"
 import {
     Pagination,
     PaginationContent,
@@ -62,8 +64,12 @@ export default function AllBookmarksPage() {
                 {isLoading ? (
                     <BookmarkSkeleton count={8} />
                 ) : bookmarkList.length === 0 ? (
-                    <div className="col-span-full text-center text-muted-foreground py-8">
-                        暂无书签
+                    <div className="col-span-full">
+                        <EmptyPlaceholder
+                            icon={BookmarkPlus}
+                            title="暂无书签"
+                            description='开始添加你的第一个书签吧！点击右上角的"添加书签"按钮开始。'
+                        />
                     </div>
                 ) : (
                     bookmarkList.map((bookmark) => (

@@ -5,6 +5,8 @@ import {useRequest} from 'alova/client';
 import {BookmarkApi, Bookmark} from '@/api/bookmark';
 import {BookmarkCard} from "@/components/bookmark/bookmark-card"
 import { BookmarkSkeleton } from "@/components/bookmark/bookmark-skeleton"
+import {EmptyPlaceholder} from "@/components/empty-placeholder"
+import {Pin, Clock, Plus} from "lucide-react"
 
 export default function BookmarksPage() {
     const [pinnedBookmarks, setPinnedBookmarks] = useState<Bookmark[]>([]);
@@ -37,8 +39,12 @@ export default function BookmarksPage() {
                     {isLoading ? (
                         <BookmarkSkeleton count={4} />
                     ) : pinnedBookmarks.length === 0 ? (
-                        <div className="col-span-full text-center text-muted-foreground py-8">
-                            暂无置顶书签
+                        <div className="col-span-full">
+                            <EmptyPlaceholder
+                                icon={Pin}
+                                title="暂无置顶书签"
+                                description="你可以通过点击书签上的图钉图标来置顶重要的书签。"
+                            />
                         </div>
                     ) : (
                         pinnedBookmarks.map((bookmark) => (
@@ -57,8 +63,12 @@ export default function BookmarksPage() {
                     {isLoading ? (
                         <BookmarkSkeleton count={4} />
                     ) : recentBookmarks.length === 0 ? (
-                        <div className="col-span-full text-center text-muted-foreground py-8">
-                            暂无最近访问的书签
+                        <div className="col-span-full">
+                            <EmptyPlaceholder
+                                icon={Clock}
+                                title="暂无最近访问"
+                                description="这里会显示你最近访问过的书签记录。"
+                            />
                         </div>
                     ) : (
                         recentBookmarks.map((bookmark) => (
@@ -77,8 +87,12 @@ export default function BookmarksPage() {
                     {isLoading ? (
                         <BookmarkSkeleton count={4} />
                     ) : recentAddedBookmarks.length === 0 ? (
-                        <div className="col-span-full text-center text-muted-foreground py-8">
-                            暂无最近新增的书签
+                        <div className="col-span-full">
+                            <EmptyPlaceholder
+                                icon={Plus}
+                                title="暂无新增书签"
+                                description="这里会显示你最近添加的新书签。"
+                            />
                         </div>
                     ) : (
                         recentAddedBookmarks.map((bookmark) => (

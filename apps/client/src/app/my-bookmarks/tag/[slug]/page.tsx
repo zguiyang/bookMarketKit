@@ -4,6 +4,8 @@ import { useParams } from 'next/navigation'
 import { PageHeader } from '@/components/page-header'
 import { useState } from 'react'
 import { BookmarkCard } from "@/components/bookmark/bookmark-card"
+import { EmptyPlaceholder } from "@/components/empty-placeholder"
+import { Tag } from "lucide-react"
 import { Bookmark } from '@/types/bookmark'
 
 // 模拟数据，后续可以替换为真实的API调用
@@ -67,14 +69,24 @@ export default function TagPage() {
         />
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredBookmarks.map(bookmark => (
-            <BookmarkCard
-              key={bookmark.id}
-              bookmark={bookmark}
-              onStarClick={() => handleStarClick(bookmark)}
-              onPinClick={() => handlePinClick(bookmark)}
-            />
-          ))}
+          {bookmarks.length === 0 ? (
+            <div className="col-span-full">
+              <EmptyPlaceholder
+                icon={Tag}
+                title="暂无相关书签"
+                description={`当前标签下还没有任何书签。`}
+              />
+            </div>
+          ) : (
+            bookmarks.map(bookmark => (
+              <BookmarkCard
+                key={bookmark.id}
+                bookmark={bookmark}
+                onStarClick={() => handleStarClick(bookmark)}
+                onPinClick={() => handlePinClick(bookmark)}
+              />
+            ))
+          )}
           {filteredBookmarks.length === 0 && (
             <div className="col-span-full text-center text-muted-foreground py-8">
               没有找到包含此标签的书签

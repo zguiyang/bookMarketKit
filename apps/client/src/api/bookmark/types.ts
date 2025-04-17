@@ -44,6 +44,8 @@ export type BookmarkPageListReq = PageListRequest & {
     title?: string;
     tagId?: string;
     categoryId?: string;
+    isPinned?: BookMarkPinnedEnums;
+    isFavorite?: BookMarkFavoriteEnums;
 }
 
 export type BookMarkPageListRes = PageListResponse<Bookmark>;
