@@ -12,9 +12,9 @@ import {useState} from "react";
 
 export default function CategoryPage() {
   const params = useParams()
-  const categorySlug = params.slug as string
+  const categoryId = params.slug as string
   const [categoryInfo, setCategoryInfo] = useState<Partial<Category>>({})
-  const { onSuccess: onSuccessCategoryInfo } = useRequest(() => BookmarkApi.queryOneCategory(categorySlug));
+  const { onSuccess: onSuccessCategoryInfo } = useRequest(() => BookmarkApi.queryOneCategory(categoryId));
   const {
     data: bookmarkList = [],
     send: getPageList,
@@ -23,7 +23,7 @@ export default function CategoryPage() {
     (page, pageSize) => BookmarkApi.pageList({
       page,
       pageSize,
-      categoryId: categorySlug,
+      categoryId,
     }),
     {
       append: false,

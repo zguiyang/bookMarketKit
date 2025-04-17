@@ -13,11 +13,11 @@ import { PaginationList } from "@/components/pagination-list"
 
 export default function TagsPage() {
   const params = useParams()
-  const tagSlug = params.slug as string
+  const tagId = params.slug as string
   const [tagInfo, setTagInfo] = useState<Partial<Tag>>({ })
 
   // 获取标签详情
-  const { onSuccess: onSuccessTagInfo } = useRequest(() => BookmarkApi.queryOneTag(tagSlug))
+  const { onSuccess: onSuccessTagInfo } = useRequest(() => BookmarkApi.queryOneTag(tagId))
 
   // 获取书签列表
   const {
@@ -31,7 +31,7 @@ export default function TagsPage() {
     (page, pageSize) => BookmarkApi.pageList({
       page,
       pageSize,
-      tagId: tagSlug,
+      tagId,
     }),
     {
       append: false,
