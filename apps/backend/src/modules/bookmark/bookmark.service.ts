@@ -190,16 +190,16 @@ export class BookmarkService {
     }
     if (tagId) {
       whereConditions.push(sql`EXISTS (
-        SELECT 1 FROM bookmark_tags bt 
-        WHERE bt.bookmark_id = ${bookmarksTable.id} 
-        AND bt.tag_id = ${tagId}
+        SELECT 1 FROM bookmark_tag_relations btr 
+        WHERE btr.bookmark_id = ${bookmarksTable.id} 
+        AND btr.tag_id = ${tagId}
       )`);
     }
     if (categoryId) {
       whereConditions.push(sql`EXISTS (
-        SELECT 1 FROM bookmark_categories bc 
-        WHERE bc.bookmark_id = ${bookmarksTable.id} 
-        AND bc.category_id = ${categoryId}
+        SELECT 1 FROM bookmark_category_relations bcr 
+        WHERE bcr.bookmark_id = ${bookmarksTable.id} 
+        AND bcr.category_id = ${categoryId}
       )`);
     }
 

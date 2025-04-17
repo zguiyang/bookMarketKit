@@ -10,7 +10,7 @@ import {Heart} from "lucide-react"
 import {usePagination} from "alova/client";
 import { PaginationList } from "@/components/pagination-list"
 
-export default function StarredPage() {
+export default function FavoritePage() {
   const {
     data: bookmarkList = [],
     send: getPageList,

@@ -6,13 +6,15 @@ import { BookmarkCard } from "@/components/bookmark/bookmark-card"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
 import { FolderOpen } from "lucide-react"
 import { BookmarkSkeleton } from "@/components/bookmark/bookmark-skeleton"
-import { usePagination } from 'alova/client';
-import { BookmarkApi } from '@/api/bookmark';
+import {usePagination, useRequest} from 'alova/client';
+import { BookmarkApi, Category } from '@/api/bookmark';
+import {useState} from "react";
 
 export default function CategoryPage() {
   const params = useParams()
   const categorySlug = params.slug as string
-
+  const [categoryInfo, setCategoryInfo] = useState<Partial<Category>>({})
+  const { onSuccess: onSuccessCategoryInfo } = useRequest(() => BookmarkApi.queryOneCategory(categorySlug));
   const {
     data: bookmarkList = [],
     send: getPageList,
@@ -32,6 +34,13 @@ export default function CategoryPage() {
     }
   )
 
+
+  onSuccessCategoryInfo(({data:res}) => {
+    if (res.success && res.data) {
+      setCategoryInfo(res.data)
+    }
+  })
+
   const handleUpdateAction = async () => {
     await getPageList();
   }
@@ -40,8 +49,8 @@ export default function CategoryPage() {
     <div className="flex-1 overflow-y-auto">
       <div className="space-y-4 p-4 md:p-8 pt-6">
         <PageHeader 
-          title={`分类：${decodeURIComponent(categorySlug)}`}
-          description={`查看分类"${decodeURIComponent(categorySlug)}"下的所有书签`}
+          title={`分类：${categoryInfo.name ?? ''}`}
+          description={`查看分类"${categoryInfo.name ?? ''}"下的所有书签`}
         />
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

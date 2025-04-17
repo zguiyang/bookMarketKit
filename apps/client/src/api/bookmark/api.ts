@@ -26,13 +26,13 @@ class BookMark {
         return request.Get<ApiResponse<Category[]>>('bookmark/category/all');
     }
     queryOneCategory(id: string) {
-        return request.Patch<ApiResponse<any>>(`bookmark/category/detail/${id}`)
+        return request.Get<ApiResponse<Category>>(`bookmark/category/detail/${id}`)
     }
     tags() {
         return request.Get<ApiResponse<Tag[]>>('bookmark/tag/all');
     }
     queryOneTag(id: string) {
-        return request.Patch<ApiResponse<any>>(`bookmark/tag/detail/${id}`)
+        return request.Get<ApiResponse<Tag>>(`bookmark/tag/detail/${id}`)
     }
 }
 
