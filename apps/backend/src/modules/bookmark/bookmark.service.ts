@@ -231,71 +231,106 @@ export class BookmarkService {
    * 目前包含：
    * 1. 置顶书签列表
    * 2. 最近访问书签列表（不包含置顶书签）
+   * 3. 最近3天新增的书签列表
    */
   async findCollection(userId: string): Promise<{
     pinnedBookmarks: SelectBookmark[];
     recentBookmarks: SelectBookmark[];
+    recentAddedBookmarks: SelectBookmark[];
   }> {
-    const [pinnedBookmarks, recentBookmarks] = await Promise.all([
-      // 获取置顶书签
-      this.database.query.bookmarksTable.findMany({
-        where: (bookmarks, { eq, and }) =>
-          and(eq(bookmarks.user_id, userId), eq(bookmarks.is_pinned, 1)),
-        orderBy: (bookmarks, { desc }) => [desc(bookmarks.updated_at)],
-        columns: {
-          id: true,
-          title: true,
-          url: true,
-          is_favorite: true,
-          is_pinned: true,
-          last_visited_at: true,
-        },
-        with: {
-          categories: {
-            with: {
-              category: true,
+    const [pinnedBookmarks, recentBookmarks, recentAddedBookmarks] =
+      await Promise.all([
+        // 获取置顶书签
+        this.database.query.bookmarksTable.findMany({
+          where: (bookmarks, { eq, and }) =>
+            and(eq(bookmarks.user_id, userId), eq(bookmarks.is_pinned, 1)),
+          orderBy: (bookmarks, { desc }) => [desc(bookmarks.updated_at)],
+          columns: {
+            id: true,
+            title: true,
+            url: true,
+            description: true,
+            is_favorite: true,
+            is_pinned: true,
+            last_visited_at: true,
+          },
+          with: {
+            categories: {
+              with: {
+                category: true,
+              },
+            },
+            tags: {
+              with: {
+                tag: true,
+              },
             },
           },
-          tags: {
-            with: {
-              tag: true,
-            },
-          },
-        },
-      }),
+        }),
 
-      // 获取最近访问的书签（不包括置顶的）
-      this.database.query.bookmarksTable.findMany({
-        where: (bookmarks, { eq, and, isNotNull }) =>
-          and(
-            eq(bookmarks.user_id, userId),
-            eq(bookmarks.is_pinned, 0),
-            isNotNull(bookmarks.last_visited_at),
-          ),
-        orderBy: (bookmarks, { desc }) => [desc(bookmarks.last_visited_at)],
-        columns: {
-          id: true,
-          title: true,
-          url: true,
-          is_favorite: true,
-          is_pinned: true,
-          last_visited_at: true,
-        },
-        limit: 10,
-        with: {
-          categories: {
-            with: {
-              category: true,
+        // 获取最近访问的书签（不包括置顶的）
+        this.database.query.bookmarksTable.findMany({
+          where: (bookmarks, { eq, and, isNotNull }) =>
+            and(
+              eq(bookmarks.user_id, userId),
+              eq(bookmarks.is_pinned, 0),
+              isNotNull(bookmarks.last_visited_at),
+            ),
+          orderBy: (bookmarks, { desc }) => [desc(bookmarks.last_visited_at)],
+          columns: {
+            id: true,
+            title: true,
+            url: true,
+            is_favorite: true,
+            is_pinned: true,
+            last_visited_at: true,
+          },
+          limit: 10,
+          with: {
+            categories: {
+              with: {
+                category: true,
+              },
+            },
+            tags: {
+              with: {
+                tag: true,
+              },
             },
           },
-          tags: {
-            with: {
-              tag: true,
+        }),
+
+        // 获取最近3天新增的书签
+        this.database.query.bookmarksTable.findMany({
+          where: (bookmarks, { eq, and, gt }) =>
+            and(
+              eq(bookmarks.user_id, userId),
+              gt(bookmarks.created_at, sql`NOW() - INTERVAL '3 days'`),
+            ),
+          orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
+          columns: {
+            id: true,
+            title: true,
+            url: true,
+            is_favorite: true,
+            is_pinned: true,
+            last_visited_at: true,
+            created_at: true,
+          },
+          with: {
+            categories: {
+              with: {
+                category: true,
+              },
+            },
+            tags: {
+              with: {
+                tag: true,
+              },
             },
           },
-        },
-      }),
-    ]);
+        }),
+      ]);
 
     return {
       pinnedBookmarks: pinnedBookmarks.map((bookmark) =>
@@ -304,6 +339,40 @@ export class BookmarkService {
       recentBookmarks: recentBookmarks.map((bookmark) =>
         this._processBookmarkRelations(bookmark),
       ),
+      recentAddedBookmarks: recentAddedBookmarks.map((bookmark) =>
+        this._processBookmarkRelations(bookmark),
+      ),
     };
+  }
+
+  /**
+   * 更新书签的最后访问时间和访问计数
+   * @param userId 用户ID
+   * @param bookmarkId 书签ID
+   */
+  async updateLastVisitTime(userId: string, bookmarkId: string) {
+    const bookmark = await this.findOne(userId, bookmarkId);
+
+    if (!bookmark) {
+      throw new BusinessException(bookmarksCodeMessages.notFoundBookmark);
+    }
+
+    const result = await this.database
+      .update(bookmarksTable)
+      .set({
+        [bookmarksTable.last_visited_at.name]: sql`NOW()`,
+        [bookmarksTable.visit_count.name]:
+          sql`${bookmarksTable.visit_count} + 1`,
+      })
+      .where(
+        and(
+          eq(bookmarksTable.id, bookmarkId),
+          eq(bookmarksTable.user_id, userId),
+        ),
+      );
+
+    if (result.rowCount < 1) {
+      throw new BusinessException(bookmarksCodeMessages.updateError);
+    }
   }
 }

@@ -26,6 +26,7 @@ import {
   SetFavoriteDTO,
   SetPinnedTopDTO,
   BookmarkPageListRequestDTO,
+  UpdateLastVisitTimeDTO,
 } from './dto/request.dto';
 
 @ApiTags('书签管理')
@@ -137,52 +138,30 @@ export class BookmarkController {
   @ApiResponse({
     status: 200,
     description: '成功获取书签集合数据',
-    schema: {
-      properties: {
-        pinnedBookmarks: {
-          type: 'array',
-          description: '置顶书签列表',
-          items: {
-            type: 'object',
-            properties: {
-              id: { type: 'string' },
-              title: { type: 'string' },
-              url: { type: 'string' },
-              description: { type: 'string' },
-              favicon_url: { type: 'string' },
-              screenshot_url: { type: 'string' },
-              visit_count: { type: 'number' },
-              is_favorite: { type: 'number' },
-              is_pinned: { type: 'number' },
-              categories: { type: 'array', items: { type: 'object' } },
-              tags: { type: 'array', items: { type: 'object' } },
-            },
-          },
-        },
-        recentBookmarks: {
-          type: 'array',
-          description: '最近访问书签列表',
-          items: {
-            type: 'object',
-            properties: {
-              id: { type: 'string' },
-              title: { type: 'string' },
-              url: { type: 'string' },
-              description: { type: 'string' },
-              favicon_url: { type: 'string' },
-              screenshot_url: { type: 'string' },
-              visit_count: { type: 'number' },
-              is_favorite: { type: 'number' },
-              is_pinned: { type: 'number' },
-              categories: { type: 'array', items: { type: 'object' } },
-              tags: { type: 'array', items: { type: 'object' } },
-            },
-          },
-        },
-      },
-    },
   })
   async getCollection(@CurrentUser('userId') userId: string) {
     return await this.bookmarkService.findCollection(userId);
+  }
+
+  /**
+   * 更新书签访问时间
+   */
+  @Patch('visit')
+  @ApiOperation({
+    summary: '更新书签访问时间',
+    description: '更新指定书签的最后访问时间和访问次数',
+  })
+  @ApiBody({ type: UpdateLastVisitTimeDTO })
+  @ApiResponse({ status: 200, description: '更新成功' })
+  @ApiResponse({ status: 400, description: '更新失败，书签不存在或无权限' })
+  async updateLastVisitTime(
+    @CurrentUser('userId') userId: string,
+    @Body() updateLastVisitTimeDto: UpdateLastVisitTimeDTO,
+  ) {
+    await this.bookmarkService.updateLastVisitTime(
+      userId,
+      updateLastVisitTimeDto.id,
+    );
+    return { message: '更新成功' };
   }
 }

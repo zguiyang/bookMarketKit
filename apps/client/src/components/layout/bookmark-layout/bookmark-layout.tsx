@@ -2,7 +2,7 @@
 
 import { ReactNode, useState } from "react"
 import { Bookmark } from '@/types/bookmark'
-import { BookmarkForm, BookmarkFormValues } from "@/components/bookmark-form"
+import { BookmarkForm, BookmarkFormValues } from "@/components/bookmark/bookmark-form"
 import { Sidebar } from "./sidebar"
 import { Header } from "./header"
 import { Content } from "./content"
@@ -56,7 +56,9 @@ export function BookmarkLayout({ children }: BookmarkLayoutProps) {
       <Sidebar />
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         <Header bookmarks={bookmarks} onAddBookmark={handleAddBookmark} />
-        <Content>{children}</Content>
+        <Content>
+          {children}
+        </Content>
         <BookmarkForm
           open={showAddBookmarkForm}
           onOpenChange={setShowAddBookmarkForm}

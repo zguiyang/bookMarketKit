@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PageListRequest } from '@/dto/pagination.dto';
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class BookmarkPageListRequestDTO extends PageListRequest {
   @ApiProperty({
@@ -192,4 +193,14 @@ export class SetPinnedTopDTO {
     required: true,
   })
   isPinned: 0 | 1;
+}
+
+export class UpdateLastVisitTimeDTO {
+  /**
+   * 书签ID
+   * @example "clh1z3k0h0000u8hnfpkg0ln1"
+   */
+  @IsString()
+  @IsNotEmpty({ message: '书签ID不能为空' })
+  id: string;
 }

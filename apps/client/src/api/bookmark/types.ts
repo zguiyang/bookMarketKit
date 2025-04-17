@@ -2,8 +2,7 @@ import { PageListRequest,PageListResponse  } from '@/types/paggination';
 
 export interface Bookmark {
     categories: Category[];
-    description: null;
-    favicon_url: null;
+    description: null  | string;
     id: string;
     is_favorite: number;
     is_pinned: number;
@@ -38,6 +37,7 @@ export interface Tag {
 export type BookmarkCollection = {
     pinnedBookmarks: Bookmark[];
     recentBookmarks: Bookmark[];
+    recentAddedBookmarks: Bookmark[];
 }
 
 export type BookmarkPageListReq = PageListRequest & {
@@ -47,3 +47,23 @@ export type BookmarkPageListReq = PageListRequest & {
 }
 
 export type BookMarkPageListRes = PageListResponse<Bookmark>;
+
+export enum BookMarkFavoriteEnums {
+    Favorite = 1,
+    UnFavorite = 0
+}
+
+export type BookMarkFavoriteReq = {
+    id: string;
+    isFavorite:BookMarkFavoriteEnums;
+}
+
+export enum BookMarkPinnedEnums {
+    Pinned = 1,
+    UnPinned = 0,
+}
+
+export type BookMarkPinnedReq = {
+    id: string;
+    isPinned:BookMarkPinnedEnums;
+}

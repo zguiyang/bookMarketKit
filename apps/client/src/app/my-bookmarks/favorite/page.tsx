@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { PageHeader } from '@/components/page-header'
-import { BookmarkCard } from "@/components/bookmark-card"
+import { BookmarkCard } from "@/components/bookmark/bookmark-card"
 import { Bookmark } from '@/types/bookmark'
 
 // 模拟数据，后续可以替换为真实的API调用

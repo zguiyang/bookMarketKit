@@ -2,7 +2,7 @@
 
 import { ReactNode, useState } from "react"
 import { Bookmark } from '@/types/bookmark'
-import { BookmarkForm, BookmarkFormValues } from "@/components/bookmark-form"
+import { BookmarkForm, BookmarkFormValues } from "@/components/bookmark/bookmark-form"
 import { Sidebar } from "./sidebar"
 import { Header } from "./header"
 import { Content } from "./content"

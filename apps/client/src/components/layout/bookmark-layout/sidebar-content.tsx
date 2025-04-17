@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { Star, Bookmark as BookmarkIcon, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { Heart, Sparkle, Bookmark as BookmarkIcon, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { UserMenu } from "@/components/user-menu"
 import { 
   DropdownMenu, 
@@ -70,8 +70,6 @@ const mockUser = {
   avatar: "https://github.com/shadcn.png"
 }
 
-// 定义视图类型
-type ViewType = 'all' | 'starred'
 
 export function SidebarContent() {
   const [categories, setCategories] = useState(mockCategories)
@@ -87,11 +85,11 @@ export function SidebarContent() {
     router.push(`/my-bookmarks/tag/${encodeURIComponent(tag.name)}`)
   }
 
-  const handleViewClick = (view: ViewType) => {
-    if (view === 'all') {
+  const handleViewClick = (view?: string) => {
+    if (view) {
+      router.push(`/my-bookmarks/${view}`)
+    } else {
       router.push('/my-bookmarks')
-    } else if (view === 'starred') {
-      router.push('/my-bookmarks/starred')
     }
   }
 
@@ -148,27 +146,38 @@ export function SidebarContent() {
           
           <div className="space-y-1">
             <button
+                onClick={() => handleViewClick()}
+                className={`flex items-center w-full p-2 rounded-lg text-sm cursor-pointer ${
+                    pathname === '/my-bookmarks'
+                        ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+            >
+              <Sparkle className="w-4 h-4 mr-2 text-primary" />
+              快捷访问
+            </button>
+            <button
               onClick={() => handleViewClick('all')}
-              className={`flex items-center w-full p-2 rounded-lg text-sm ${
-                pathname === '/my-bookmarks'
+              className={`flex items-center w-full p-2 rounded-lg text-sm cursor-pointer ${
+                pathname === '/my-bookmarks/all'
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium' 
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <BookmarkIcon className="w-4 h-4 mr-2" />
-              全部书签
+              所有书签
             </button>
             
             <button
-              onClick={() => handleViewClick('starred')}
-              className={`flex items-center w-full p-2 rounded-lg text-sm ${
-                pathname === '/my-bookmarks/starred'
+              onClick={() => handleViewClick('favorite')}
+              className={`flex items-center w-full p-2 rounded-lg text-sm  cursor-pointer ${
+                pathname === '/my-bookmarks/favorite'
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium' 
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
-              <Star className="w-4 h-4 mr-2 text-yellow-500" />
-              收藏夹
+              <Heart className="w-4 h-4 mr-2 text-red-500" />
+              最喜欢的
             </button>
           </div>
         </div>
