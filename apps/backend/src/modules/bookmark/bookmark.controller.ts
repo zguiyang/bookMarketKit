@@ -16,6 +16,7 @@ import {
   ApiParam,
   ApiBody,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/decorator/get-user.decorator';
 import { PaginationParamsFormatPipe } from '@/common/pipes/pagination.pipe';
@@ -120,8 +121,10 @@ export class BookmarkController {
   @Get('pageList')
   @ApiOperation({
     summary: '分页获取书签',
-    description: '分页获取书签列表，支持标题、标签和分类筛选',
+    description:
+      '分页获取书签列表，支持标题、标签、分类筛选，以及按置顶和收藏状态筛选',
   })
+  @ApiQuery({ type: BookmarkPageListRequestDTO })
   @ApiResponse({ status: 200, description: '成功获取书签列表' })
   async pageList(
     @CurrentUser('userId') userId: string,

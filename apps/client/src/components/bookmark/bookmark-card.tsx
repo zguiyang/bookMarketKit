@@ -1,7 +1,7 @@
-import {Clock, Copy, Edit, MoreHorizontal, Pin, PinOff, Heart, StarOff, Trash2} from "lucide-react"
+import {Copy, Edit, MoreHorizontal, Pin, PinOff, Heart, Trash2} from "lucide-react"
 import {useRequest} from 'alova/client';
 import {Bookmark, BookmarkApi, BookMarkFavoriteEnums, BookMarkPinnedEnums} from '@/api/bookmark';
-import {Card, CardContent, CardFooter} from "@/components/ui/card"
+import {Card, CardContent} from "@/components/ui/card"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import {Button} from "@/components/ui/button"
 import {toast} from "sonner"
-import {cn, dateFormat} from "@/lib/utils"
+import {cn} from "@/lib/utils"
 
 interface BookmarkCardProps {
     bookmark: Bookmark
@@ -19,10 +19,9 @@ interface BookmarkCardProps {
 }
 
 export function BookmarkCard({
-                                 bookmark,
-                                 onUpdateBookmark,
-                             }: BookmarkCardProps) {
-
+    bookmark,
+    onUpdateBookmark,
+}: BookmarkCardProps) {
     const { send: setBookmarkFavorite } = useRequest(BookmarkApi.setFavorite, {
         immediate: false,
     });
@@ -73,18 +72,17 @@ export function BookmarkCard({
 
     const handleViewBookmark = async () => {
         window.open(bookmark.url, '_blank')
-         await visitBookmark(bookmark.id)
+        await visitBookmark(bookmark.id)
     }
 
     return (
-        <Card
-            className="group relative overflow-hidden transition-all duration-300 hover:-translate-y-1 border-gray-200 dark:border-gray-700">
-            <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2 max-w-[80%]">
+        <Card className="group relative overflow-hidden transition-all hover:-translate-y-1 border-gray-200 dark:border-gray-700 sm:p-2">
+            <CardContent className="p-4 sm:p-3">
+                {/* 标题栏部分 */}
+                <div className="flex items-center justify-between mb-3 sm:mb-2">
+                    <div className="flex items-center space-x-2 max-w-[70%] sm:max-w-[60%]">
                         {bookmark.icon && (
-                            <div
-                                className="w-6 h-6 flex-shrink-0 rounded-md overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-gray-700">
+                            <div className="w-6 h-6 flex-shrink-0 rounded-md overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-gray-700">
                                 <img
                                     src={bookmark.icon}
                                     alt=""
@@ -95,48 +93,40 @@ export function BookmarkCard({
                                 />
                             </div>
                         )}
-                        <span
+                        <h3
                             onClick={handleViewBookmark}
-                            className="text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors"
+                            className="text-base font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors cursor-pointer"
                             title={bookmark.title}
                         >
                             {bookmark.title}
-                        </span>
+                        </h3>
                     </div>
 
+                    {/* 操作按钮组 */}
                     <div className="flex items-center space-x-1">
                         <Button
                             variant="ghost"
                             size="icon"
                             onClick={handleFavoriteBookmark}
                             className={cn(
-                                "size-8",
-                                "cursor-pointer",
-                                bookmark.is_favorite && "text-red-500"
+                                "size-8 sm:size-7",
+                                "cursor-pointer transition-colors",
+                                bookmark.is_favorite && "text-red-500 hover:text-red-600"
                             )}
                         >
-                            {bookmark.is_favorite ? (
-                                <Heart className="size-4 fill-current"/>
-                            ) : (
-                                <Heart className="size-4"/>
-                            )}
+                            <Heart className={cn("size-4 sm:size-3.5", bookmark.is_favorite && "fill-current")} />
                         </Button>
                         <Button
                             variant="ghost"
                             size="icon"
                             onClick={handlePinBookmark}
-                            className={cn(
-                                "size-8",
-                                "cursor-pointer"
-                            )}
+                            className="size-8 sm:size-7 cursor-pointer transition-colors"
                         >
-                            {
-                                bookmark.is_pinned ? (
-                                    <Pin className="size-4 fill-current"/>
-                                ): (
-                                    <PinOff className="size-4" />
-                                )
-                            }
+                            {bookmark.is_pinned ? (
+                                <Pin className="size-4 sm:size-3.5 fill-current" />
+                            ) : (
+                                <PinOff className="size-4 sm:size-3.5" />
+                            )}
                         </Button>
 
                         <DropdownMenu>
@@ -144,31 +134,31 @@ export function BookmarkCard({
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="size-8"
+                                    className="size-8 sm:size-7"
                                 >
-                                    <MoreHorizontal className="size-4"/>
+                                    <MoreHorizontal className="size-4 sm:size-3.5" />
                                     <span className="sr-only">更多操作</span>
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
+                            <DropdownMenuContent align="end" className="w-36">
                                 <DropdownMenuItem onClick={handleCopyUrl}>
-                                    <Copy className="size-4 mr-2"/>
+                                    <Copy className="size-4 mr-2" />
                                     复制链接
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={handlePinBookmark}>
-                                    <Pin className="size-4 mr-2"/>
+                                    <Pin className="size-4 mr-2" />
                                     {bookmark.is_pinned ? "取消置顶" : "置顶"}
                                 </DropdownMenuItem>
-                                <DropdownMenuSeparator/>
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={handleEditBookmark}>
-                                    <Edit className="size-4 mr-2"/>
+                                    <Edit className="size-4 mr-2" />
                                     编辑
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                     onClick={handleDeleteBookmark}
                                     className="text-destructive focus:text-destructive"
                                 >
-                                    <Trash2 className="size-4 mr-2 text-red-500"/>
+                                    <Trash2 className="size-4 mr-2 text-red-500" />
                                     删除
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -176,40 +166,42 @@ export function BookmarkCard({
                     </div>
                 </div>
 
+                {/* 描述部分 */}
                 {bookmark.description && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2 group-hover:line-clamp-none transition-all duration-300">
-                        {bookmark.description}
-                    </p>
+                    <div className="mb-3">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all duration-200">
+                            {bookmark.description}
+                        </p>
+                        <div className="h-4 relative">
+                            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white dark:from-gray-900 to-transparent group-hover:opacity-0 transition-opacity" />
+                        </div>
+                    </div>
                 )}
 
-                <div className="flex flex-wrap gap-1.5 mb-3">
+                {/* 分类和标签部分 */}
+                <div className="flex flex-wrap gap-1.5">
+                    {/* 分类标签组 */}
                     {bookmark.categories.map((category) => (
                         <span
                             key={category.id}
-                            className="px-2 py-0.5 rounded-md text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-              {category.name}
-            </span>
+                            className="px-2 py-0.5 rounded-md text-xs font-medium bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 transition-colors"
+                        >
+                            {category.name}
+                        </span>
                     ))}
                     {bookmark.tags.map((tag) => (
                         <span
                             key={tag.id}
-                            className="px-2 py-0.5 rounded-md text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+                            className="px-2 py-0.5 rounded-md text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
                         >
-              {tag.name}
-            </span>
+                            #{tag.name}
+                        </span>
                     ))}
                 </div>
             </CardContent>
 
-            <CardFooter
-                className="px-4 py-2 border-t border-gray-100 dark:border-gray-800 flex items-center text-xs text-gray-500 dark:text-gray-500">
-                <Clock className="size-3 mr-1 inline-flex"/>
-                <span>最后访问：{dateFormat(bookmark.last_visited_at)}</span>
-            </CardFooter>
-
-            {/* 悬停效果 */}
-            <div
-                className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"/>
+            {/* 悬停渐变效果 */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         </Card>
     )
 } 

@@ -23,6 +23,22 @@ export class BookmarkPageListRequestDTO extends PageListRequest {
     required: false,
   })
   categoryId?: string;
+
+  @ApiProperty({
+    description: '是否置顶（0-否，1-是）',
+    example: 1,
+    enum: [0, 1],
+    required: false,
+  })
+  isPinned?: 0 | 1;
+
+  @ApiProperty({
+    description: '是否收藏（0-否，1-是）',
+    example: 1,
+    enum: [0, 1],
+    required: false,
+  })
+  isFavorite?: 0 | 1;
 }
 
 export class CreateBookmarkDTO {

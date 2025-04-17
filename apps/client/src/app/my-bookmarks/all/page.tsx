@@ -4,6 +4,7 @@ import {useState} from "react"
 import { usePagination } from 'alova/client';
 import {BookmarkApi} from '@/api/bookmark';
 import {BookmarkCard} from "@/components/bookmark/bookmark-card"
+import { BookmarkSkeleton } from "@/components/bookmark/bookmark-skeleton"
 import {
     Pagination,
     PaginationContent,
@@ -15,11 +16,12 @@ import {
 
 export default function AllBookmarksPage() {
     const {
-        data: bookmarkList,
+        data: bookmarkList = [],
         send: getPageList,
         page,
         update,
         onSuccess: onPageListSuccess,
+        loading: isLoading,
     } = usePagination(
         (page, pageSize) => BookmarkApi.pageList({
             page,
@@ -28,12 +30,11 @@ export default function AllBookmarksPage() {
         {
             append: false,
             initialPage: 1,
-            initialPageSize: 50,
+            initialPageSize: 40,
             total: ({data: res}) => res.total,
             data: ({data: res}) => res.content,
         }
     )
-
 
     const [totalPages, setTotalPages] = useState<number>(0);
 
@@ -48,30 +49,40 @@ export default function AllBookmarksPage() {
     }
 
     const handlePageChange = async (newPage: number) => {
-         update({
+        if (isLoading) return;
+        update({
             page: newPage,
         });
     }
 
     return (
         <div className="px-4 py-8">
-                <h2 className="text-2xl font-bold mb-4">📚 所有书签</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {bookmarkList.map((bookmark) => (
+            <h2 className="text-2xl font-bold mb-4">📚 所有书签</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {isLoading ? (
+                    <BookmarkSkeleton count={8} />
+                ) : bookmarkList.length === 0 ? (
+                    <div className="col-span-full text-center text-muted-foreground py-8">
+                        暂无书签
+                    </div>
+                ) : (
+                    bookmarkList.map((bookmark) => (
                         <BookmarkCard
                             onUpdateBookmark={handleUpdateAction}
                             key={bookmark.id}
                             bookmark={bookmark}
                         />
-                    ))}
-                </div>
+                    ))
+                )}
+            </div>
+            {(bookmarkList.length > 0 || isLoading) && (
                 <div className="mt-8 flex justify-center">
                     <Pagination>
-                        <PaginationContent className="gap-1">
+                        <PaginationContent className="flex items-center gap-1">
                             <PaginationItem>
                                 <PaginationPrevious 
-                                    onClick={() => handlePageChange(page - 1)}
-                                    className={`rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 ${page <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
+                                    onClick={() => !isLoading && handlePageChange(page - 1)}
+                                    className={`${page <= 1 || isLoading ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-muted"} flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-md`}
                                 >
                                     上一页
                                 </PaginationPrevious>
@@ -79,9 +90,9 @@ export default function AllBookmarksPage() {
                             {Array.from({length: totalPages}, (_, i) => i + 1).map((pageNum) => (
                                 <PaginationItem key={pageNum}>
                                     <PaginationLink
-                                        onClick={() => handlePageChange(pageNum)}
+                                        onClick={() => !isLoading && handlePageChange(pageNum)}
                                         isActive={page === pageNum}
-                                        className={`rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${page === pageNum ? "bg-primary text-primary-foreground hover:bg-primary/90" : "cursor-pointer"}`}
+                                        className={`${isLoading ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-muted"} px-4 py-2 text-sm font-medium transition-all duration-200 rounded-md ${page === pageNum ? "bg-primary text-primary-foreground hover:bg-primary/90" : ""}`}
                                     >
                                         {pageNum}
                                     </PaginationLink>
@@ -89,8 +100,8 @@ export default function AllBookmarksPage() {
                             ))}
                             <PaginationItem>
                                 <PaginationNext
-                                    onClick={() => handlePageChange(page + 1)}
-                                    className={`rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 ${page >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
+                                    onClick={() => !isLoading && handlePageChange(page + 1)}
+                                    className={`${page >= totalPages || isLoading ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-muted"} flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-md`}
                                 >
                                     下一页
                                 </PaginationNext>
@@ -98,6 +109,7 @@ export default function AllBookmarksPage() {
                         </PaginationContent>
                     </Pagination>
                 </div>
+            )}
         </div>
     )
 } 

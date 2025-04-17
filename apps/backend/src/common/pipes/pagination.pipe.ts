@@ -7,7 +7,7 @@ export class PaginationParamsFormatPipe implements PipeTransform {
   private defaultParams: FormatParams = {};
   constructor(
     options: FormatParams = {
-      orderBy: 'createdAt',
+      orderBy: 'created_at',
       direction: PageDirectionEnum.DESC,
     },
   ) {

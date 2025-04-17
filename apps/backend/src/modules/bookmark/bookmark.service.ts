@@ -1,6 +1,5 @@
 import type { InsertBookmark, SelectBookmark } from '@/db/schemas';
 import { bookmarksTable } from '@/db/schemas';
-
 import { Inject, Injectable } from '@nestjs/common';
 import { and, eq, sql } from 'drizzle-orm';
 import { DB_PROVIDER, type DbType } from '@/core/database/database-provider';
@@ -15,6 +14,7 @@ import {
 } from './dto/request.dto';
 import { PageListData } from '@/dto/pagination.dto';
 import { BookmarkRelationService } from './rel/bookmark.rel.service';
+import { PageDirectionEnum } from '@/dto/pagination.dto';
 
 @Injectable()
 export class BookmarkService {
@@ -168,37 +168,71 @@ export class BookmarkService {
     return this._processBookmarkRelations(bookmark);
   }
 
+  /**
+   * 构建书签查询条件
+   */
+  private _buildBookmarkWhereConditions(
+    userId: string,
+    query: Partial<BookmarkPageListRequestDTO>,
+  ) {
+    const whereConditions = [eq(bookmarksTable.user_id, userId)];
+
+    const { isPinned, isFavorite, title, tagId, categoryId } = query;
+
+    if (isPinned !== undefined) {
+      whereConditions.push(eq(bookmarksTable.is_pinned, isPinned));
+    }
+    if (isFavorite !== undefined) {
+      whereConditions.push(eq(bookmarksTable.is_favorite, isFavorite));
+    }
+    if (title) {
+      whereConditions.push(sql`${bookmarksTable.title} ILIKE ${`%${title}%`}`);
+    }
+    if (tagId) {
+      whereConditions.push(sql`EXISTS (
+        SELECT 1 FROM bookmark_tags bt 
+        WHERE bt.bookmark_id = ${bookmarksTable.id} 
+        AND bt.tag_id = ${tagId}
+      )`);
+    }
+    if (categoryId) {
+      whereConditions.push(sql`EXISTS (
+        SELECT 1 FROM bookmark_categories bc 
+        WHERE bc.bookmark_id = ${bookmarksTable.id} 
+        AND bc.category_id = ${categoryId}
+      )`);
+    }
+
+    return whereConditions;
+  }
+
   async pageList(
     userId: string,
     query: BookmarkPageListRequestDTO,
   ): Promise<PageListData<SelectBookmark>> {
-    const { page, pageSize } = query;
+    const { page, pageSize, orderBy, direction } = query;
+
     const offset = (page - 1) * pageSize;
+    const whereConditions = this._buildBookmarkWhereConditions(userId, query);
 
     const [total, bookmarks] = await Promise.all([
+      // 获取总数
       this.database
         .select({ count: sql<number>`count(*)` })
         .from(bookmarksTable)
-        .where(eq(bookmarksTable.user_id, userId))
+        .where(and(...whereConditions))
         .then((result) => Number(result[0].count)),
 
+      // 获取分页数据
       this.database.query.bookmarksTable.findMany({
-        where: (bookmarks, { eq }) => eq(bookmarks.user_id, userId),
-        orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
+        where: (bookmarks, { and }) => and(...whereConditions),
+        orderBy: (bookmarks, { asc, desc }) => [
+          direction === PageDirectionEnum.ASC
+            ? asc(bookmarks[orderBy as keyof typeof bookmarks])
+            : desc(bookmarks[orderBy as keyof typeof bookmarks]),
+        ],
         limit: pageSize,
         offset,
-        columns: {
-          id: true,
-          title: true,
-          url: true,
-          description: true,
-          visit_count: true,
-          is_favorite: true,
-          is_pinned: true,
-          icon: true,
-          screenshot_url: true,
-          last_visited_at: true,
-        },
         with: {
           categories: {
             with: {
@@ -214,15 +248,14 @@ export class BookmarkService {
       }),
     ]);
 
-    const totalPages = Math.ceil(total / pageSize);
     return {
       content: bookmarks.map((bookmark) =>
         this._processBookmarkRelations(bookmark),
       ),
-      pages: totalPages,
       page,
       pageSize,
       total,
+      pages: Math.ceil(total / pageSize),
     };
   }
 
@@ -245,15 +278,6 @@ export class BookmarkService {
           where: (bookmarks, { eq, and }) =>
             and(eq(bookmarks.user_id, userId), eq(bookmarks.is_pinned, 1)),
           orderBy: (bookmarks, { desc }) => [desc(bookmarks.updated_at)],
-          columns: {
-            id: true,
-            title: true,
-            url: true,
-            description: true,
-            is_favorite: true,
-            is_pinned: true,
-            last_visited_at: true,
-          },
           with: {
             categories: {
               with: {
@@ -277,14 +301,6 @@ export class BookmarkService {
               isNotNull(bookmarks.last_visited_at),
             ),
           orderBy: (bookmarks, { desc }) => [desc(bookmarks.last_visited_at)],
-          columns: {
-            id: true,
-            title: true,
-            url: true,
-            is_favorite: true,
-            is_pinned: true,
-            last_visited_at: true,
-          },
           limit: 10,
           with: {
             categories: {
@@ -308,15 +324,6 @@ export class BookmarkService {
               gt(bookmarks.created_at, sql`NOW() - INTERVAL '3 days'`),
             ),
           orderBy: (bookmarks, { desc }) => [desc(bookmarks.created_at)],
-          columns: {
-            id: true,
-            title: true,
-            url: true,
-            is_favorite: true,
-            is_pinned: true,
-            last_visited_at: true,
-            created_at: true,
-          },
           with: {
             categories: {
               with: {
