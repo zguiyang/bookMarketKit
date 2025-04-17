@@ -20,10 +20,10 @@ export interface Category {
     icon?: string;
     id: string;
     name: string;
-    parent_id: null;
-    updated_at: string;
-    created_at: string;
-    user_id: string;
+    parent_id?: null;
+    updated_at?: string;
+    created_at?: string;
+    user_id?: string;
 }
 
 export interface Tag {
@@ -68,4 +68,23 @@ export enum BookMarkPinnedEnums {
 export type BookMarkPinnedReq = {
     id: string;
     isPinned:BookMarkPinnedEnums;
+}
+
+export type CreateCategoryReq = {
+    name: string;
+    description?: string;
+    icon?: string;
+    parentId?: string;
+}
+
+export type UpdateCategoryReq = CreateCategoryReq & {
+ id: string;
+}
+
+export type CreateTagReq = {
+    name: string;
+    color?: string;
+};
+export type UpdateTagReq = CreateTagReq & {
+    id: string;
 }

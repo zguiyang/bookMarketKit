@@ -27,7 +27,7 @@ export class CreateCategoryDTO {
     example: 'uuid-parent-category-id',
     required: false,
   })
-  parent_id?: string;
+  parentId?: string;
 }
 
 export class UpdateCategoryDTO {
@@ -64,5 +64,5 @@ export class UpdateCategoryDTO {
     example: 'uuid-parent-category-id',
     required: false,
   })
-  parent_id?: string;
+  parentId?: string;
 }

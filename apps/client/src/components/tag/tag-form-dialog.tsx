@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import {
   Form,
@@ -21,8 +20,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
 import { tagColors } from "@/config/tag-colors"
+import { Tag } from "@/api/bookmark"
 import {
   Select,
   SelectContent,
@@ -38,12 +37,21 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-interface AddTagDialogProps {
-  onAddTag: (tag: { name: string; colorIndex: number }) => void
+interface TagFormDialogProps {
+  mode: 'create' | 'edit'
+  tag?: Tag
+  open: boolean
+  onOpenChange(open: boolean): void
+  onSubmitForm(values: FormValues): void
 }
 
-export function AddTagDialog({ onAddTag }: AddTagDialogProps) {
-  const [open, setOpen] = useState(false)
+export function TagFormDialog({ 
+  mode,
+  tag,
+  open,
+  onOpenChange,
+  onSubmitForm
+}: TagFormDialogProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,25 +60,36 @@ export function AddTagDialog({ onAddTag }: AddTagDialogProps) {
     }
   })
 
-  const onSubmit = (values: FormValues) => {
-    onAddTag({ name: values.name, colorIndex: values.colorIndex })
-    form.reset()
-    setOpen(false)
+  // 监听 tag 变化，更新表单值
+  useEffect(() => {
+    if (tag && mode === 'edit') {
+      // 找到当前颜色对应的索引
+      const colorIndex = tagColors.findIndex(color => color.bg === tag.color);
+      form.reset({
+        name: tag.name,
+        colorIndex: colorIndex >= 0 ? colorIndex : 0
+      })
+    } else {
+      form.reset({
+        name: "",
+        colorIndex: 0
+      })
+    }
+  }, [tag, mode, form])
+
+  const handleSubmit = (values: FormValues) => {
+    onSubmitForm(values)
+    onOpenChange(false)
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Plus className="h-4 w-4" />
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>新增标签</DialogTitle>
+          <DialogTitle>{mode === 'create' ? '新增标签' : '编辑标签'}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -92,7 +111,7 @@ export function AddTagDialog({ onAddTag }: AddTagDialogProps) {
                   <FormLabel>颜色</FormLabel>
                   <Select
                     onValueChange={(value: string) => field.onChange(parseInt(value))}
-                    defaultValue={field.value.toString()}
+                    value={field.value.toString()}
                   >
                     <FormControl>
                       <SelectTrigger className="w-full">
@@ -140,7 +159,7 @@ export function AddTagDialog({ onAddTag }: AddTagDialogProps) {
               <Button 
                 type="button" 
                 variant="outline" 
-                onClick={() => setOpen(false)}
+                onClick={() => onOpenChange(false)}
               >
                 取消
               </Button>
