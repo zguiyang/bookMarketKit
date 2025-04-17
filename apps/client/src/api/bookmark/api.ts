@@ -1,6 +1,6 @@
 import request from "@/lib/request";
 import { ApiResponse } from '@/types/response';
-import { BookmarkCollection, BookmarkPageListReq, BookMarkPageListRes, BookMarkFavoriteReq, BookMarkPinnedReq } from './types';
+import { BookmarkCollection, BookmarkPageListReq, BookMarkPageListRes, BookMarkFavoriteReq, BookMarkPinnedReq, Category, Tag } from './types';
 
 class BookMark {
     collection() {
@@ -21,6 +21,18 @@ class BookMark {
         return request.Patch<ApiResponse<any>>('bookmark/visit', {
             id
         });
+    }
+    categories() {
+        return request.Get<ApiResponse<Category[]>>('bookmark/category/all');
+    }
+    queryOneCategory(id: string) {
+        return request.Patch<ApiResponse<any>>(`bookmark/category/detail/${id}`)
+    }
+    tags() {
+        return request.Get<ApiResponse<Tag[]>>('bookmark/tag/all');
+    }
+    queryOneTag(id: string) {
+        return request.Patch<ApiResponse<any>>(`bookmark/tag/detail/${id}`)
     }
 }
 

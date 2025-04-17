@@ -9,6 +9,7 @@ export interface AuthStore {
     removeAuthToken: () => void;
     setUserInfo: (userInfo: LoginUserInfoResponse | null) => void;
     queryUserInfo: () => Promise<void>;
+    logout: () => Promise<void>;
     clearAuthInfo: () => void;
 }
 
@@ -45,6 +46,13 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         return set({
             userInfo,
         })
+    },
+    async logout( callback?: () => void) {
+      const { success } = await AuthApi.logout();
+      if (success) {
+          get().clearAuthInfo();
+          callback && callback()
+      }
     },
     clearAuthInfo: () => {
         get().removeAuthToken();

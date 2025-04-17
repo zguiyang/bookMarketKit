@@ -12,7 +12,7 @@ class Auth {
     }
 
      logout () {
-        return request.Delete('/auth/logout');
+        return request.Delete<ApiResponse<any>>('/auth/logout');
     }
 
      queryCurrentUser () {

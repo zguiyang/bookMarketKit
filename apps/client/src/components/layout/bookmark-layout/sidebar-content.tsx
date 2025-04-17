@@ -3,7 +3,9 @@
 import { useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { Heart, Sparkle, Bookmark as BookmarkIcon, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
-import { UserMenu } from "@/components/user-menu"
+import { useRequest } from 'alova/client'
+import { BookmarkApi, Tag, Category } from '@/api/bookmark'
+import { UserMenu } from "./user-menu"
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -16,73 +18,36 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
-import { tagColors, getColorIndexFromName } from "@/config/tag-colors"
 import { AddCategoryDialog } from "@/components/category/add-category-dialog"
 import { AddTagDialog } from "@/components/tag/add-tag-dialog"
 
-interface Category {
-  name: string
-  icon: string
-  count: number
-}
-
-interface Tag {
-  name: string
-  count: number
-}
-
-const mockCategories: Category[] = [
-  {
-    name: '开发工具',
-    icon: '🛠️',
-    count: 8
-  },
-  {
-    name: '技术学习',
-    icon: '📚',
-    count: 12
-  },
-  {
-    name: '设计资源',
-    icon: '🎨',
-    count: 6
-  }
-]
-
-const mockTags: (Tag & { colorIndex: number })[] = [
-  { name: 'JavaScript', count: 15, colorIndex: 0 },
-  { name: 'Vue', count: 12, colorIndex: 1 },
-  { name: 'React', count: 8, colorIndex: 2 },
-  { name: 'TypeScript', count: 10, colorIndex: 3 },
-  { name: 'Python', count: 6, colorIndex: 4 },
-  { name: 'Docker', count: 5, colorIndex: 5 },
-  { name: 'Git', count: 7, colorIndex: 6 },
-  { name: 'CSS', count: 9, colorIndex: 7 }
-].map(tag => ({
-  ...tag,
-  colorIndex: getColorIndexFromName(tag.name)
-}))
-
-// 用户资料
-const mockUser = {
-  name: "张三",
-  email: "zhangsan@example.com",
-  avatar: "https://github.com/shadcn.png"
-}
-
-
 export function SidebarContent() {
-  const [categories, setCategories] = useState(mockCategories)
-  const [tags, setTags] = useState(mockTags)
   const router = useRouter()
   const pathname = usePathname()
 
+  const [categories, setCategories] = useState<Category[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
+  const { onSuccess: onSuccessCategories } = useRequest(BookmarkApi.categories);
+  const { onSuccess: onSuccessTags } = useRequest(BookmarkApi.tags);
+
+  onSuccessCategories(({data:res}) => {
+    if (res.success && res.data) {
+      setCategories(res.data)
+    }
+  })
+
+  onSuccessTags(({data:res}) => {
+    if (res.success && res.data) {
+      setTags(res.data)
+    }
+  })
+
   const handleCategoryClick = (category: Category) => {
-    router.push(`/my-bookmarks/category/${encodeURIComponent(category.name)}`)
+    router.push(`/my-bookmarks/category/${category.id}`)
   }
 
   const handleTagClick = (tag: Tag) => {
-    router.push(`/my-bookmarks/tag/${encodeURIComponent(tag.name)}`)
+    router.push(`/my-bookmarks/tag/${encodeURIComponent(tag.id)}`)
   }
 
   const handleViewClick = (view?: string) => {
@@ -113,17 +78,12 @@ export function SidebarContent() {
     // TODO: 实现标签删除逻辑
   }
 
-  const handleAddCategory = (values: { name: string; icon: string }) => {
-    const newCategory = {
-      name: values.name,
-      icon: values.icon,
-      count: 0
-    }
-    setCategories([...categories, newCategory])
+  const handleAddCategory = () => {
+   // do something
   }
 
-  const handleAddTag = (newTag: { name: string; colorIndex: number }) => {
-    setTags([...tags, { ...newTag, count: 0 }])
+  const handleAddTag = () => {
+   // do something
   }
 
   return (
@@ -189,13 +149,13 @@ export function SidebarContent() {
             <AddCategoryDialog onAddCategory={handleAddCategory} />
           </div>
           
-          {categories.map((category, index) => {
+          {categories.map((category) => {
             const categoryPath = `/category/${encodeURIComponent(category.name)}`
             const isActive = pathname === categoryPath
 
             return (
               <div 
-                key={index} 
+                key={category.id}
                 className={`group flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg mb-1 ${
                   isActive ? 'bg-gray-200 dark:bg-gray-700' : ''
                 }`}
@@ -205,14 +165,13 @@ export function SidebarContent() {
                   onClick={() => handleCategoryClick(category)}
                 >
                   <div className="flex items-center">
-                    <span className="mr-2">{category.icon}</span>
+                    <span className="mr-2">{category.icon || '📁'}</span>
                     <span className={`text-sm ${
                       isActive 
                         ? 'text-gray-900 dark:text-white font-medium' 
                         : 'text-gray-700 dark:text-gray-300'
                     }`}>{category.name}</span>
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">{category.count}</span>
                 </div>
                 
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -231,7 +190,7 @@ export function SidebarContent() {
                         onClick={() => handleDeleteCategory(category)}
                         className="text-red-500 focus:text-red-500"
                       >
-                        <Trash2 className="w-4 h-4 mr-2" />
+                        <Trash2 className="w-4 h-4 mr-2 text-red-500" />
                         删除
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -249,17 +208,24 @@ export function SidebarContent() {
             <AddTagDialog onAddTag={handleAddTag} />
           </div>
           <div className="flex flex-wrap gap-2">
-            {tags.map((tag, index) => {
-              const colorScheme = tagColors[tag.colorIndex]
+            {tags.map((tag) => {
+              const tagStyle = tag.color ? {
+                backgroundColor: tag.color,
+                color: '#FFFFFF',  // 使用白色文本以确保在彩色背景上可读
+                opacity: 0.9,
+              } : undefined;
+
               return (
-                <ContextMenu key={index}>
+                <ContextMenu key={tag.id}>
                   <ContextMenuTrigger>
                     <span
-                      className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${colorScheme.bg} ${colorScheme.text} ${colorScheme.hover} cursor-pointer transition-colors duration-200`}
+                      style={tagStyle}
+                      className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${
+                        !tag.color ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' : ''
+                      } cursor-pointer transition-colors duration-200 hover:opacity-100`}
                       onClick={() => handleTagClick(tag)}
                     >
-                      {tag.name}
-                      <span className="ml-1 opacity-75">{tag.count}</span>
+                      # {tag.name}
                     </span>
                   </ContextMenuTrigger>
                   <ContextMenuContent className="w-32">
@@ -271,7 +237,7 @@ export function SidebarContent() {
                       onClick={() => handleTagDelete(tag)}
                       className="text-red-500 focus:text-red-500"
                     >
-                      <Trash2 className="w-4 h-4 mr-2" />
+                      <Trash2 className="w-4 h-4 mr-2 text-red-500" />
                       删除
                     </ContextMenuItem>
                   </ContextMenuContent>
@@ -284,7 +250,7 @@ export function SidebarContent() {
 
       {/* 用户信息 */}
       <div className="flex-none p-3 border-t border-gray-200 dark:border-gray-700">
-        <UserMenu user={mockUser} />
+        <UserMenu />
       </div>
     </aside>
   )
