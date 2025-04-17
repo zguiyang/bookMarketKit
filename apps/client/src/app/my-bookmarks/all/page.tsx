@@ -7,14 +7,7 @@ import {BookmarkCard} from "@/components/bookmark/bookmark-card"
 import {BookmarkSkeleton} from "@/components/bookmark/bookmark-skeleton"
 import {EmptyPlaceholder} from "@/components/empty-placeholder"
 import {BookmarkPlus} from "lucide-react"
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
+import { PaginationList } from "@/components/pagination-list"
 
 export default function AllBookmarksPage() {
     const {
@@ -83,37 +76,12 @@ export default function AllBookmarksPage() {
             </div>
             {(bookmarkList.length > 0 || isLoading) && (
                 <div className="mt-8 flex justify-center">
-                    <Pagination>
-                        <PaginationContent className="flex items-center gap-1">
-                            <PaginationItem>
-                                <PaginationPrevious 
-                                    onClick={() => !isLoading && handlePageChange(page - 1)}
-                                    className={`${page <= 1 || isLoading ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-muted"} flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-md`}
-                                >
-                                    上一页
-                                </PaginationPrevious>
-                            </PaginationItem>
-                            {Array.from({length: totalPages}, (_, i) => i + 1).map((pageNum) => (
-                                <PaginationItem key={pageNum}>
-                                    <PaginationLink
-                                        onClick={() => !isLoading && handlePageChange(pageNum)}
-                                        isActive={page === pageNum}
-                                        className={`${isLoading ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-muted"} px-4 py-2 text-sm font-medium transition-all duration-200 rounded-md ${page === pageNum ? "bg-primary text-primary-foreground hover:bg-primary/90" : ""}`}
-                                    >
-                                        {pageNum}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            ))}
-                            <PaginationItem>
-                                <PaginationNext
-                                    onClick={() => !isLoading && handlePageChange(page + 1)}
-                                    className={`${page >= totalPages || isLoading ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-muted"} flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-md`}
-                                >
-                                    下一页
-                                </PaginationNext>
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
+                    <PaginationList
+                        currentPage={page}
+                        totalPages={totalPages}
+                        isLoading={isLoading}
+                        onPageChange={handlePageChange}
+                    />
                 </div>
             )}
         </div>

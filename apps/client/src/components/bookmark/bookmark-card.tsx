@@ -194,7 +194,7 @@ export function BookmarkCard({
                             key={tag.id}
                             className="px-2 py-0.5 rounded-md text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
                         >
-                            #{tag.name}
+                            # {tag.name}
                         </span>
                     ))}
                 </div>
