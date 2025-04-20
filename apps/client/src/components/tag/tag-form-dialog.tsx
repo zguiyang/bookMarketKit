@@ -75,7 +75,7 @@ export function TagFormDialog({
         colorIndex: 0
       })
     }
-  }, [tag, mode, form])
+  }, [tag, mode, form, open])
 
   const handleSubmit = (values: FormValues) => {
     onSubmitForm(values)

@@ -77,7 +77,7 @@ export function CategoryFormDialog({
         icon: ""
       })
     }
-  }, [category, form])
+  }, [category, form, open, mode])
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {

@@ -70,6 +70,19 @@ export type BookMarkPinnedReq = {
     isPinned:BookMarkPinnedEnums;
 }
 
+
+export type CreateBookmarkDTO = {
+    title: string;
+    url: string;
+    icon?: string;
+    categoryIds?: string[];
+    tagIds?: string[];
+}
+
+export type UpdateBookmarkDTO = CreateBookmarkDTO & {
+    id: string;
+}
+
 export type CreateCategoryReq = {
     name: string;
     description?: string;

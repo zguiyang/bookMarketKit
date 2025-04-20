@@ -1,7 +1,9 @@
 import request from "@/lib/request";
 import { ApiResponse } from '@/types/response';
-import { BookmarkCollection, BookmarkPageListReq, BookMarkPageListRes, BookMarkFavoriteReq, BookMarkPinnedReq, Category,
+import { BookmarkCollection, BookmarkPageListReq, BookMarkPageListRes,
+    BookMarkFavoriteReq, BookMarkPinnedReq, Category,
     Tag, CreateCategoryReq, UpdateCategoryReq, UpdateTagReq, CreateTagReq,
+    CreateBookmarkDTO, UpdateBookmarkDTO
 } from './types';
 
 class BookMark {
@@ -29,20 +31,32 @@ class BookMark {
         });
     }
 
+    create(data: CreateBookmarkDTO) {
+        return request.Post<ApiResponse>('/bookmark/create', data);
+    }
+
+    update(data: UpdateBookmarkDTO) {
+        return request.Put<ApiResponse>('/bookmark/update', data);
+    }
+
     /* ---------------- BookMark Category ----------------------------*/
 
     categories() {
         return request.Get<ApiResponse<Category[]>>('/bookmark/category/all');
     }
+
     queryOneCategory(id: string) {
         return request.Get<ApiResponse<Category>>(`/bookmark/category/detail/${id}`)
     }
+
     createCategory (data: CreateCategoryReq) {
         return request.Post<ApiResponse<Category>>('/bookmark/category/create', data)
     }
+
     updateCategory(data: UpdateCategoryReq) {
         return request.Put<ApiResponse>('/bookmark/category/update', data);
     }
+
     delCategory(id: string) {
         return request.Delete<ApiResponse>(`/bookmark/category/delete/${id}`)
     }
@@ -52,15 +66,19 @@ class BookMark {
     tags() {
         return request.Get<ApiResponse<Tag[]>>('/bookmark/tag/all');
     }
+
     queryOneTag(id: string) {
         return request.Get<ApiResponse<Tag>>(`/bookmark/tag/detail/${id}`)
     }
+
     createTag(data: CreateTagReq) {
         return request.Post<ApiResponse>('/bookmark/tag/create', data);
     }
+
     updateTag(data: UpdateTagReq) {
         return request.Put<ApiResponse>('/bookmark/tag/update', data);
     }
+
     delTag(id: string) {
         return request.Delete<ApiResponse>(`/bookmark/tag/delete/${id}`)
     }

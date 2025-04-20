@@ -1,25 +1,15 @@
 "use client"
 
-import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import * as z from "zod"
-import { 
-  Bookmark, 
-  Star, 
-  StarOff, 
-  ChevronDown, 
-  ChevronUp, 
-  Sparkles, 
-  Loader2 
-} from "lucide-react"
+import { Bookmark as BookmarkIcon } from "lucide-react"
+import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -27,474 +17,192 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Bookmark as BookmarkType } from "@/types/bookmark"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-// 定义表单模式
-const bookmarkFormSchema = z.object({
+import { Bookmark } from '@/api/bookmark';
+import { useBookmarkData } from '@/hooks/bookmark-data';
+
+const formSchema = z.object({
   title: z.string().min(1, "标题不能为空"),
   url: z.string().url("请输入有效的URL地址"),
-  description: z.string().optional(),
-  category: z.string().optional(),
-  subcategory: z.string().optional(),
-  tags: z.string().optional(),
-  starred: z.boolean().optional(),
+  icon: z.string().optional(),
+  categoryId: z.string().optional(),
+  tagId: z.string().optional()
 })
 
-// 使用zod推断的类型
-type FormValues = z.infer<typeof bookmarkFormSchema>
-
-// 创建一个转换后的类型，用于提交给父组件
-export interface BookmarkFormValues {
-  title: string
-  url: string
-  description?: string
-  category?: string
-  subcategory?: string
-  tags: string[]
-  starred: boolean
-}
-
-// 默认值需要匹配FormValues类型
-const defaultValues: FormValues = {
-  title: "",
-  url: "",
-  description: "",
-  category: "",
-  subcategory: "",
-  tags: "",
-  starred: false,
-}
+export type FormValues = z.infer<typeof formSchema>
 
 interface BookmarkFormProps {
+  mode: 'create' | 'edit'
+  bookmark?: Bookmark;
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (values: BookmarkFormValues) => void
-  initialData?: BookmarkType
+  onSubmit: (values: FormValues) => void
 }
 
 export function BookmarkForm({ 
+  mode,
+  bookmark,
   open, 
   onOpenChange, 
-  onSubmit, 
-  initialData 
+  onSubmit,
 }: BookmarkFormProps) {
-  const [isStarred, setIsStarred] = useState(initialData?.starred || false)
-  const [activeTab, setActiveTab] = useState<string>("quick")
-  const [isAILoading, setIsAILoading] = useState(false)
-  const [expandedForm, setExpandedForm] = useState(false)
-  
-  const form = useForm<FormValues>({
-    resolver: zodResolver(bookmarkFormSchema),
-    defaultValues: initialData ? {
-      title: initialData.title,
-      url: initialData.url,
-      description: initialData.description || "",
-      category: initialData.category || "",
-      subcategory: initialData.subcategory || "",
-      tags: initialData.tags ? initialData.tags.join(", ") : "",
-      starred: initialData.starred ?? false,
-    } : defaultValues,
-  })
+  const { categories, tags } = useBookmarkData();
 
-  // 使用AI抓取网页信息
-  const handleFetchWithAI = async () => {
-    const url = form.getValues("url")
-    if (!url) {
-      form.setError("url", { 
-        type: "manual", 
-        message: "请先输入URL地址" 
-      })
-      return
-    }
-
-    setIsAILoading(true)
-    // TODO: 实现AI抓取网页信息的逻辑
-    // 这里模拟AI抓取过程
-    setTimeout(() => {
-      // 模拟AI抓取的结果
-      const aiResult = {
-        title: url.includes("github") ? "GitHub - 开发者协作平台" : 
-               url.includes("stackoverflow") ? "Stack Overflow - 开发者问答社区" :
-               "网页标题",
-        description: "这是AI自动抓取的网页描述，包含了网页的主要内容和关键信息。",
-        category: "技术",
-        subcategory: "开发工具",
-        tags: "开发, 工具, 在线服务",
-      }
-      
-      form.setValue("title", aiResult.title)
-      form.setValue("description", aiResult.description)
-      form.setValue("category", aiResult.category)
-      form.setValue("subcategory", aiResult.subcategory)
-      form.setValue("tags", aiResult.tags)
-      
-      setIsAILoading(false)
-      setExpandedForm(true)
-    }, 1500)
+  const defaultValues: Partial<FormValues> = {
+    title: "",
+    url: "",
+    icon: "",
+    categoryId: "",
+    tagId: ""
   }
 
-  // 处理表单提交
-  const onFormSubmit:SubmitHandler<FormValues> = (values: FormValues) => {
-    // 将表单值转换为提交格式
-    const submissionValues: BookmarkFormValues = {
-      title: values.title,
-      url: values.url,
-      description: values.description,
-      category: values.category,
-      subcategory: values.subcategory,
-      tags: values.tags ? values.tags.split(",").map(tag => tag.trim()).filter(Boolean) : [],
-      starred: isStarred,
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: defaultValues as FormValues
+  })
+
+  useEffect(() => {
+    if (bookmark && mode === 'edit') {
+      // TODO: 需要支持多分类、多标签
+      const categoryIds = bookmark.categories?.map(c => c.id);
+      const tagIds = bookmark.tags?.map(t => t.id);
+      form.reset({
+        title: bookmark.title,
+        url: bookmark.url,
+        icon: bookmark.icon || "",
+        categoryId: categoryIds[0] ? categoryIds[0] : '',
+        tagId: tagIds[0] ? tagIds[0] : '',
+      })
+    } else {
+      form.reset(defaultValues as FormValues)
     }
-    
-    onSubmit(submissionValues)
-    form.reset(defaultValues)
-    setExpandedForm(false)
-    setActiveTab("quick")
-    onOpenChange(false)
+  }, [bookmark, mode, form, open])
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      form.reset(defaultValues as FormValues)
+      form.clearErrors()
+    }
+    onOpenChange(open)
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Bookmark className="h-5 w-5" />
-            {initialData ? "编辑书签" : "新增书签"}
+            <BookmarkIcon className="h-5 w-5" />
+            {mode === 'create' ? '新增书签' : '编辑书签'}
           </DialogTitle>
-          <DialogDescription>
-            {initialData 
-              ? "修改书签信息，点击保存更新书签。" 
-              : "添加一个新的书签，填写必要的信息后点击保存。"}
-          </DialogDescription>
         </DialogHeader>
         
-        {!initialData && (
-          <Tabs 
-            defaultValue="quick" 
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="quick">快速添加</TabsTrigger>
-              <TabsTrigger value="advanced">完整表单</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        )}
-        
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-4">
-            {/* 快速添加表单 */}
-            {(activeTab === "quick" && !initialData) && (
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>URL</FormLabel>
-                      <div className="flex gap-2">
-                        <FormControl>
-                          <Input placeholder="https://example.com" {...field} />
-                        </FormControl>
-                        <Button 
-                          type="button" 
-                          variant="outline" 
-                          size="icon"
-                          onClick={handleFetchWithAI}
-                          disabled={isAILoading}
-                          className="flex-shrink-0"
-                          title="使用AI抓取信息"
-                        >
-                          {isAILoading ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Sparkles className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>标题</FormLabel>
-                      <FormControl>
-                        <Input placeholder="书签标题" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <div className="flex items-center gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex items-center gap-1"
-                    onClick={() => {
-                      setIsStarred(!isStarred);
-                      form.setValue("starred", !isStarred);
-                    }}
-                  >
-                    {isStarred ? (
-                      <>
-                        <StarOff className="h-4 w-4" />
-                        <span>取消收藏</span>
-                      </>
-                    ) : (
-                      <>
-                        <Star className="h-4 w-4" />
-                        <span>收藏</span>
-                      </>
-                    )}
-                  </Button>
-                  <span className="text-sm text-muted-foreground">
-                    {isStarred ? "已添加到收藏" : "添加到收藏以便快速访问"}
-                  </span>
-                </div>
-                
-                {expandedForm && (
-                  <div className="space-y-4 pt-2">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium">AI抓取的附加信息</h3>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setExpandedForm(!expandedForm)}
-                        className="h-8 px-2"
-                      >
-                        {expandedForm ? (
-                          <ChevronUp className="h-4 w-4" />
-                        ) : (
-                          <ChevronDown className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                    
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>描述</FormLabel>
-                          <FormControl>
-                            <Textarea placeholder="书签描述（可选）" {...field} className="resize-none" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                      
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="category"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>分类</FormLabel>
-                            <FormControl>
-                              <Input placeholder="分类（可选）" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="subcategory"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>子分类</FormLabel>
-                            <FormControl>
-                              <Input placeholder="子分类（可选）" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                      
-                    <FormField
-                      control={form.control}
-                      name="tags"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>标签</FormLabel>
-                          <FormControl>
-                            <Input placeholder="标签，用逗号分隔（可选）" {...field} />
-                          </FormControl>
-                          <FormDescription>多个标签请用逗号分隔</FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
-              </div>
-            )}
+          <form 
+            onSubmit={form.handleSubmit((data) => {
+              onSubmit(data)
+              if (mode === 'create') {
+                form.reset(defaultValues as FormValues)
+              }
+              onOpenChange(false)
+            })} 
+            className="space-y-4"
+          >
+            <FormField
+              control={form.control}
+              name="url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             
-            {/* 完整表单 */}
-            {(activeTab === "advanced" || initialData) && (
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>URL</FormLabel>
-                      <div className="flex gap-2">
-                        <FormControl>
-                          <Input placeholder="https://example.com" {...field} />
-                        </FormControl>
-                        {!initialData && (
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            size="icon"
-                            onClick={handleFetchWithAI}
-                            disabled={isAILoading}
-                            className="flex-shrink-0"
-                            title="使用AI抓取信息"
-                          >
-                            {isAILoading ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Sparkles className="h-4 w-4" />
-                            )}
-                          </Button>
-                        )}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>标题</FormLabel>
-                      <FormControl>
-                        <Input placeholder="书签标题" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>描述</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="书签描述（可选）" 
-                          {...field} 
-                          className="resize-none"
-                        />
-                      </FormControl>
-                      <FormDescription>简要描述这个书签的内容</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                  
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>分类</FormLabel>
-                        <FormControl>
-                          <Input placeholder="分类（可选）" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="subcategory"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>子分类</FormLabel>
-                        <FormControl>
-                          <Input placeholder="子分类（可选）" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                  
-                <FormField
-                  control={form.control}
-                  name="tags"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>标签</FormLabel>
-                      <FormControl>
-                        <Input placeholder="标签，用逗号分隔（可选）" {...field} />
-                      </FormControl>
-                      <FormDescription>多个标签请用逗号分隔</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <div className="flex items-center gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex items-center gap-1"
-                    onClick={() => {
-                      setIsStarred(!isStarred);
-                      form.setValue("starred", !isStarred);
-                    }}
-                  >
-                    {isStarred ? (
-                      <>
-                        <StarOff className="h-4 w-4" />
-                        <span>取消收藏</span>
-                      </>
-                    ) : (
-                      <>
-                        <Star className="h-4 w-4" />
-                        <span>收藏</span>
-                      </>
-                    )}
-                  </Button>
-                  <span className="text-sm text-muted-foreground">
-                    {isStarred ? "已添加到收藏" : "添加到收藏以便快速访问"}
-                  </span>
-                </div>
-              </div>
-            )}
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>标题</FormLabel>
+                  <FormControl>
+                    <Input placeholder="书签标题" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>分类</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="选择分类" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tagId"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>标签</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="选择标签" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {tags.map((tag) => (
+                        <SelectItem key={tag.id} value={tag.id}>
+                          {tag.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             
             <DialogFooter className="pt-2">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
                 取消
               </Button>
-              <Button type="submit">保存</Button>
+              <Button type="submit">确定</Button>
             </DialogFooter>
           </form>
         </Form>

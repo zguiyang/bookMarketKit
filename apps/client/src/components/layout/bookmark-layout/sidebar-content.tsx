@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { Heart, Sparkle, Bookmark as BookmarkIcon, MoreHorizontal, Pencil, Trash2, Plus } from "lucide-react"
-import { useRequest } from 'alova/client'
 import { BookmarkApi, Tag, Category, CreateCategoryReq } from '@/api/bookmark'
 import { UserMenu } from "./user-menu"
 import { toast } from "sonner"
@@ -24,6 +23,7 @@ import { Button } from '@/components/ui/button'
 import { CategoryFormDialog } from "@/components/category/category-form-dialog"
 import { TagFormDialog } from "@/components/tag/tag-form-dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useBookmarkData } from '@/hooks/bookmark-data';
 
 // 视图选择组件
 function ViewSection() {
@@ -86,24 +86,16 @@ function ViewSection() {
 function CategorySection() {
   const router = useRouter()
   const pathname = usePathname()
-  const [categories, setCategories] = useState<Category[]>([])
+
   const [dialogCreateOpen, setDialogCreateOpen] = useState<boolean>(false);
   const [dialogUpdateOpen, setDialogUpdateOpen] = useState<boolean>(false);
   const [categoryRow, setCategoryRow] = useState<Category>({
     id: '',
     name: '',
   })
-  
-  const { 
-    loading: categoriesLoading,
-    onSuccess: onSuccessCategories 
-  } = useRequest(BookmarkApi.categories);
 
-  onSuccessCategories(({data:res}) => {
-    if (res.success && res.data) {
-      setCategories(res.data)
-    }
-  })
+  const { categories, setCategories, categoriesLoading } = useBookmarkData();
+
 
   const handleCategoryClick = (category: Category) => {
     router.push(`/my-bookmarks/category/${category.id}`)
@@ -235,21 +227,11 @@ function CategorySection() {
 // 标签区域组件
 function TagSection() {
   const router = useRouter()
-  const [tags, setTags] = useState<Tag[]>([])
   const [dialogCreateOpen, setDialogCreateOpen] = useState(false)
   const [dialogUpdateOpen, setDialogUpdateOpen] = useState(false)
   const [tagToEdit, setTagToEdit] = useState<Tag | undefined>()
-  
-  const { 
-    loading: tagsLoading,
-    onSuccess: onSuccessTags 
-  } = useRequest(BookmarkApi.tags);
 
-  onSuccessTags(({data:res}) => {
-    if (res.success && res.data) {
-      setTags(res.data)
-    }
-  })
+  const { tags, setTags, tagsLoading } = useBookmarkData();
 
   const handleTagClick = (tag: Tag) => {
     router.push(`/my-bookmarks/tag/${encodeURIComponent(tag.id)}`)

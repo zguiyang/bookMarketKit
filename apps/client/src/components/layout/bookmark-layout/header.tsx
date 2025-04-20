@@ -1,17 +1,14 @@
 import { Plus, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { CommandMenu } from "@/components/command-menu"
-import { Bookmark } from '@/types/bookmark'
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { SidebarContent } from "./sidebar-content"
 
 interface HeaderProps {
-  bookmarks: Bookmark[]
   onAddBookmark: () => void
 }
 
-export function Header({ bookmarks, onAddBookmark }: HeaderProps) {
+export function Header({ onAddBookmark }: HeaderProps) {
   return (
     <div className="border-b border-border bg-background">
       <div className="flex h-16 items-center px-4 md:px-8">
@@ -41,7 +38,7 @@ export function Header({ bookmarks, onAddBookmark }: HeaderProps) {
 
         <div className="flex-1 flex items-center space-x-4">
           <div className="flex-1 relative">
-            <CommandMenu bookmarks={bookmarks} />
+            {/* 移除 CommandMenu，因为现在不需要它 */}
           </div>
           <Button onClick={onAddBookmark}>
             <Plus className="w-5 h-5" />
