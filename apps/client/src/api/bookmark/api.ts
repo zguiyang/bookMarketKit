@@ -39,6 +39,10 @@ class BookMark {
         return request.Put<ApiResponse>('/bookmark/update', data);
     }
 
+    delete(id: string) {
+        return request.Delete<ApiResponse>(`/bookmark/delete/${id}`);
+    }
+
     /* ---------------- BookMark Category ----------------------------*/
 
     categories() {

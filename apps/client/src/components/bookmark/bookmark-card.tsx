@@ -38,6 +38,9 @@ export function BookmarkCard({
     const { send: updateBookmark } = useRequest(BookmarkApi.update, {
         immediate: false,
     });
+    const { send: deleteBookmark } = useRequest(BookmarkApi.delete, {
+        immediate: false,
+    });
 
     const handleUpdateBookmark = () => {
         onUpdateBookmark && onUpdateBookmark(bookmark)
@@ -52,8 +55,11 @@ export function BookmarkCard({
         }
     }
 
-    const handleDeleteBookmark = () => {
-        handleUpdateBookmark();
+    const handleDeleteBookmark = async () => {
+        const { success } = await deleteBookmark(bookmark.id);
+      if (success) {
+          handleUpdateBookmark();
+      }
     }
 
     const handleEditBookmark = () => {

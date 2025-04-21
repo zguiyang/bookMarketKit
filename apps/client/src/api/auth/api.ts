@@ -7,6 +7,12 @@ class Auth {
         return request.Post<ApiResponse<any>>('/auth/register', data);
     }
 
+    getValidationCode (email:string) {
+        return request.Get<ApiResponse<any>>('/auth/getEmailCode', {
+            params: { email }
+        })
+    }
+
      login (data: LoginRequest) {
         return  request.Post<ApiResponse<string>>('/auth/login', data);
     }
