@@ -46,7 +46,7 @@ export default function LoginPage() {
     const res =  await postLogin(data)
       if (res.success) {
         setAuthToken(res.data);
-        router.push("/")
+        router.push("/my-bookmarks")
       }
     } catch (error) {
       console.error(error)
