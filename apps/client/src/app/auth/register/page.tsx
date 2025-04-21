@@ -194,9 +194,14 @@ export default function RegisterPage() {
                     disabled={isLoading}
                   />
                 </FormControl>
-                <FormDescription className="text-xs">
-                  密码长度至少8位，包含字母和数字
-                </FormDescription>
+                <div className="space-y-1.5">
+                  <FormDescription className="text-xs">
+                    密码长度至少8位，包含字母和数字
+                  </FormDescription>
+                  <p className="text-xs text-yellow-500 dark:text-yellow-400">
+                    注意：找回密码功能开发中，请牢记密码。如遗忘请联系管理员：2770723534@qq.com
+                  </p>
+                </div>
                 <FormMessage />
               </FormItem>
             )}

@@ -367,8 +367,20 @@ function Logo() {
   return (
     <div className="flex-none p-4 border-b border-gray-200 dark:border-gray-700">
       <div className="flex items-center space-x-2">
-        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-          <span className="text-white text-lg">📚</span>
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+        <svg 
+            className="h-5 w-5 sm:h-6 sm:w-6 text-primary" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" 
+            />
+          </svg>
         </div>
         <span className="text-xl font-bold text-gray-900 dark:text-white">BookMarketKit</span>
       </div>
