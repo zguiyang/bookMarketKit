@@ -220,3 +220,14 @@ export class UpdateLastVisitTimeDTO {
   @IsNotEmpty({ message: '书签ID不能为空' })
   id: string;
 }
+
+export class SearchDTO {
+  @ApiProperty({
+    description: '搜索关键词',
+    example: '前端开发',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty({ message: '搜索关键词不能为空' })
+  keyword: string;
+}

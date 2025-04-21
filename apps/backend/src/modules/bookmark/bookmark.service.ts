@@ -1,7 +1,11 @@
 import type { InsertBookmark, SelectBookmark } from '@/db/schemas';
-import { bookmarksTable } from '@/db/schemas';
+import {
+  bookmarksTable,
+  bookmarkCategoriesTable,
+  bookmarkTagsTable,
+} from '@/db/schemas';
 import { Inject, Injectable } from '@nestjs/common';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, sql, ilike, or, desc } from 'drizzle-orm';
 import { DB_PROVIDER, type DbType } from '@/core/database/database-provider';
 import { BusinessException } from '@/common/exceptions/business.exception';
 import { bookmarksCodeMessages } from '@/settings/code-message.setting';
@@ -381,5 +385,87 @@ export class BookmarkService {
     if (result.rowCount < 1) {
       throw new BusinessException(bookmarksCodeMessages.updateError);
     }
+  }
+
+  /**
+   * 搜索书签、分类和标签
+   * @param userId 用户ID
+   * @param keyword 搜索关键词
+   * @returns 分组的搜索结果
+   */
+  async search(
+    userId: string,
+    keyword: string,
+  ): Promise<{
+    bookmarks: SelectBookmark[];
+    categories: any[];
+    tags: any[];
+  }> {
+    // 验证参数
+    if (!keyword.trim()) {
+      return {
+        bookmarks: [],
+        categories: [],
+        tags: [],
+      };
+    }
+
+    const [bookmarks, categories, tags] = await Promise.all([
+      // 搜索书签
+      this.database.query.bookmarksTable.findMany({
+        where: (bookmarks, { eq, and, or, ilike }) =>
+          and(
+            eq(bookmarks.user_id, userId),
+            or(
+              ilike(bookmarks.title, `%${keyword}%`),
+              ilike(bookmarks.url, `%${keyword}%`),
+            ),
+          ),
+        orderBy: (bookmarks, { desc }) => [desc(bookmarks.updated_at)],
+        limit: 10,
+        with: {
+          categories: {
+            with: {
+              category: true,
+            },
+          },
+          tags: {
+            with: {
+              tag: true,
+            },
+          },
+        },
+      }),
+
+      // 搜索分类
+      this.database.query.bookmarkCategoriesTable.findMany({
+        where: (categories, { eq, and, or, ilike }) =>
+          and(
+            eq(categories.user_id, userId),
+            or(
+              ilike(categories.name, `%${keyword}%`),
+              ilike(categories.description || '', `%${keyword}%`),
+            ),
+          ),
+        orderBy: (categories, { desc }) => [desc(categories.updated_at)],
+        limit: 5,
+      }),
+
+      // 搜索标签
+      this.database.query.bookmarkTagsTable.findMany({
+        where: (tags, { eq, and, ilike }) =>
+          and(eq(tags.user_id, userId), ilike(tags.name, `%${keyword}%`)),
+        orderBy: (tags, { desc }) => [desc(tags.created_at)],
+        limit: 5,
+      }),
+    ]);
+
+    return {
+      bookmarks: bookmarks.map((bookmark) =>
+        this._processBookmarkRelations(bookmark),
+      ),
+      categories,
+      tags,
+    };
   }
 }

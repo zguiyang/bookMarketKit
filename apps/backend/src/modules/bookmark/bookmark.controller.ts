@@ -28,6 +28,7 @@ import {
   SetPinnedTopDTO,
   BookmarkPageListRequestDTO,
   UpdateLastVisitTimeDTO,
+  SearchDTO,
 } from './dto/request.dto';
 
 @ApiTags('书签管理')
@@ -166,5 +167,19 @@ export class BookmarkController {
       updateLastVisitTimeDto.id,
     );
     return { message: '更新成功' };
+  }
+
+  @Get('search')
+  @ApiOperation({
+    summary: '搜索书签、分类、标签',
+    description: '根据关键词搜索书签、分类、标签，结果分组返回',
+  })
+  @ApiQuery({ name: 'keyword', description: '搜索关键词', required: true })
+  @ApiResponse({ status: 200, description: '搜索成功' })
+  async search(
+    @CurrentUser('userId') userId: string,
+    @Query('keyword') keyword: string,
+  ) {
+    return await this.bookmarkService.search(userId, keyword);
   }
 }

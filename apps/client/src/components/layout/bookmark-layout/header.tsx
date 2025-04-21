@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { SidebarContent } from "./sidebar-content"
+import {CommandMenu} from "./command-menu";
 
 interface HeaderProps {
   onAddBookmark: () => void
@@ -38,7 +39,7 @@ export function Header({ onAddBookmark }: HeaderProps) {
 
         <div className="flex-1 flex items-center space-x-4">
           <div className="flex-1 relative">
-            {/* 移除 CommandMenu，因为现在不需要它 */}
+            <CommandMenu />
           </div>
           <Button onClick={onAddBookmark}>
             <Plus className="w-5 h-5" />

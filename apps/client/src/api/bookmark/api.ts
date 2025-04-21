@@ -3,7 +3,7 @@ import { ApiResponse } from '@/types/response';
 import { BookmarkCollection, BookmarkPageListReq, BookMarkPageListRes,
     BookMarkFavoriteReq, BookMarkPinnedReq, Category,
     Tag, CreateCategoryReq, UpdateCategoryReq, UpdateTagReq, CreateTagReq,
-    CreateBookmarkDTO, UpdateBookmarkDTO
+    CreateBookmarkDTO, UpdateBookmarkDTO, BookmarkSearchRes,
 } from './types';
 
 class BookMark {
@@ -15,6 +15,12 @@ class BookMark {
         return request.Get<BookMarkPageListRes>('/bookmark/pageList', {
             params,
         });
+    }
+
+    search (keyword: string) {
+        return request.Get<ApiResponse<BookmarkSearchRes>>('/bookmark/search', {
+            params: { keyword }
+        })
     }
 
     setFavorite(data: BookMarkFavoriteReq) {

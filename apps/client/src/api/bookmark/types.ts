@@ -101,3 +101,9 @@ export type CreateTagReq = {
 export type UpdateTagReq = CreateTagReq & {
     id: string;
 }
+
+export type BookmarkSearchRes = {
+    bookmarks: Bookmark[];
+    categories: Category[];
+    tags: Tag[];
+}
