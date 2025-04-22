@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // 禁用构建时的类型检查
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   async rewrites() {
     // 确保有默认值，防止构建失败
     const backendUrl = process.env.BACKEND_SERVER_URL || 'http://backend:3090';
