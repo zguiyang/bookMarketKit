@@ -11,11 +11,13 @@ export interface PageListRequest {
     orderBy?: string;
     direction?: PageDirectionEnum;
 }
-export interface PageListData<T = any> {
+
+export interface PageListData<T = unknown> {
     content: T[];
     page: number;
     pages: number;
     pageSize: number;
     total: number;
 }
-export type PageListResponse<T = any> = ApiResponse<PageListData<T>>;
+
+export type PageListResponse<T = unknown> = ApiResponse<PageListData<T>>;
