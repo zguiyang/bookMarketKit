@@ -16,10 +16,14 @@ RUN pnpm install
 # 复制源代码
 COPY . .
 
+# 设置构建时环境变量
+ENV BACKEND_SERVER_URL=http://backend:3090
+ENV NEXT_PUBLIC_API_URL=http://localhost:3090
+
 # 构建应用
 RUN pnpm build
 
-# 设置环境变量
+# 设置运行时环境变量
 ENV PORT=3091
 ENV NODE_ENV=production
 

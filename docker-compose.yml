@@ -23,6 +23,8 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3091
+      - NEXT_PUBLIC_API_URL=http://localhost:3090
+      - BACKEND_SERVER_URL=http://backend:3090
     ports:
       - "3091:3091"
     depends_on:
