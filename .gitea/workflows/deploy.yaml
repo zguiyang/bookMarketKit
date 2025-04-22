@@ -1,0 +1,77 @@
+name: Deploy BookmarkKet apps
+run-name: ${{ gitea.actor }} is building out Gitea Actions 🚀
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
+      - name: Checkout repository code
+        uses: https://gitea.com/actions/checkout@v4
+        with:
+          ref: 'main'
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+
+      # Skip pnpm cache to reduce overhead
+      - name: Install pnpm
+        run: |
+          if ! command -v pnpm &> /dev/null; then
+            npm install -g pnpm@9
+          else
+            echo "pnpm is already installed"
+          fi
+
+      - name: Check Node.js and pnpm versions
+        run: |
+          echo "pnpm version ===>" && pnpm -v
+          echo "node version ===>" && node -v
+
+      # Simplify node_modules handling without caching
+      - name: Install dependencies
+        run: |
+          if [ ! -d "node_modules" ] || [ "$(find package.json -newer node_modules)" ]; then
+            echo "Dependencies are outdated or missing, installing..."
+            pnpm install
+          else
+            echo "Dependencies are up-to-date, skipping installation."
+          fi
+
+      - name: Build backend
+        run: pnpm backend:build
+
+      - name: Build client
+        run: pnpm client:build
+
+      - name: Prepare deployment artifacts
+        run: |
+          mkdir deploy_apps
+          mkdir -p deploy_apps/client
+          mkdir -p deploy_apps/backend
+          
+          cp -r apps/backend/dist/**/*  deploy_apps/backend
+          cp -r apps/backend/package.json  deploy_apps/backend
+          cp -r apps/backend/.env.prod  deploy_apps/backend
+          
+          cp -r apps/client/.next/**/*  deploy_apps/client
+          cp -r apps/client/package.json  deploy_apps/client
+          cp -r apps/client/.env.prod  deploy_apps/client
+
+      - name: ssh deploy for deploy_apps
+        uses: easingthemes/ssh-deploy@v5.1.0
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+          SOURCE: "/deploy_apps/"
+          TARGET: "/opt/1panel/apps/openresty/openresty/www/sites/bookmark.9crd.com"
+          EXCLUDE: "/node_modules/"

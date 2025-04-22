@@ -10,7 +10,6 @@ export const redisClientFactory: FactoryProvider<Redis> = {
       host: configService.get<string>('REDIS_HOST'),
       port: configService.get<number>('REDIS_PORT'),
       password: configService.get<string>('REDIS_PASSWORD'),
-      db: configService.get<number>('REDIS_DB'),
     });
 
     redisInstance.on('connect', () => {

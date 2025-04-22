@@ -1,7 +1,7 @@
 {
   "name": "book-market-kit",
   "version": "1.0.0",
-  "description": "图书交易平台",
+  "description": "书签管理平台",
   "private": true,
   "scripts": {
     "client:dev": "pnpm --filter client dev",
