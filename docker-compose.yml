@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: bookmarket-backend
+    environment:
+      - NODE_ENV=production
+      # 在这里添加其他环境变量
+    ports:
+      - "3090:3090"
+    networks:
+      - bookmarket-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./apps/client
+      dockerfile: Dockerfile
+    container_name: bookmarket-frontend
+    environment:
+      - NODE_ENV=production
+      - PORT=3091
+    ports:
+      - "3091:3091"
+    depends_on:
+      - backend
+    networks:
+      - bookmarket-network
+    restart: unless-stopped
+
+networks:
+  bookmarket-network:
+    driver: bridge 
