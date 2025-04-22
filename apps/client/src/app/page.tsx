@@ -32,14 +32,17 @@ export default function HomePage() {
                 d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" 
               />
             </svg>
-            <span className="text-lg font-semibold text-foreground">BookmarketKit</span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-lg font-semibold text-foreground">BookmarketKit</span>
+              <span className="text-[10px] font-medium px-1 py-0.5 rounded-sm bg-primary/15 text-primary">BETA</span>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/auth/login">
-              <Button variant="ghost" className="h-9">登录</Button>
+              <Button variant="ghost" className="h-9 cursor-pointer">登录</Button>
             </Link>
             <Link href="/auth/register">
-              <Button className="h-9">注册</Button>
+              <Button className="h-9 cursor-pointer">注册</Button>
             </Link>
           </div>
         </div>
@@ -62,12 +65,12 @@ export default function HomePage() {
               </p>
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link href="/auth/register">
-                  <Button size="lg" className="gap-2">
+                  <Button size="lg" className="gap-2 cursor-pointer">
                     开始使用 <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
                 <Link href="#features">
-                  <Button variant="outline" size="lg">
+                  <Button variant="outline" size="lg" className="cursor-pointer">
                     了解更多
                   </Button>
                 </Link>
@@ -297,12 +300,12 @@ export default function HomePage() {
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link href="/auth/register">
-                  <Button size="lg" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full sm:w-auto cursor-pointer">
                     注册账户
                   </Button>
                 </Link>
                 <Link href="/auth/login">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto cursor-pointer">
                     登录账户
                   </Button>
                 </Link>

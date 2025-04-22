@@ -368,7 +368,7 @@ function Logo() {
     <div className="flex-none p-4 border-b border-gray-200 dark:border-gray-700">
       <div className="flex items-center space-x-2">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-        <svg 
+          <svg 
             className="h-5 w-5 sm:h-6 sm:w-6 text-primary" 
             viewBox="0 0 24 24" 
             fill="none" 
@@ -382,7 +382,10 @@ function Logo() {
             />
           </svg>
         </div>
-        <span className="text-xl font-bold text-gray-900 dark:text-white">BookMarketKit</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xl font-bold text-gray-900 dark:text-white">BookMarketKit</span>
+          <span className="text-[10px] font-medium px-1 py-0.5 rounded-sm bg-primary/15 text-primary">BETA</span>
+        </div>
       </div>
     </div>
   )

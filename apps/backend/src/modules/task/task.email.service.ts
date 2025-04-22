@@ -26,7 +26,6 @@ export class TaskEmailService {
     const message = await this.redisService.popFromQueue(
       queueMessageConstants.EMAIL_VERIFICATION_QUEUE,
     );
-    this.logger.log('处理邮件队列消息监听', message);
     if (message) {
       await this.processEmailVerification(message);
     }
