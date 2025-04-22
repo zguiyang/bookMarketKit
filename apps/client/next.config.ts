@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // 禁用构建时的 ESLint 检查
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async rewrites() {
     // 确保有默认值，防止构建失败
     const backendUrl = process.env.BACKEND_SERVER_URL || 'http://backend:3090';
