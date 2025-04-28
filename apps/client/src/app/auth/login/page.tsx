@@ -25,7 +25,8 @@ import { LoginFormValues, loginSchema } from "./validation"
 
 export default function LoginPage() {
   const router = useRouter()
-  const {  setAuthToken } = useAuthStore();
+  const {  setAuthToken, authToken } = useAuthStore();
+
   const { send: postLogin } = useRequest(AuthApi.login, {
     immediate: false,
   });
@@ -53,6 +54,10 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (authToken) {
+    return router.replace('/my-bookmarks')
   }
 
   return (
