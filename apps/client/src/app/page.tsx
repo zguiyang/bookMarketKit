@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import HeaderLogin from "@/components/HeaderLogin";
 
 export default function HomePage() {
   return (
@@ -10,17 +11,17 @@ export default function HomePage() {
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 max-w-screen-xl mx-auto px-2 sm:px-4 lg:px-8 items-center justify-between flex-nowrap min-w-0">
           <div className="flex items-center gap-1 min-w-0 overflow-hidden">
-            <svg 
-              className="h-6 w-6 text-primary flex-shrink-0" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              className="h-6 w-6 text-primary flex-shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
               strokeWidth="2"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" 
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"
               />
             </svg>
             <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 overflow-hidden">
@@ -29,16 +30,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-            <Link href="/auth/login">
-              <Button variant="outline" className="h-9 px-3 text-sm sm:h-10 sm:px-6 sm:text-base rounded-lg border-2 border-primary text-primary font-bold transition-all duration-200 hover:bg-primary/10 hover:text-primary-700 shadow-none cursor-pointer">
-                登录
-              </Button>
-            </Link>
-            <Link href="/auth/register">
-              <Button className="h-9 px-3 text-sm sm:h-10 sm:px-6 sm:text-base rounded-lg bg-gradient-to-r from-primary via-blue-500 to-pink-500 text-white font-bold shadow-md transition-all duration-200 hover:scale-105 cursor-pointer">
-                注册
-              </Button>
-            </Link>
+            <HeaderLogin />
           </div>
         </div>
       </header>
