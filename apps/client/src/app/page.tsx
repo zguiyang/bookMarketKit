@@ -8,10 +8,10 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col">
       {/* 导航栏 */}
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="container flex h-14 max-w-screen-xl mx-auto px-2 sm:px-4 lg:px-8 items-center justify-between flex-nowrap min-w-0">
+          <div className="flex items-center gap-1 min-w-0 overflow-hidden">
             <svg 
-              className="h-6 w-6 text-primary" 
+              className="h-6 w-6 text-primary flex-shrink-0" 
               viewBox="0 0 24 24" 
               fill="none" 
               stroke="currentColor" 
@@ -23,19 +23,19 @@ export default function HomePage() {
                 d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" 
               />
             </svg>
-            <div className="flex items-center gap-1.5">
-              <span className="text-lg font-semibold text-foreground">BookmarketKit</span>
-              <span className="text-[10px] font-medium px-1 py-0.5 rounded-sm bg-primary/15 text-primary">BETA</span>
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 overflow-hidden">
+              <span className="text-base sm:text-lg font-semibold text-foreground truncate">BookmarketKit</span>
+              <span className="text-[10px] font-medium px-1 py-0.5 rounded-sm bg-primary/15 text-primary hidden xs:inline">BETA</span>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             <Link href="/auth/login">
-              <Button variant="outline" className="h-10 px-6 text-base rounded-lg border-2 border-primary text-primary font-bold transition-all duration-200 hover:bg-primary/10 hover:text-primary-700 shadow-none cursor-pointer">
+              <Button variant="outline" className="h-9 px-3 text-sm sm:h-10 sm:px-6 sm:text-base rounded-lg border-2 border-primary text-primary font-bold transition-all duration-200 hover:bg-primary/10 hover:text-primary-700 shadow-none cursor-pointer">
                 登录
               </Button>
             </Link>
             <Link href="/auth/register">
-              <Button className="h-10 px-6 text-base rounded-lg bg-gradient-to-r from-primary via-blue-500 to-pink-500 text-white font-bold shadow-md transition-all duration-200 hover:scale-105 cursor-pointer">
+              <Button className="h-9 px-3 text-sm sm:h-10 sm:px-6 sm:text-base rounded-lg bg-gradient-to-r from-primary via-blue-500 to-pink-500 text-white font-bold shadow-md transition-all duration-200 hover:scale-105 cursor-pointer">
                 注册
               </Button>
             </Link>
@@ -57,24 +57,20 @@ export default function HomePage() {
         <section className="relative z-10 overflow-visible py-20 md:py-28 lg:py-36 flex flex-col items-center justify-center">
           <div className="container max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight mb-6">
-              代码构建
-              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent mx-1">想象</span>
-              <br className="hidden sm:block" />
-              设计驱动
-              <span className="bg-gradient-to-r from-sky-400 via-blue-500 to-orange-400 bg-clip-text text-transparent mx-1">未来</span>
+              智能书签，<span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent mx-1">AI驱动高效管理</span>
             </h1>
             <p className="mt-4 text-lg md:text-xl text-muted-foreground font-light">
-              欢迎使用 BookmarketKit，一站式智能书签管理工具，AI赋能，极致Web体验与高效知识管理。
+              BookmarketKit 是一款集书签保存、智能分类、内容摘要与多标签管理于一体的现代化书签管理工具。让你的知识收藏更有序、更智能、更高效。
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link href="/auth/register">
                 <Button size="lg" className="h-10 px-8 text-base rounded-lg bg-gradient-to-r from-primary via-blue-500 to-pink-500 text-white font-bold shadow-md transition-all duration-200 hover:scale-105 gap-2 cursor-pointer">
-                  开始使用 <ArrowRight className="h-4 w-4" />
+                  立即体验 <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="#features">
                 <Button variant="outline" size="lg" className="h-10 px-8 text-base rounded-lg border-2 border-primary text-primary font-bold transition-all duration-200 hover:bg-primary/10 hover:text-primary-700 cursor-pointer">
-                  了解更多
+                  产品特性
                 </Button>
               </Link>
             </div>
