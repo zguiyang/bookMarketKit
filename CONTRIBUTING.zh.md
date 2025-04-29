@@ -12,7 +12,7 @@
 ### 2. Pull Request
 
 - Fork 本仓库，并从 `main` 或 `develop` 分支创建你的新分支。
-- 遵循 [提交信息规范](./git-commit.rule) 和代码风格要求。
+- 遵循 [提交信息规范](./git-commit.rule.md) 和代码风格要求。
 - 确保你的代码通过所有测试和 Lint 检查。
 - 如有需要，请补充或更新相关文档和测试。
 - 提交 Pull Request 时请清晰描述你的更改内容。

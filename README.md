@@ -10,52 +10,40 @@
 
 ## Overview
 
-Book Market Kit is a full-stack solution for web bookmark collection, smart categorization, and content summarization. It features AI-powered categorization, content summarization, tag-based filtering, and more, helping users efficiently manage and discover valuable web content.
+Book Market Kit is a full-stack solution for web bookmark collection, smart categorization, and content summarization. It integrates AI-powered categorization, content summarization, tag-based filtering, and more, helping users efficiently manage and discover valuable web content.
 
 ---
 
 ## Key Features
 
 - **Smart Bookmark Management**: Save web bookmarks with one click and auto-categorize
-- **AI Categorization**: AI analyzes bookmark content and recommends categories
-- **Content Summarization**: AI generates summaries for web content and extracts key information
-- **Multi-Tag System**: Add multiple tags to bookmarks for easy filtering
-- **Global Search**: Search by title, URL, description, tags, and more
-- **Category Management**: Custom categories with drag-and-drop, edit, and delete
+- **Tag System**: Add multiple tags to bookmarks for easy filtering
 - **Responsive Design**: Works seamlessly on desktop and mobile
+- **Batch Import/Export**: Import and export bookmarks in bulk (coming soon)
+- **AI Categorization**: AI analyzes bookmark content and recommends categories (coming soon)
+- **Content Summarization**: AI generates summaries for web content and extracts key information (coming soon)
+- **Global Search**: Fuzzy search bookmarks, tags, and categories by name
+- **Category Management**: Custom categories with add, edit, and delete
 
 ---
 
 ## Development Progress (TODO)
 
 - [x] Smart bookmark management
-- [x] AI-powered categorization (beta)
-- [x] Content summarization (beta)
 - [x] Tag system
 - [x] Responsive UI
-- [ ] User profile & authentication
 - [ ] Batch import/export bookmarks
-- [ ] Notification system
-- [ ] Admin dashboard
-- [ ] Replace UI placeholders with real screenshots
+- [ ] AI-powered categorization
+- [ ] Content summarization
 
 ---
 
 ## Product Screenshots
 
-> The following are sample UI placeholders. Replace with real screenshots for production use.
+> The following are sample UI screenshots. Replace with real screenshots for production use.
 
-### Bookmark Home & Browsing
-
-![Home Screenshot](https://via.placeholder.com/900x500?text=Home+Page+Placeholder)
-
-### Smart Bookmark & AI Summary
-
-![AI Summary Screenshot](https://via.placeholder.com/900x500?text=AI+Summary+Placeholder)
-
-### Category & Tag Management
-
-![Category Management Screenshot](https://via.placeholder.com/900x500?text=Category+Management+Placeholder)
+![Home Screenshot 1](https://pic1.imgdb.cn/item/6810b1dd58cb8da5c8d45d72.png)
+![Home Screenshot 2](https://pic1.imgdb.cn/item/6810b20d58cb8da5c8d45d87.jpg)
 
 ---
 

@@ -12,7 +12,7 @@ Thank you for considering contributing to Book Market Kit! We welcome all kinds 
 ### 2. Pull Requests
 
 - Fork the repository and create your branch from `main` or `develop`.
-- Follow the [commit message guidelines](./git-commit.rule) and code style conventions.
+- Follow the [commit message guidelines](./git-commit.rule.md) and code style conventions.
 - Ensure your code passes all tests and linter checks.
 - Add or update documentation and tests as needed.
 - Submit your pull request and describe your changes clearly.
