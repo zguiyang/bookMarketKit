@@ -1,261 +1,107 @@
 ---
 description: 
-globs: apps/client/**/*.ts,apps/client/**/*.tsx
+globs: 
 alwaysApply: false
 ---
+# Nuxt.js 前端开发规范
+
+## 技术栈概览
+
+- **主框架**：Nuxt.js 3（基于 Vue 3）
+- **UI 组件库**：Nuxt UI 3
+- **状态管理**：Pinia
+- **类型系统**：TypeScript
+- **样式**：原子化 CSS（如 UnoCSS/Tailwind CSS）、SCSS
+- **表单校验**：zod 或 vee-validate
+- **API 请求**：@nuxt/http、axios 或 useFetch
+- **测试**：Vitest + Vue Test Utils
+- **代码规范**：ESLint、Prettier、Stylelint
+
 ---
-description: 本文档概述了前端开发的最佳实践和标准，专注于TypeScript、React、Next.js和现代UI/UX框架的应用，旨在提供高性能、可维护的代码指南。
-globs: apps/client/**/*.{ts,tsx,js,jsx}
+
+## 目录结构规范
+
+```
+src/
+├── assets/           # 静态资源（样式、图片等）
+├── components/       # 通用组件（PascalCase 命名）
+├── composables/      # 组合式函数（useXxx 命名）
+├── layouts/          # 布局组件
+├── middleware/       # 路由中间件
+├── pages/            # 页面组件（自动路由）
+├── plugins/          # Nuxt 插件
+├── stores/           # Pinia 状态管理
+├── utils/            # 工具函数
+├── types/            # 类型定义
+├── app.vue           # 应用根组件
+├── nuxt.config.ts    # Nuxt 配置
+└── ...
+```
+
 ---
 
-# 前端开发规范
+## 组件与页面规范
 
-## 目标
-- 创建不仅功能完善，而且遵循性能、安全性和可维护性最佳实践的Next.js解决方案。
+1. **组件命名**：
+   - 组件文件使用 PascalCase（如 UserCard.vue）
+   - 组合式函数 useXxx 命名（如 useUser.ts）
+2. **页面命名**：
+   - pages 目录下文件自动映射为路由，使用 kebab-case
+3. **UI 组件**：
+   - 优先使用 Nuxt UI 3 提供的组件，必要时自定义扩展
+4. **Props/Emit**：
+   - 明确 props 类型，事件使用 defineEmits
+5. **样式**：
+   - 推荐使用原子化 CSS（如 UnoCSS/Tailwind），局部样式用 <style scoped>
 
-## 代码风格与结构
-- 编写简洁、技术性强的TypeScript代码，提供准确的示例。
-- 使用函数式和声明式编程模式；避免使用类。
-- 优先考虑迭代和模块化，避免代码重复。
-- 使用描述性变量名，包含辅助动词（如`isLoading`、`hasError`）。
-- 文件结构应包括导出的组件、子组件、辅助函数、静态内容和类型。
-- 目录名使用小写字母加连字符（如`components/auth-wizard`）。
+---
 
-## 优化与最佳实践
-- 最小化使用`'use client'`、`useEffect`和`setState`；优先使用React服务器组件(RSC)和Next.js的SSR功能。
-- 实现动态导入以进行代码分割和优化。
-- 使用响应式设计，采用移动优先的方法。
-- 图片优化：使用WebP格式，包含尺寸数据，实现懒加载。
+## 状态管理
 
-## 错误处理与验证
-- 优先处理错误和边缘情况：
-  - 对错误条件使用提前返回。
-  - 实现防护条款，提前处理前置条件和无效状态。
-  - 使用自定义错误类型进行一致的错误处理。
+- 全局状态统一使用 Pinia，store 文件放在 stores 目录
+- 避免在组件间直接传递复杂数据，统一通过 store 管理
 
-  ## 界面风格与主题设计规范
+---
 
-### 主题设计原则
+## API 调用与数据获取
 
-- **一致性**：所有组件和界面元素必须保持风格一致
-- **可配置性**：通过配置文件管理主题而非硬编码样式
-- **可扩展性**：设计应支持未来主题的扩展和修改
-- **可访问性**：确保在所有主题模式下都保持良好的可读性和对比度
+- 推荐使用 useFetch/useAsyncData 进行服务端/客户端数据获取
+- 封装 API 请求逻辑到 composables 或 api 目录
+- 类型安全，接口响应定义类型
 
-### 主题配置管理
+---
 
-- **使用Tailwind配置**：通过tailwind.config.js集中管理颜色、间距、字体等样式变量
-- **避免硬编码**：严禁在组件中直接硬编码颜色值（如`#ffffff`、`rgb(0,0,0)`）
-- **使用语义化变量**：使用语义化的变量名定义颜色和样式（如`primary`、`secondary`、`background`）
-- **扩展默认主题**：示例配置：
+## 类型与工具
 
-```js
-// tailwind.config.js
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          50: 'var(--primary-50)',
-          100: 'var(--primary-100)',
-          // ...其他色阶
-          900: 'var(--primary-900)',
-        },
-        // ...其他颜色系列
-      },
-    },
-  },
-  // ...其他配置
-};
-```
+- 全局类型定义放在 types 目录
+- 组件/组合式函数应有明确类型注解
 
-### 组件库使用规范
+---
 
-- **优先使用组件库**：优先使用shadcn-ui、Radix UI等组件库构建界面
-- **组件定制**：通过组件库提供的配置API进行定制，而非直接修改组件源码
-- **组件扩展**：创建基于基础组件的高级组件，保持风格一致性
-- **组件主题集成**：确保自定义组件与主题系统完全集成
+## 代码规范
 
-```tsx
-// 正确示例：使用主题变量
-const Button = ({ children, ...props }) => (
-  <button 
-    className="bg-primary-500 hover:bg-primary-600 text-primary-foreground" 
-    {...props}
-  >
-    {children}
-  </button>
-);
+- 统一使用 ESLint + Prettier + Stylelint
+- 组件、页面、store、composable 必须有注释说明用途
+- 复杂逻辑需详细注释
+- 命名风格：
+  - 组件/类 PascalCase
+  - 变量/函数 camelCase
+  - 文件/目录 kebab-case
 
-// 错误示例：硬编码颜色
-const Button = ({ children, ...props }) => (
-  <button 
-    className="bg-[#3b82f6] hover:bg-[#2563eb] text-white" 
-    {...props}
-  >
-    {children}
-  </button>
-);
-```
+---
 
-### 设计审查与验证
+## 测试规范
 
-- **跨主题测试**：在开发过程中定期在不同主题下测试UI组件
-- **对比度检查**：确保文本与背景的对比度符合WCAG标准
-- **视觉一致性**：定期审查组件在不同主题下的视觉一致性
-- **用户测试**：收集用户对不同主题的反馈，持续改进
+- 单元测试用 Vitest + Vue Test Utils
+- 测试文件与组件同目录，命名为 Xxx.spec.ts
+- 业务代码覆盖率 > 80%
 
-## 样式编写最佳实践
+---
 
-- **优先使用Tailwind类**：优先使用Tailwind提供的工具类
-- **组合而非覆盖**：通过组合类实现样式，避免覆盖默认样式
-- **响应式设计**：使用Tailwind的响应式前缀（sm:, md:, lg:等）
-- **避免内联样式**：不要使用内联style属性
-- **模块化CSS**：必要时使用CSS Modules或styled-components
-- **注释复杂样式**：为复杂的样式组合添加注释说明
+## 其它最佳实践
 
-```tsx
-{/* 推荐: 使用Tailwind类和主题变量 */}
-<div className="bg-background text-foreground p-4 rounded-lg shadow-md">
-  <h2 className="text-xl font-semibold text-primary-600 dark:text-primary-400">
-    标题
-  </h2>
-  <p className="mt-2 text-muted-foreground">
-    内容描述
-  </p>
-</div>
-
-{/* 不推荐: 硬编码样式 */}
-<div style={{ backgroundColor: '#ffffff', color: '#000000', padding: '16px' }}>
-  <h2 style={{ color: '#3b82f6', fontSize: '1.25rem' }}>
-    标题
-  </h2>
-  <p style={{ marginTop: '8px', color: '#6b7280' }}>
-    内容描述
-  </p>
-</div>
-```
-
-## 组件开发规范
-
-- **原子设计**：遵循原子设计原则，从小组件构建复杂界面
-- **组件文档**：为每个组件提供清晰的文档和使用示例
-- **主题适配**：确保组件在所有主题下都能正常工作
-- **可访问性**：遵循ARIA规范，确保组件可访问性
-- **性能优化**：避免不必要的渲染和计算
-
-
-## UI和样式
-- 使用现代UI框架（如Tailwind CSS、Shadcn UI、Radix UI）进行样式设计。
-- 在各平台上实现一致的设计和响应式模式。
-
-## Shadcn UI 组件使用规范
-
-- 不要直接复制粘贴 Shadcn UI 组件代码到项目中
-- 始终使用官方提供的安装命令添加组件，例如：`pnpm dlx shadcn@latest add button`
-- 安装后再根据项目需求对组件进行自定义修改
-- 保持组件结构与 Shadcn UI 文档一致，便于后续升级和维护
-
-## shadcn-ui 组件安装规范
-
-### 安装前检查
-
-**检查组件是否已存在**：
-   在安装任何新组件前，首先检查组件是否已在项目中存在：
-
-   ```bash
-   # 检查组件目录
-   ls apps/client/components/ui/[组件名]
-   ```
-
-   或检查组件文件：
-
-   ```bash
-   # 检查组件文件
-   ls apps/client/components/ui/[组件名].tsx
-   ```
-
-**组件已存在**：
-   - 如果组件已存在，直接使用现有组件，**不要重新安装**
-   - 查看组件的使用方法：`apps/client/components/ui/[组件名].tsx`
-
-**组件不存在**：
-   - 只有在确认组件不存在的情况下，才进行安装
-
-### 安装流程
-
-**确保在正确目录**：
-   安装命令**必须**在 `apps/client` 目录下执行：
-
-   ```bash
-   # 确保在正确的目录
-   cd apps/client
-   ```
-
-**安装依赖组件**：
-   某些组件可能需要其他组件作为依赖，CLI 会提示安装，请按照提示操作。
-
-**安装命令示例**
-- 组件安装命令格式：`pnpm dlx shadcn@latest add [组件名称]`
-- 常用组件安装示例：
-  - 按钮：`pnpm dlx shadcn@latest add button`
-  - 表单：`pnpm dlx shadcn@latest add form`
-  - 对话框：`pnpm dlx shadcn@latest add dialog`
-  - 下拉菜单：`pnpm dlx shadcn@latest add dropdown-menu`
-
-
-## 组件使用优先级
-
-- 优先使用已安装的 Shadcn UI 组件，避免重复造轮子
-- 如果 Shadcn UI 没有提供所需组件，使用 Tailwind CSS + Radix UI 进行封装
-- 只有在上述两种方案都无法满足需求时，才考虑使用 React 原生方式封装组件
-
-## 组件使用原则
-
-- 组件自定义应通过 Tailwind 类或主题配置进行，而非修改组件核心逻辑
-- 遵循组件文档中推荐的用法和最佳实践
-- 确保组件的无障碍性(a11y)符合项目要求
-
-## 状态管理与数据获取
-- 使用现代状态管理解决方案（如Zustand、TanStack React Query）处理全局状态和数据获取。
-- 使用Zod实现模式验证。
-
-## 安全性与性能
-- 实施适当的错误处理、用户输入验证和安全编码实践。
-- 遵循性能优化技术，如减少加载时间和提高渲染效率。
-
-## 测试与文档
-- 使用vitest和React Testing Library为组件编写单元测试。
-- 为复杂逻辑提供清晰简洁的注释。
-- 使用JSDoc注释函数和组件，以改善IDE智能提示。
-
-## 方法论
-### 系统2思维
-- 以分析严谨的方式处理问题。
-- 将需求分解为更小、更易管理的部分。
-- 在实施前彻底考虑每个步骤。
-
-### 思维树方法
-- 评估多种可能的解决方案及其后果。
-- 使用结构化方法探索不同路径并选择最佳方案。
-
-### 迭代改进
-- 在最终确定代码前，考虑改进、边缘情况和优化。
-- 迭代潜在的增强功能，确保最终解决方案的稳健性。
-
-## 开发流程
-### 深入分析
-- 开始时对手头任务进行彻底分析，考虑技术要求和约束。
-
-### 规划
-- 制定清晰的计划，概述解决方案的架构结构和流程。
-- 必要时使用<PLANNING>标签。
-
-### 实施
-- 逐步实施解决方案，确保每个部分都遵循指定的最佳实践。
-
-### 审查与优化
-- 对代码进行审查，寻找潜在的优化和改进领域。
-
-### 最终确定
-- 通过确保代码满足所有要求、安全且高效来完成代码。
+- 合理拆分组件，避免大文件
+- 复用逻辑抽离为 composable
+- 路由中间件统一放 middleware 目录
+- 配置统一在 nuxt.config.ts
+- 推荐使用 Volar/Vetur 插件进行 Vue 语法高亮和类型提示

@@ -3,11 +3,6 @@ description:
 globs: 
 alwaysApply: true
 ---
----
-description: 本文档概述了智能书签管理应用程序的需求，包括项目概述、功能需求、用户界面要求和用户流程。该应用允许用户保存、组织和搜索网页书签，并通过AI技术实现智能分类和内容摘要。
-globs: docs/requirements/**/*.{md}
----
-
 # 需求文档
 
 ## 1. 项目概述

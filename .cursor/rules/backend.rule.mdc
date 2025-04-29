@@ -3,191 +3,124 @@ description:
 globs: apps/backend/**/*.ts
 alwaysApply: false
 ---
-# NestJS 后端开发规范
+# 后端开发规范
 
 ## 技术栈概览
 
 我们的后端应用基于以下核心技术栈构建：
 
-- **框架**：NestJS
-- **数据库**：PostgreSQL
-- **ORM**：Drizzle ORM
+- **框架**：Fastify.js
+- **数据库**：MongoDB
+- **ODM**：mongoose
 - **缓存**：Redis
-- **认证**：Passport / JWT
-- **验证** class-validator class-transform
-- **API文档**：Swagger/OpenAPI
+- **认证**：JWT（fastify-jwt）
+- **验证**：zod（推荐）或 ajv
+- **API文档**：OpenAPI/Swagger（fastify-swagger）
 
 ## 目录结构规范
 
 ```
 src/
-├── common/                  # 通用功能模块
-│   ├── decorator/           # 自定义装饰器
-│   ├── filters/             # 全局过滤器
-│   ├── guard/               # 全局守卫
-│   ├── interceptors/        # 拦截器
-│   │   └── transform-response.ts
-│   └── pipes/               # 管道
-│       └── drizzle.validation.ts
-├── core/                    # 核心模块
-│   ├── database/            # 数据库相关
-│   ├── jwt/                 # JWT认证
-│   └── redis/               # Redis配置
-│       ├── redis-client.factory.ts
-│       ├── redis.modules.ts
-│       └── redis.service.ts
-├── dto/                     # 全局DTO
-│   ├── request.dto.ts
-│   └── response.dto.ts
-├── guards/                  # 应用级守卫
-├── modules/                 # 功能模块
-│   └── users/               # 用户模块示例
-│       ├── dto/             # 模块专用DTO
-│       │   ├── create-user.dto.ts
-│       │   └── update-user.dto.ts
-│       ├── entities/        # 实体定义
-│       ├── users.controller.ts
-│       ├── users.controller.spec.ts
-│       ├── users.module.ts
-│       ├── users.service.ts
-│       └── users.service.spec.ts
-├── shared/                  # 共享资源
-├── app.controller.ts        # 主控制器
-├── app.controller.spec.ts
-├── app.module.ts            # 主模块
-├── app.service.ts           # 主服务
-└── main.ts                  # 应用入口点
+├── plugins/                 # Fastify 插件（如数据库、redis、jwt等）
+│   ├── db.ts                # MongoDB 连接与挂载
+│   ├── redis.ts             # Redis 客户端
+│   └── jwt.ts               # JWT 插件
+├── models/                  # mongoose 数据模型
+│   ├── user.model.ts
+│   ├── bookmark.model.ts
+│   └── ...
+├── routes/                  # 路由定义
+│   ├── user.route.ts
+│   ├── bookmark.route.ts
+│   └── ...
+├── controllers/             # 控制器/处理器
+│   ├── user.controller.ts
+│   ├── bookmark.controller.ts
+│   └── ...
+├── services/                # 业务逻辑
+│   ├── user.service.ts
+│   ├── bookmark.service.ts
+│   └── ...
+├── schemas/                 # 请求/响应校验（zod/ajv）
+│   ├── user.schema.ts
+│   ├── bookmark.schema.ts
+│   └── ...
+├── utils/                   # 工具函数
+├── middlewares/             # 中间件
+├── types/                   # 全局类型定义
+├── config/                  # 配置文件
+├── app.ts                   # Fastify 实例与主入口
+└── main.ts                  # 启动脚本
 ```
 
 ## 组件创建规则
 
-1. **必须使用NestJS CLI创建组件**，不要手动创建文件：
-   ```bash
-   # 创建模块
-   nest g module users
-   
-   # 创建控制器
-   nest g controller users
-   
-   # 创建服务
-   nest g service users
-   
-   # 创建资源(包含CRUD)
-   nest g resource products
-   ```
-
+1. **推荐使用脚本/模板生成基础结构**，避免手动创建重复性文件。
 2. **文件命名**：
-   - 使用kebab-case（烤肉串命名法）
-   - 格式：`feature.type.ts`（例如：user.controller.ts）
+   - 使用 kebab-case（如：user.service.ts）
+3. **类/函数命名**：
+   - 使用 PascalCase（类）或 camelCase（函数）
 
-3. **类命名**：
-   - 使用PascalCase（大驼峰命名法）
-   - 格式：`FeatureType`（例如：UserController）
+## 路由与控制器组织
 
-## 模块组织原则
+1. **路由文件**只负责注册路由和校验 schema，实际处理逻辑委托给 controller。
+2. **控制器**只处理请求与响应，业务逻辑委托给 service。
+3. **service** 只处理业务逻辑和数据访问。
 
-1. **职责分离**：
-   - Controller处理HTTP请求和响应
-   - Service包含业务逻辑
-   - Module组织和连接组件
+## 依赖注入与插件
 
-2. **依赖注入**：
-   - 正确使用@Injectable()装饰器
-   - 在module中正确注册providers
+- 推荐将数据库、redis、jwt 等通过 Fastify 插件挂载到实例（`fastify.decorate`）。
+- 避免全局变量，所有依赖通过 request 实例访问。
 
-3. **避免手动创建实例**：
-   - 使用依赖注入而不是new关键字创建服务实例
+## 数据库与 ODM 规范
 
-4. **模块结构**：
-   - 每个功能模块应包含自己的dto、entities目录
-   - 相关的测试文件应与源文件放在同一目录
+### mongoose 使用规范
 
-## 数据库与ORM规范
-
-### Drizzle ORM使用规范
-
-1. **Schema定义**：
-   - 数据库schema定义放在`db/schemas`目录下
-   - 每个表对应一个单独的schema文件（如`user.schema.ts`）
-
+1. **模型定义**：
+   - 所有 mongoose 数据模型定义放在 `src/models` 目录下
+   - 每个集合对应一个 model 文件（如 `user.model.ts`）
 2. **命名规范**：
-   - 表名使用复数形式（例如：`users`, `products`）
-   - 字段名使用蛇形命名法（例如：`created_at`, `user_id`）
-   - 主键统一命名为 `id`
-   - 外键命名格式为 `<表名单数>_id`（例如：`user_id`, `product_id`）
+   - 集合名用复数（如 users、bookmarks），model 名用 PascalCase（如 UserModel）
+   - 字段名用 camelCase
+   - 主键统一使用 `_id`（由 MongoDB 自动生成）
+3. **Schema 设计**：
+   - 明确字段类型、必填、默认值、索引等
+   - 推荐为常用查询字段建立索引
+   - 建议所有文档包含 `createdAt`、`updatedAt` 字段（可用 mongoose timestamps 选项）
+   - 软删除可用 `deletedAt` 字段
+   - 枚举用字符串类型并限定可选值
 
-3. **索引规范**：
-   - 外键字段必须创建索引
-   - 经常用于查询条件的字段应创建索引
-   - 索引命名格式：`idx_<表名>_<字段名>`
+## 数据验证与转换
 
-4. **字段设计**：
-   - 所有表必须包含 `created_at` 和 `updated_at` 时间戳字段
-   - 使用软删除策略，添加 `deleted_at` 字段而非直接删除数据
-   - 枚举值使用 PostgreSQL 的 `ENUM` 类型
+- 推荐使用 zod 或 ajv 进行请求/响应 schema 校验
+- 路由层进行参数和 body 校验，service 层只处理已校验数据
 
-### 数据验证与转换
+## Redis 缓存规范
 
-1. **使用Pipes进行验证**：
-   - 使用`drizzle.validation.ts`中的自定义管道进行数据验证
-   - 为每个DTO定义明确的验证规则
+- Redis 客户端通过插件挂载
+- 频繁访问但不常变数据可缓存，设置合理过期时间
+- 实现缓存失效机制
 
-2. **DTO组织**：
-   - 全局DTO放在`src/dto`目录下
-   - 模块特定DTO放在对应模块的`dto`目录下
-   - 遵循`create-entity.dto.ts`和`update-entity.dto.ts`命名模式
+## 错误与响应处理
 
-## Redis缓存规范
-
-1. **Redis模块组织**：
-   - 使用`redis.module.ts`注册Redis服务
-   - 使用`redis-client.factory.ts`创建Redis客户端
-   - 通过`redis.service.ts`提供Redis操作接口
-
-2. **缓存策略**：
-   - 对频繁访问但不常变化的数据使用缓存
-   - 设置适当的缓存过期时间
-   - 实现缓存失效机制
-
-## 拦截器与响应处理
-
-1. **响应转换**：
-   - 使用`transform-response.ts`拦截器统一处理响应格式
-   - 确保所有API返回一致的响应结构
-
-2. **错误处理**：
-   - 使用全局异常过滤器处理异常
-   - 返回标准化的错误响应
+- 统一使用 Fastify 的错误处理机制
+- 返回标准化响应结构（如 `{ code, message, data }`）
+- 全局注册错误钩子处理未捕获异常
 
 ## 测试规范
 
-1. **测试文件组织**：
-   - 单元测试文件与源文件放在同一目录
-   - 使用`.spec.ts`后缀命名测试文件
-
-2. **测试覆盖率要求**：
-   - 控制器和服务的测试覆盖率应达到80%以上
-   - 关键业务逻辑应有完整的测试用例
+- 单元测试与源文件同目录，`.spec.ts` 后缀
+- 覆盖率要求：核心业务逻辑 80% 以上
+- 推荐使用 Vitest 或 Jest
 
 ## 安全最佳实践
 
-1. **认证与授权**：
-   - 使用JWT进行认证
-   - 实现基于角色的访问控制
-   - 使用守卫保护敏感路由
-
-2. **数据保护**：
-   - 敏感数据加密存储
-   - 使用HTTPS加密传输
-   - 避免在日志中记录敏感信息
+- 认证用 fastify-jwt，敏感路由加中间件保护
+- 敏感数据加密存储，HTTPS 传输
+- 日志避免记录敏感信息
 
 ## 性能优化
 
-1. **缓存策略**：
-   - 合理使用Redis缓存减少数据库负载
-   - 实现缓存预热和定期刷新机制
-
-2. **数据库优化**：
-   - 优化查询，避免N+1问题
-   - 为常用查询创建适当的索引
-   - 使用数据库连接池
+- 合理使用 Redis 缓存
+- 查询优化，常用字段建索引，避免全表扫描
+- 使用 MongoDB 连接池
