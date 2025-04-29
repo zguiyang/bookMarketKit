@@ -1,86 +1,104 @@
 # Book Market Kit
 
-图书交易平台是一个基于 Next.js 和 NestJS 的全栈应用，提供图书交易和管理功能。
+> 🚀 A modern open-source intelligent bookmark management platform, built with Next.js & NestJS.
 
-## 技术栈
+---
 
-### 前端
-- Next.js (React 框架)
-- TypeScript
-- Tailwind CSS
-- Shadcn UI 和 Radix UI
-- Zustand (状态管理)
-- SWR (数据获取)
-- Zod (数据验证)
+> 中文版请见: [README.zh.md](./README.zh.md)
 
-### 后端
-- NestJS
-- TypeScript
-- PostgreSQL
-- MongoDB
-- Drizzle ORM
-- Redis
-- Zod
+---
 
-## 开发环境要求
+## Overview
 
-- Node.js >= 18.0.0
-- pnpm >= 8.0.0
-- PostgreSQL
-- MongoDB
-- Redis
+Book Market Kit is a full-stack solution for web bookmark collection, smart categorization, and content summarization. It features AI-powered categorization, content summarization, tag-based filtering, and more, helping users efficiently manage and discover valuable web content.
 
-## 项目结构
+---
 
-```
-root/
-├── apps/
-│   ├── client/     # 前端应用
-│   └── backend/    # 后端服务
-├── pnpm-workspace.yaml
-├── package.json
-└── README.md
-```
+## Key Features
 
-## 开始使用
+- **Smart Bookmark Management**: Save web bookmarks with one click and auto-categorize
+- **AI Categorization**: AI analyzes bookmark content and recommends categories
+- **Content Summarization**: AI generates summaries for web content and extracts key information
+- **Multi-Tag System**: Add multiple tags to bookmarks for easy filtering
+- **Global Search**: Search by title, URL, description, tags, and more
+- **Category Management**: Custom categories with drag-and-drop, edit, and delete
+- **Responsive Design**: Works seamlessly on desktop and mobile
 
-1. 安装依赖：
-```bash
-pnpm install
-```
+---
 
-2. 启动开发服务器：
-```bash
-# 同时启动前端和后端
-pnpm dev
+## Development Progress (TODO)
 
-# 仅启动前端
-pnpm client:dev
+- [x] Smart bookmark management
+- [x] AI-powered categorization (beta)
+- [x] Content summarization (beta)
+- [x] Tag system
+- [x] Responsive UI
+- [ ] User profile & authentication
+- [ ] Batch import/export bookmarks
+- [ ] Notification system
+- [ ] Admin dashboard
+- [ ] Replace UI placeholders with real screenshots
 
-# 仅启动后端
-pnpm backend:dev
-```
+---
 
-3. 构建项目：
-```bash
-pnpm build
-```
+## Product Screenshots
 
-4. 启动生产环境：
-```bash
-pnpm start
-```
+> The following are sample UI placeholders. Replace with real screenshots for production use.
 
-## 开发指南
+### Bookmark Home & Browsing
 
-- 使用 TypeScript 进行开发
-- 遵循项目的代码规范和最佳实践
-- 提交代码前运行测试和代码格式化：
-  ```bash
-  pnpm test
-  pnpm format
-  ```
+![Home Screenshot](https://via.placeholder.com/900x500?text=Home+Page+Placeholder)
 
-## 许可证
+### Smart Bookmark & AI Summary
 
-ISC
+![AI Summary Screenshot](https://via.placeholder.com/900x500?text=AI+Summary+Placeholder)
+
+### Category & Tag Management
+
+![Category Management Screenshot](https://via.placeholder.com/900x500?text=Category+Management+Placeholder)
+
+---
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, Shadcn UI, Zustand, SWR, Zod
+- **Backend**: NestJS, TypeScript, PostgreSQL, MongoDB, Drizzle ORM, Redis, Zod
+
+---
+
+## Getting Started
+
+1. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+2. **Start development**
+   ```bash
+   # Start both frontend and backend
+   pnpm dev
+
+   # Frontend only
+   pnpm client:dev
+
+   # Backend only
+   pnpm backend:dev
+   ```
+
+3. **Build & Production**
+   ```bash
+   pnpm build
+   pnpm start
+   ```
+
+---
+
+## Contributing
+
+We welcome community contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
+
+## License
+
+[ISC](./LICENSE)

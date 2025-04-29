@@ -1,0 +1,73 @@
+---
+description: git commit rule
+globs: 
+alwaysApply: false
+---
+---
+name: git.rule.mdc
+description: Git提交规范，包括提交信息格式、分支管理和工作流程
+globs: */**
+---
+
+所有生成的提交信息不遵循中文规范,遵循Conventional Commits规范, Conventional Commits 是第一优先级
+
+
+## generate Git Commit message 规范
+
+### 提交信息格式
+
+使用规范化的提交信息格式，：
+
+```
+<类型>[可选的作用域]: <描述>
+
+[可选的正文]
+
+[可选的脚注]
+```
+
+### 提交类型
+
+- **feat**: 新功能
+- **fix**: 修复bug
+- **docs**: 文档更新
+- **style**: 代码风格修改(不影响代码运行)
+- **refactor**: 代码重构(既不是新增功能，也不是修复bug)
+- **perf**: 性能优化
+- **test**: 测试相关
+- **build**: 构建系统或外部依赖变更
+- **ci**: CI配置文件和脚本变更
+- **chore**: 其他不修改src或测试文件的变更
+- **revert**: 撤销之前的提交
+
+### 作用域
+
+可选的作用域用于说明提交影响的范围：
+
+- **frontend**: 前端代码变更
+- **backend**: 后端代码变更
+- **api**: API相关变更
+- **ui**: UI组件变更
+- **db**: 数据库相关变更
+- **config**: 配置文件变更
+- **deps**: 依赖更新
+
+### 示例
+
+```
+feat(ui): 添加用户资料页面
+
+- 实现用户基本信息展示
+- 添加头像上传功能
+- 集成权限控制
+
+Closes #123
+```
+
+```
+fix(api): 修复用户认证失败问题
+
+修复了当用户名包含特殊字符时认证失败的问题
+
+Fixes #456
+``` 
