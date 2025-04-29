@@ -2,9 +2,17 @@
 
 > 🚀 A modern open-source intelligent bookmark management platform, built with Next.js & NestJS.
 
+[中文版](./README.zh.md)
+
 ---
 
-> 中文版请见: [README.zh.md](./README.zh.md)
+## Product Screenshots
+
+> The following are sample UI screenshots
+
+![Home Screenshot 1](https://pic1.imgdb.cn/item/6810b45c58cb8da5c8d45ebc.png)
+
+![Home Screenshot 2](https://pic1.imgdb.cn/item/6810b45c58cb8da5c8d45ebd.png)
 
 ---
 
@@ -14,16 +22,22 @@ Book Market Kit is a full-stack solution for web bookmark collection, smart cate
 
 ---
 
+## Tech Stack
+
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, Shadcn UI, Zustand, SWR, Zod
+- **Backend**: NestJS, TypeScript, PostgreSQL, MongoDB, Drizzle ORM, Redis, Zod
+
+---
+
 ## Key Features
 
 - **Smart Bookmark Management**: Save web bookmarks with one click and auto-categorize
+- **AI Categorization**: AI analyzes bookmark content and recommends categories
+- **Content Summarization**: AI generates summaries for web content and extracts key information
 - **Tag System**: Add multiple tags to bookmarks for easy filtering
-- **Responsive Design**: Works seamlessly on desktop and mobile
-- **Batch Import/Export**: Import and export bookmarks in bulk (coming soon)
-- **AI Categorization**: AI analyzes bookmark content and recommends categories (coming soon)
-- **Content Summarization**: AI generates summaries for web content and extracts key information (coming soon)
 - **Global Search**: Fuzzy search bookmarks, tags, and categories by name
 - **Category Management**: Custom categories with add, edit, and delete
+- **Responsive Design**: Works seamlessly on desktop and mobile
 
 ---
 
@@ -35,23 +49,6 @@ Book Market Kit is a full-stack solution for web bookmark collection, smart cate
 - [ ] Batch import/export bookmarks
 - [ ] AI-powered categorization
 - [ ] Content summarization
-
----
-
-## Product Screenshots
-
-> The following are sample UI screenshots. Replace with real screenshots for production use.
-
-![Home Screenshot 1](https://pic1.imgdb.cn/item/6810b1dd58cb8da5c8d45d72.png)
-
-![Home Screenshot 2](https://pic1.imgdb.cn/item/6810b20d58cb8da5c8d45d87.jpg)
-
----
-
-## Tech Stack
-
-- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, Shadcn UI, Zustand, SWR, Zod
-- **Backend**: NestJS, TypeScript, PostgreSQL, MongoDB, Drizzle ORM, Redis, Zod
 
 ---
 

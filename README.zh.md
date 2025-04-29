@@ -2,15 +2,30 @@
 
 > 🚀 一个现代化的开源智能书签管理平台，基于 Next.js & NestJS 构建。
 
+[English version](./README.md)
+
 ---
 
-> English version: [README.md](./README.md)
+## 产品界面预览
+
+> 以下为主要功能界面示例
+
+![Home Screenshot 1](https://pic1.imgdb.cn/item/6810b45c58cb8da5c8d45ebc.png)
+
+![Home Screenshot 2](https://pic1.imgdb.cn/item/6810b45c58cb8da5c8d45ebd.png)
 
 ---
 
 ## 产品简介
 
 Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要场景的全栈解决方案。平台集成了 AI 智能分类、内容摘要、标签筛选等功能，帮助用户高效管理和发现有价值的网页内容。
+
+---
+
+## 技术架构
+
+- **前端**：Next.js、React、TypeScript、Tailwind CSS、Shadcn UI、Zustand、SWR、Zod
+- **后端**：NestJS、TypeScript、PostgreSQL、MongoDB、Drizzle ORM、Redis、Zod
 
 ---
 
@@ -34,22 +49,6 @@ Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要�
 - [ ] 书签批量导入导出
 - [ ] AI 智能分类
 - [ ] 内容摘要
-
----
-
-## 产品界面预览
-
-> 以下为主要功能界面示例（占位图，实际请替换为产品截图）
-
-![首页界面](https://pic1.imgdb.cn/item/6810b1dd58cb8da5c8d45d72.png)
-
-![首页界面](https://pic1.imgdb.cn/item/6810b20d58cb8da5c8d45d87.jpg)
----
-
-## 技术架构
-
-- **前端**：Next.js、React、TypeScript、Tailwind CSS、Shadcn UI、Zustand、SWR、Zod
-- **后端**：NestJS、TypeScript、PostgreSQL、MongoDB、Drizzle ORM、Redis、Zod
 
 ---
 
