@@ -43,6 +43,7 @@ Book Market Kit is a full-stack solution for web bookmark collection, smart cate
 > The following are sample UI screenshots. Replace with real screenshots for production use.
 
 ![Home Screenshot 1](https://pic1.imgdb.cn/item/6810b1dd58cb8da5c8d45d72.png)
+
 ![Home Screenshot 2](https://pic1.imgdb.cn/item/6810b20d58cb8da5c8d45d87.jpg)
 
 ---
