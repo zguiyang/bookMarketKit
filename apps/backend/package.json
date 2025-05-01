@@ -21,6 +21,7 @@
     "push:db": "npx drizzle-kit push"
   },
   "dependencies": {
+    "@bookmark/schemas": "workspace:^",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^4.0.2",

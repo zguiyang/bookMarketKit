@@ -17,7 +17,7 @@
     "lint": "pnpm run --parallel lint",
     "format": "pnpm run --parallel format"
   },
-  "keywords": ["book", "market", "trading"],
+  "keywords": ["bookmark"],
   "author": "",
   "license": "ISC",
   "engines": {
