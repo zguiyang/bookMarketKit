@@ -8,7 +8,6 @@
     ".": "./dist/index.mjs"
   },
   "scripts": {
-    "build": "tsup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,8 +16,5 @@
   "packageManager": "pnpm@10.4.1",
   "dependencies": {
     "zod": "^3.24.3"
-  },
-  "devDependencies": {
-    "tsup": "^8.4.0"
   }
 }

@@ -1,0 +1,21 @@
+{
+  "name": "code-definitions",
+  "version": "1.0.0",
+  "description": "前后端共享的错误码、消息、常量定义包",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "keywords": [
+    "shared",
+    "codes",
+    "constants",
+    "enums"
+  ],
+  "author": "",
+  "license": "ISC"
+}

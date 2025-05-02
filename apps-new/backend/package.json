@@ -12,7 +12,6 @@
     "test": "cross-env NODE_ENV=development NODE_OPTIONS=\"--import tsx\" vitest run"
   },
   "dependencies": {
-    "@bookmark/schemas": "workspace:*",
     "@fastify/autoload": "^6.3.0",
     "@fastify/env": "^5.0.2",
     "@fastify/jwt": "^9.1.0",

@@ -9,7 +9,6 @@
     "strict": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "outDir": "dist",
-    }
+    "resolveJsonModule": true
+  }
 } 
