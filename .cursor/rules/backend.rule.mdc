@@ -10,7 +10,7 @@ alwaysApply: false
 - **框架**：Fastify v5
 - **数据库**：MongoDB（mongoose v8）
 - **缓存**：Redis（@fastify/redis v7）
-- **验证**：zod（fastify-type-provider-zod v4）
+- **验证**：zod（fastify-type-provider-zod v4）/ ajv
 - **API文档**：OpenAPI/Swagger（@fastify/swagger v9）
 - **配置管理**：环境变量（@fastify/env v5）
 - **包管理**：pnpm workspace
@@ -18,66 +18,111 @@ alwaysApply: false
 
 ## 目录结构规范
 
+实际目录结构如下：
+
 ```
 src/
-├── app.ts                   # 应用入口文件
-├── bootstrap.ts             # Fastify实例初始化与配置
-├── config/                  # 配置文件目录
-│   ├── code-enums.config.ts # 状态码枚举定义
-│   └── code-message.config.ts # 状态码对应消息
-├── core/                    # 核心功能
-│   ├── jwt/                # JWT相关实现
-│   │   └── jwt.service.ts  # JWT服务
-│   └── business-error.ts   # 业务错误处理
-├── hooks/                   # 全局钩子函数
-│   └── response-hook.ts     # 响应处理钩子
-├── interfaces/              # 接口定义
-│   └── user.ts             # 用户接口定义
+├── app.ts                   # Fastify 应用入口
+├── bootstrap.ts             # Fastify 实例初始化与配置
+├── config/                  # 配置文件
+├── core/                    # 核心功能（如 jwt、业务错误）
+├── hooks/                   # 全局钩子
+├── interfaces/              # 业务接口定义
 ├── middlewares/             # 中间件
-│   ├── error-handler.ts     # 错误处理中间件
-│   └── not-found-handler.ts # 404处理中间件
-├── models/                  # Mongoose数据模型
-│   ├── bookmark.model.ts    # 书签模型
-│   ├── user.model.ts       # 用户模型
-│   └── index.ts            # 模型导出
-├── modules/                 # 业务模块
-│   ├── bookmark/           # 书签模块
-│   │   ├── category/       # 分类子模块
-│   │   │   ├── category.controller.ts
-│   │   │   ├── category.route.ts
-│   │   │   └── category.service.ts
-│   │   ├── tag/           # 标签子模块
-│   │   │   ├── tag.controller.ts
-│   │   │   ├── tag.route.ts
-│   │   │   └── tag.service.ts
-│   │   ├── bookmark.controller.ts
-│   │   ├── bookmark.route.ts
-│   │   └── bookmark.service.ts
-│   ├── user/              # 用户模块
-│   │   ├── user.controller.ts
-│   │   ├── user.route.ts
-│   │   └── user.service.ts
-│   └── index.route.ts     # 路由入口
-├── plugins/                # Fastify插件
-│   ├── auth-context.ts    # 认证上下文插件
-│   ├── db-connect.ts      # 数据库连接插件
-│   ├── env.ts             # 环境变量插件
-│   ├── jwt.ts             # JWT插件
-│   ├── redis.ts           # Redis插件
-│   └── swagger.ts         # Swagger文档插件
-├── shared/                # 共享代码
-│   └── mongoose/         # Mongoose相关
-│       ├── common-transform.ts    # 通用转换
-│       ├── leanTransformPlugin.ts # 精简转换插件
-│       └── mongoose-type.ts       # Mongoose类型定义
-├── typings/              # 类型声明
-│   ├── fastify-env.d.ts  # 环境变量类型
-│   ├── fastify-jwt.d.ts  # JWT类型
-│   └── fastify.request.d.ts # 请求类型扩展
-└── utils/               # 工具函数
-    ├── bcrypt.ts       # 密码加密
-    └── query-params.util.ts # 查询参数处理
+├── models/                  # Mongoose 数据模型（含子目录）
+├── modules/                 # 业务模块（如 user、bookmark，含子模块 category、tag）
+├── plugins/                 # Fastify 插件
+├── shared/                  # 共享代码（如 mongoose 通用插件）
+├── typings/                 # 类型声明
+├── utils/                   # 工具函数
+└── tests/                   # 测试用例
 ```
+
+### 业务模块结构
+
+- 每个一级业务模块（如 user、bookmark）下可包含子模块（如 category、tag）
+- 每个（子）模块均应包含 controller、route、service、schema 四类文件
+- 数据模型统一放在 `models/` 下，按业务拆分子目录
+
+---
+
+## 命名规范（强制）
+
+### 1. 目录与文件
+- 目录、文件统一使用 kebab-case（如：bookmark-category/、bookmark.service.ts）
+- 子模块文件命名格式：`<父模块>.<子模块>.<类型>.ts`，如 `bookmark.category.service.ts`
+- schema 文件命名格式：`<模块>[.<子模块>].schema.ts`
+- model 文件命名格式：`<模块>[.<子模块>].model.ts`
+- 工具函数文件：`xxx.util.ts`，如 `query-params.util.ts`
+
+### 2. 类、类型、接口
+- 类名、类型、接口名统一使用 PascalCase（如：BookmarkService、IBookmarkDocument、UserController）
+- Mongoose 文档类型：`I<模型名>Document`，Lean 类型：`I<模型名>Lean`
+- Service、Controller、Model、Schema、Route 结尾均为 PascalCase
+
+### 3. 变量、函数、方法
+- 统一使用 camelCase（如：findAll、getById、userId、bookmarkList）
+- 常量使用 UPPER_SNAKE_CASE（如：DATE_FORMAT）
+- 枚举类型使用 PascalCase，枚举成员用 UPPER_SNAKE_CASE
+
+### 4. 路由与 API
+- 路由文件统一以 `.route.ts` 结尾
+- 路由 handler 命名与 controller 方法保持一致
+- 路由路径风格统一为小写、短横线分隔（如 `/page-list`、`/set-favorite`）
+
+### 5. 其他
+- 插件文件统一以 `.ts` 结尾，文件名为功能名（如：auth-context.ts、db-connect.ts）
+- 类型声明文件统一放在 typings/，以 `.d.ts` 结尾
+- 业务接口定义文件统一放在 interfaces/，以业务为前缀
+
+---
+
+## 主要实现规范
+
+### 1. Controller/Route/Service/Schema 四分层
+- **Controller**：处理请求与响应，调用 service 层
+- **Route**：定义路由、校验 schema、绑定 controller
+- **Service**：业务逻辑实现
+- **Schema**：zod/ajv 校验规则，独立文件
+
+### 2. 插件系统
+- 插件统一放在 `plugins/` 目录，按功能拆分
+- 注册顺序：env → db-connect → redis → jwt → auth-context → swagger
+
+### 3. 数据模型
+- 所有 mongoose schema 放在 `models/`，按业务拆分子目录
+- 统一使用 `leanTransformPlugin` 等通用插件
+- 类型定义、转换逻辑抽离到 `shared/mongoose/`
+
+### 4. 错误处理
+- 业务错误统一继承 `BusinessError`
+- 错误处理中间件统一在 `middlewares/` 下
+
+### 5. 类型与接口
+- 业务接口定义放在 `interfaces/`
+- 全局类型声明放在 `typings/`
+
+### 6. 工具函数
+- 通用工具放在 `utils/`，如加密、参数处理等
+
+### 7. 测试
+- 测试文件与业务模块结构一致，放在 `tests/modules/模块名/`
+- 覆盖 controller、route、service 层
+
+---
+
+## 其它补充
+
+- 目录、文件、类、方法、常量等命名规范严格遵循 kebab-case、PascalCase、camelCase、UPPER_SNAKE_CASE
+- 重要逻辑、复杂方法需有注释
+- 依赖统一用 pnpm 管理
+- 代码风格统一使用 Prettier、ESLint
+- API 路由需配合 swagger 注释
+- 认证、权限、缓存、日志、环境变量等均有独立插件和配置
+
+---
+
+如需更详细的代码示例或某一部分的具体规范，请告知！
 
 ## 开发规范
 

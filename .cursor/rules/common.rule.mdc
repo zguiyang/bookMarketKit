@@ -7,11 +7,12 @@ alwaysApply: true
 
 ## 架构概述
 
-本项目采用 Monorepo 架构，统一管理前后端多个子项目，实现依赖共享、版本一致和高效协作。
+本项目采用 Monorepo 架构，统一管理前后端多个子项目和共享依赖包，实现依赖共享、版本一致和高效协作。
 
 - **前端**：Nuxt.js 3（Vue 3）+ Nuxt UI 3
 - **后端**：Fastify.js + MongoDB（mongoose）
 - **包管理**：pnpm workspace
+- **共享包**：TypeScript + tsup
 
 ---
 
@@ -19,15 +20,39 @@ alwaysApply: true
 
 ```
 project-root/
-├── apps/
-│   ├── backend/           # 后端服务（Fastify + mongoose）
-│   └── client/            # 前端应用（Nuxt 3 + Nuxt UI 3）
+├── apps/                  # 应用程序目录
+│   ├── backend/          # 后端服务（Fastify + mongoose）
+│   └── client/           # 前端应用（Nuxt 3 + Nuxt UI 3）
+├── packages/             # 共享依赖包
+│   ├── schemas/         # 通用数据模型和类型定义
+│   │   ├── src/        # 源代码
+│   │   ├── dist/       # 编译输出
+│   │   └── package.json # 包配置
+│   ├── code-definitions/ # 错误码和消息定义
+│   │   ├── src/        # 源代码
+│   │   ├── dist/       # 编译输出
+│   │   └── package.json # 包配置
+│   └── docs/           # 项目文档
 ├── node_modules/
-├── package.json           # 根包配置
-├── pnpm-lock.yaml         # pnpm 锁文件
-├── pnpm-workspace.yaml    # pnpm 工作区配置
-└── README.md              # 项目总体说明
+├── package.json          # 根包配置
+├── pnpm-lock.yaml        # pnpm 锁文件
+├── pnpm-workspace.yaml   # pnpm 工作区配置
+└── README.md             # 项目总体说明
 ```
+
+### packages 目录规范
+
+#### 1. schemas
+- 存放所有应用共享的数据模型、接口类型定义
+- 使用 TypeScript 严格模式
+- 使用 tsup 构建，输出 ESM 格式
+- 版本号遵循 Semver 规范
+
+#### 2. code-definitions
+- 存放错误码、状态码及其对应消息定义
+- 支持国际化（i18n）消息定义
+- 使用 TypeScript 常量枚举
+- 使用 tsup 构建，输出 ESM 格式
 
 ---
 
@@ -37,8 +62,10 @@ project-root/
 - **Vue/Nuxt 组件**：PascalCase（如：UserCard.vue）
 - **后端类/模型**：PascalCase（如：UserModel）
 - **函数/变量**：camelCase
-- **常量**：UPPER_SNAKE_CASE
+- **常量/枚举值**：UPPER_SNAKE_CASE
 - **CSS 类名**：kebab-case
+- **包名**：kebab-case（如：@bookmark/schemas）
+- **类型定义**：PascalCase（如：UserSchema）
 
 ---
 
@@ -66,6 +93,7 @@ project-root/
 - 统一使用 pnpm 作为包管理器
 - Node.js >= 18.x，推荐使用 nvm 管理 Node 版本
 - 编辑器建议启用保存时自动格式化，使用 Prettier、ESLint、Stylelint
+- 共享包开发需要使用 TypeScript 严格模式
 
 ---
 
@@ -76,6 +104,7 @@ project-root/
 - **代码检查**：ESLint（前后端）、Stylelint（前端样式）
 - **注释**：组件、函数、复杂逻辑必须有注释说明
 - **API 文档**：后端接口需有 Swagger/OpenAPI 文档，前端接口类型需定义
+- **共享包**：必须包含完整的类型定义和文档注释
 
 ---
 
@@ -83,6 +112,7 @@ project-root/
 
 - **前端**：Vitest + Vue Test Utils，测试文件 *.spec.ts，覆盖率 > 80%
 - **后端**：Vitest 或 Jest，测试文件 *.spec.ts，覆盖率 > 80%
+- **共享包**：Vitest，需包含单元测试，覆盖率 > 90%
 - **测试文件**：与源文件同目录
 
 ---
@@ -97,6 +127,38 @@ project-root/
 - 更新依赖：pnpm update <package-name>
 - 依赖优先在根 package.json 共享，特定依赖在各子项目 package.json
 - 定期审查并更新过时依赖，关键依赖锁定精确版本
+- 共享包的依赖版本必须精确指定，避免版本不一致
+
+---
+
+## 共享包开发规范
+
+1. **目录结构**
+   ```
+   package-name/
+   ├── src/          # 源代码目录
+   ├── dist/         # 编译输出目录
+   ├── tests/        # 测试文件目录
+   ├── package.json  # 包配置文件
+   ├── tsconfig.json # TypeScript 配置
+   └── tsup.config.ts # 构建配置
+   ```
+
+2. **版本管理**
+   - 遵循 Semver 语义化版本规范
+   - 重大更新必须升级主版本号
+   - 所有更新必须更新 CHANGELOG.md
+
+3. **发布流程**
+   - 完成功能开发和测试
+   - 更新版本号和 CHANGELOG.md
+   - 构建并检查输出文件
+   - 发布到 npm 仓库
+
+4. **文档要求**
+   - README.md：包含安装、使用说明
+   - API 文档：详细的接口说明
+   - 更新日志：记录版本变更
 
 ---
 
@@ -106,4 +168,5 @@ project-root/
 - 目录结构清晰，分层合理，便于维护和扩展
 - 重要变更需同步更新相关文档
 - 严格遵循各自领域的详细开发规范（详见 backend.rule.mdc、frontend.rule.mdc）
+- 共享包的变更需要考虑对所有使用方的影响
 
