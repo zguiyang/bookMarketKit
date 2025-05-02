@@ -13,7 +13,7 @@ import {
 } from '@bookmark/schemas';
 import { BookmarkModel, BookmarkCategoryModel, BookmarkTagModel, IBookmarkLean } from '@/models/bookmark/index.js';
 import { BusinessError } from '@/core/business-error';
-import { bookmarkCodeMessages} from '@/config/code-message.config';
+import { bookmarkCodeMessages } from '@bookmark/code-definitions';
 import { getPaginateOptions } from '@/utils/query-params.util';
 
 export class BookmarkService {

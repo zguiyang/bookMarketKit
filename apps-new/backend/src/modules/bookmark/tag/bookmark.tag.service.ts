@@ -3,7 +3,7 @@ import { CreateTagBody, UpdateTagBody, TagResponse } from '@bookmark/schemas';
 import { omit } from 'lodash-es';
 import type { FilterQuery, UpdateQuery } from 'mongoose';
 import { BusinessError } from '@/core/business-error';
-import { bookmarkTagCodeMessages } from '@/config/code-message.config';
+import { bookmarkTagCodeMessages } from '@bookmark/code-definitions';
 
 export class BookmarkTagService {
   constructor() {}

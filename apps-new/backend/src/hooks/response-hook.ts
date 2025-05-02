@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { ApiResponse } from '@bookmark/schemas';
-import { commonCodeMessages } from '@/config/code-message.config.js';
+import { commonCodeMessages } from '@bookmark/code-definitions';
 
 function isApiResponse(obj: any): obj is Partial<ApiResponse> {
   return (

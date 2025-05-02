@@ -14,10 +14,6 @@
     "types": ["node", "vitest"],
     "paths": {
       "@/*": ["src/*"],
-      "@bookmark/schemas": ["../../packages/schemas/src/index.js"],
-      "@bookmark/code-definitions": ["../../packages/code-definitions/src/index.js"],
-      "@bookmark/schemas/*": ["../../packages/schemas/src/*"],
-      "@bookmark/code-definitions/*": ["../../packages/code-definitions/src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/typings/*.d.ts", "tests/**/*.ts", "vitest.config.ts"],

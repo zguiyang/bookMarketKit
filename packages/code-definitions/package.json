@@ -1,12 +1,9 @@
 {
-  "name": "code-definitions",
+  "name": "@bookmark/code-definitions",
   "version": "1.0.0",
   "description": "前后端共享的错误码、消息、常量定义包",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
   "scripts": {
     "build": "tsup"
   },
@@ -17,5 +14,8 @@
     "enums"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "tsup": "^8.4.0"
+  }
 }

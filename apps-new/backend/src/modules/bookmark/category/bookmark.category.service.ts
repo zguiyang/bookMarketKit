@@ -3,7 +3,7 @@ import { CreateCategoryBody, UpdateCategoryBody, CategoryResponse } from '@bookm
 import { omit } from 'lodash-es';
 import type { FilterQuery, UpdateQuery } from 'mongoose';
 import { BusinessError } from '@/core/business-error';
-import { bookmarkCategoryCodeMessages } from '@/config/code-message.config';
+import { bookmarkCategoryCodeMessages } from '@bookmark/code-definitions';
 
 export class BookmarkCategoryService {
   constructor() {}

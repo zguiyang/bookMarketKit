@@ -3,7 +3,7 @@ import { CreateUserBody, UserResponse } from "@bookmark/schemas";
 import { UserModel, IUserDocument, IUserLean } from '@/models/user.model.js';
 import { hashPassword } from '@/utils/bcrypt.js';
 import { BusinessError } from '@/core/business-error.js';
-import { userCodeMessages } from '@/config/code-message.config.js';
+import { userCodeMessages } from '@bookmark/code-definitions';
 
 export class UserService {
   constructor() {}
