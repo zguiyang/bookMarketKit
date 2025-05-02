@@ -41,15 +41,14 @@ const app = Fastify({
   logger: envToLogger[NODE_ENV as keyof typeof envToLogger] ?? true,
   ajv: {
     customOptions: {
-      coerceTypes: 'array',
-      useDefaults: true,
-      allErrors: false,
+      coerceTypes: false, // 禁用ajv的类型转换, 使用zod的类型转换
     }
   },
-  }).withTypeProvider<ZodTypeProvider>();
+  });
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
+  app.withTypeProvider<ZodTypeProvider>();
 
 async function bootstrap() {
 

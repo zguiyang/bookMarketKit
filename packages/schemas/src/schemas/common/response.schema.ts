@@ -59,15 +59,15 @@ export function createPaginatedRequestSchema<T extends ZodObject<ZodRawShape>>(
 
   const paginationSchema = z.object({
     // 页码：最小为1
-    page: z.number()
+    page: z.coerce.number()
       .int()
       .min(1)
+      .positive()
       .default(PaginationDefaults.PAGE),
-
-    // 每页数量：最小为1，最大为maxPageSize
-    pageSize: z.number()
+    pageSize: z.coerce.number()
       .int()
       .min(1)
+      .positive()
       .default(defaultPageSize),
 
     // 排序字段：如果提供了orderByEnum则限制可选值
@@ -90,10 +90,10 @@ export function createPaginatedRequestSchema<T extends ZodObject<ZodRawShape>>(
 export function createPaginatedResponseSchema<T extends ZodTypeAny>(itemSchema: T) {
   return z.object({
     content: z.array(itemSchema),
-    page: z.number().int().min(1),
-    pages: z.number().int().min(0),
-    pageSize: z.number().int().min(1),
-    total: z.number().int().min(0),
+    page: z.coerce.number().int().min(1).positive(),
+    pages: z.coerce.number().int().min(0),
+    pageSize: z.coerce.number().int().min(1).positive(),
+    total: z.coerce.number().int().min(0),
   })
 }
 

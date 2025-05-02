@@ -28,8 +28,8 @@ export const bookmarkResponseSchema = z.object({
   lastVisitedAt: z.string().optional(),
   categories: z.array(categoryResponseSchema),
   tags: z.array(tagResponseSchema),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 // 书签列表Schema

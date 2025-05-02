@@ -1,8 +1,9 @@
 import type { FastifyInstance } from 'fastify';
+import type { CreateUserBody, UserIdParam } from '@bookmark/schemas';
 
 import { UserController } from './user.controller.js';
 import { UserService } from './user.service.js';
-import { userSchemas, CreateUserBody, UserIdParam } from '@bookmark/schemas';
+import { userSchemas } from './user.schema.js';
 
 export default async function userRoutes(fastify: FastifyInstance) {
   const userService = new UserService();

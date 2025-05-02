@@ -26,13 +26,12 @@ export function filterNullOrUndefined<T extends Record<string, any>>(
  * @param query 分页请求参数
  * @returns 分页与排序相关参数
  */
-export function getPaginateOptions(query: Partial<PaginatedRequest>) {
-  const page = query.page && query.page > 0 ? query.page : 1;
-  const pageSize = query.pageSize && query.pageSize > 0 ? query.pageSize : 10;
+export function getPaginateOptions(query: PaginatedRequest) {
+  const { page, pageSize, orderBy, direction } = query;
   const skip = (page - 1) * pageSize;
   let sort: string | { [key: string]: SortOrder } = { createdAt: -1 };
-  if (query.orderBy) {
-    sort = { [query.orderBy]: query.direction ?? PaginationDirectionEnum.DESC } as { [key: string]: SortOrder };
+  if (orderBy) {
+    sort = { [orderBy]: direction ?? PaginationDirectionEnum.DESC } as { [key: string]: SortOrder };
   }
   return { page, pageSize, skip, sort };
 }

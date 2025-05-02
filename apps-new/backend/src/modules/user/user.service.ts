@@ -1,13 +1,14 @@
 import { omit } from 'lodash-es';
-import { CreateUserBody }from "@bookmark/schemas";
-import { UserModel, IUser } from '@/models/user.model.js';
+import { CreateUserBody, UserResponse } from "@bookmark/schemas";
+import { UserModel, IUserDocument, IUserLean } from '@/models/user.model.js';
 import { hashPassword } from '@/utils/bcrypt.js';
 import { BusinessError } from '@/core/business-error.js';
 import { userCodeMessages } from '@/config/code-message.config.js';
+
 export class UserService {
   constructor() {}
 
-  async create(userData: CreateUserBody): Promise<Omit<IUser, 'password'>> {
+  async create(userData: CreateUserBody): Promise<UserResponse> {
     const existingUser = await this.getByUsernameOrEmail({
       username: userData.username,
       email: userData.email,
@@ -19,19 +20,33 @@ export class UserService {
       ...userData,
       password: await hashPassword(userData.password),
     });
-    return omit(user.toJSON(), 'password');
+    const userJson = user.toJSON<UserResponse>();
+    return omit(userJson, 'password');
   }
 
-  async getAll(): Promise<Omit<IUser, 'password'>[]> {
-    return UserModel.find({}, { password: 0 }).lean();
+  async getAll(): Promise<UserResponse[]> {
+    return UserModel.find({}, { password: 0 })
+      .lean<IUserLean[]>();
   }
 
-  async getByUsernameOrEmail({ username, email }: { username?: string, email?: string }): Promise<IUser | null> {
-    return UserModel.findOne({ $or: [{ username }, { email }] }).lean();
+  async getByUsernameOrEmail({ 
+    username, 
+    email 
+  }: { 
+    username?: string; 
+    email?: string; 
+  }): Promise<IUserLean | null> {
+    return UserModel.findOne({ 
+      $or: [{ username }, { email }] 
+    }).lean<IUserLean>();
   }
 
-  async getById(id: string): Promise<Omit<IUser, 'password'>> {
-    const user = await UserModel.findById({ _id: id }, { password: 0 }).lean();
+  async getById(id: string): Promise<UserResponse> {
+    const user = await UserModel.findById(
+      { _id: id }, 
+      { password: 0 }
+    ).lean<IUserLean>();
+
     if (!user) {
       throw new BusinessError(userCodeMessages.notFoundUser);
     }

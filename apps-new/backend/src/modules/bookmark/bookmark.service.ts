@@ -1,20 +1,20 @@
 import { omit } from 'lodash-es';
 import { Types } from 'mongoose';
 import {
+  BookmarkResponse,
+  BookmarkListResponse,
+  BookmarkPageListResponse,
+  BookmarkCollectionResponse,
   CreateBookmarkBody,
   UpdateBookmarkBody,
   SetFavoriteBody,
   SetPinnedBody,
   BookmarkPageListQuery,
-  BookmarkCollectionResponse,
-  BookmarkResponse,
-  BookmarkPageListResponse,
 } from '@bookmark/schemas';
-import { BookmarkModel, IBookmark, BookmarkCategoryModel, BookmarkTagModel } from '@/models/bookmark/index.js';
+import { BookmarkModel, BookmarkCategoryModel, BookmarkTagModel, IBookmarkLean } from '@/models/bookmark/index.js';
 import { BusinessError } from '@/core/business-error';
 import { bookmarkCodeMessages} from '@/config/code-message.config';
 import { getPaginateOptions } from '@/utils/query-params.util';
-
 
 export class BookmarkService {
   constructor() {}
@@ -26,7 +26,7 @@ export class BookmarkService {
       categories: data.categoryIds || [],
       tags: data.tagIds || [],
     });
-    return bookmark as unknown as BookmarkResponse;
+    return bookmark.toJSON<BookmarkResponse>();
   }
 
   async update(userId: string, data: UpdateBookmarkBody): Promise<BookmarkResponse> {
@@ -40,52 +40,64 @@ export class BookmarkService {
       { _id: data.id, user: userId },
       { $set: updateData },
       { new: true }
-    ).populate(['categories', 'tags']).lean();
+    ).populate(['categories', 'tags']).lean<IBookmarkLean>();
 
     if (!bookmark) {
       throw new BusinessError(bookmarkCodeMessages.updateError);
     }
 
-    return bookmark as unknown as BookmarkResponse;
+    return bookmark;
   }
 
   async delete(userId: string, id: string) {
     return await BookmarkModel.deleteOne({ _id: id, user: userId });
   }
 
-  async favorite(userId: string, data: SetFavoriteBody) {
-    return BookmarkModel.findOneAndUpdate(
+  async favorite(userId: string, data: SetFavoriteBody): Promise<BookmarkResponse> {
+    const bookmark = await BookmarkModel.findOneAndUpdate(
       { _id: data.id, user: userId },
       { isFavorite: !!data.isFavorite },
       { new: true }
-    ).populate(['categories', 'tags']);
+    ).populate(['categories', 'tags']).lean<IBookmarkLean>();
+    
+    if (!bookmark) {
+      throw new BusinessError(bookmarkCodeMessages.notFoundBookmark);
+    }
+    
+    return bookmark;
   }
 
-  async pinned(userId: string, data: SetPinnedBody) {
-    return BookmarkModel.findOneAndUpdate(
+  async pinned(userId: string, data: SetPinnedBody): Promise<BookmarkResponse> {
+    const bookmark = await BookmarkModel.findOneAndUpdate(
       { _id: data.id, user: userId },
       { isPinned: !!data.isPinned },
       { new: true }
-    ).populate(['categories', 'tags']);
+    ).populate(['categories', 'tags']).lean<IBookmarkLean>();
+    
+    if (!bookmark) {
+      throw new BusinessError(bookmarkCodeMessages.notFoundBookmark);
+    }
+    
+    return bookmark;
   }
 
-  async findAll(userId: string): Promise<BookmarkResponse[]> {
+  async findAll(userId: string): Promise<BookmarkListResponse> {
     const bookmarks = await BookmarkModel.find({ user: userId })
       .populate(['categories', 'tags'])
       .sort({ createdAt: -1 })
-      .lean();
-    return bookmarks as unknown as BookmarkResponse[];
+      .lean<IBookmarkLean[]>();
+    return bookmarks;
   }
 
   async findOne(userId: string, id: string): Promise<BookmarkResponse> {
     const bookmark = await BookmarkModel.findOne({ _id: id, user: userId })
       .populate(['categories', 'tags'])
-      .lean();
+      .lean<IBookmarkLean>();
 
     if (!bookmark) {
       throw new BusinessError(bookmarkCodeMessages.notFoundBookmark);
     }
-    return bookmark as unknown as BookmarkResponse;
+    return bookmark;
   }
 
   async pageList(userId: string, query: BookmarkPageListQuery): Promise<BookmarkPageListResponse> {
@@ -95,8 +107,6 @@ export class BookmarkService {
       keyword,
       tagId,
       categoryId,
-      orderBy,
-      direction,
     } = query;
 
     const filter: any = { user: userId };
@@ -129,7 +139,7 @@ export class BookmarkService {
       .sort(sort)
       .skip(skip)
       .limit(pageSize)
-      .lean();
+      .lean<IBookmarkLean[]>();
 
     const pages = Math.ceil(total / pageSize);
 
@@ -137,7 +147,7 @@ export class BookmarkService {
       page,
       pageSize,
       pages,
-      content: bookmarks as unknown as BookmarkResponse[],
+      content: bookmarks,
       total,
     };
   }
@@ -148,37 +158,43 @@ export class BookmarkService {
       BookmarkModel.find({ user: userId, isPinned: true })
         .populate(['categories', 'tags'])
         .sort({ updatedAt: -1 })
-        .limit(10).lean(),
+        .limit(10).lean<IBookmarkLean[]>(),
 
       // 最近访问的书签
       BookmarkModel.find({ user: userId, lastVisitedAt: { $exists: true } })
         .populate(['categories', 'tags'])
         .sort({ lastVisitedAt: -1 })
-        .limit(10).lean(),
+        .limit(10).lean<IBookmarkLean[]>(),
 
       // 最近添加的书签
       BookmarkModel.find({ user: userId })
         .populate(['categories', 'tags'])
         .sort({ createdAt: -1 })
-        .limit(10).lean(),
+        .limit(10).lean<IBookmarkLean[]>(),
     ]);
 
     return {
-      pinnedBookmarks: pinnedBookmarks as unknown as BookmarkResponse[],
-      recentBookmarks: recentBookmarks as unknown as BookmarkResponse[],
-      recentAddedBookmarks: recentAddedBookmarks as unknown as BookmarkResponse[],
+      pinnedBookmarks,
+      recentBookmarks,
+      recentAddedBookmarks,
     };
   }
 
-  async updateLastVisitTime(userId: string, id: string) {
-    return BookmarkModel.findOneAndUpdate(
+  async updateLastVisitTime(userId: string, id: string): Promise<BookmarkResponse> {
+    const bookmark = await BookmarkModel.findOneAndUpdate(
       { _id: id, user: userId },
       { 
         lastVisitedAt: new Date(),
         $inc: { visitCount: 1 }
       },
       { new: true }
-    ).populate(['categories', 'tags']);
+    ).populate(['categories', 'tags']).lean<IBookmarkLean>();
+    
+    if (!bookmark) {
+      throw new BusinessError(bookmarkCodeMessages.notFoundBookmark);
+    }
+    
+    return bookmark;
   }
 
   async search(userId: string, keyword: string) {
@@ -191,7 +207,7 @@ export class BookmarkService {
           { description: { $regex: keyword, $options: 'i' } },
           { url: { $regex: keyword, $options: 'i' } }
         ]
-      }).populate(['categories', 'tags']),
+      }).populate(['categories', 'tags']).lean(),
 
       // 搜索分类
       BookmarkCategoryModel.find({
@@ -200,13 +216,13 @@ export class BookmarkService {
           { name: { $regex: keyword, $options: 'i' } },
           { description: { $regex: keyword, $options: 'i' } }
         ]
-      }),
+      }).lean(),
 
       // 搜索标签
       BookmarkTagModel.find({
         user: userId,
         name: { $regex: keyword, $options: 'i' }
-      })
+      }).lean()
     ]);
 
     return {
