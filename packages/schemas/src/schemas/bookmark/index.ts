@@ -2,7 +2,7 @@
 export * from './bookmark.schema';
 
 // 导出分类相关Schema和类型
-export * from './category.schema';
+export * from './bookmark.category.schema';
 
 // 导出标签相关Schema和类型
-export * from './tag.schema';
+export * from './bookmark.tag.schema';

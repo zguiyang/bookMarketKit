@@ -61,7 +61,7 @@ export class BookmarkService {
     ).populate(['categories', 'tags']).lean<IBookmarkLean>();
     
     if (!bookmark) {
-      throw new BusinessError(bookmarkCodeMessages.notFoundBookmark);
+      throw new BusinessError(bookmarkCodeMessages.notFound);
     }
     
     return bookmark;
@@ -75,7 +75,7 @@ export class BookmarkService {
     ).populate(['categories', 'tags']).lean<IBookmarkLean>();
     
     if (!bookmark) {
-      throw new BusinessError(bookmarkCodeMessages.notFoundBookmark);
+      throw new BusinessError(bookmarkCodeMessages.notFound);
     }
     
     return bookmark;
@@ -95,7 +95,7 @@ export class BookmarkService {
       .lean<IBookmarkLean>();
 
     if (!bookmark) {
-      throw new BusinessError(bookmarkCodeMessages.notFoundBookmark);
+      throw new BusinessError(bookmarkCodeMessages.notFound);
     }
     return bookmark;
   }
@@ -191,7 +191,7 @@ export class BookmarkService {
     ).populate(['categories', 'tags']).lean<IBookmarkLean>();
     
     if (!bookmark) {
-      throw new BusinessError(bookmarkCodeMessages.notFoundBookmark);
+      throw new BusinessError(bookmarkCodeMessages.notFound);
     }
     
     return bookmark;

@@ -18,7 +18,7 @@ export class BookmarkTagService {
     const update: UpdateQuery<IBookmarkTagDocument> = { $set: omit(data, 'id') };
     const tag = await BookmarkTagModel.findOneAndUpdate(filter, update, { new: true });
     if (!tag) {
-      throw new BusinessError(bookmarkTagCodeMessages.updateTagError);
+      throw new BusinessError(bookmarkTagCodeMessages.updateError);
     }
     return tag?.toJSON<TagResponse>();
   }

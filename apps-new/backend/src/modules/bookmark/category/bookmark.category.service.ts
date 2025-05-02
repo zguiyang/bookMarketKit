@@ -18,7 +18,7 @@ export class BookmarkCategoryService {
     const update: UpdateQuery<IBookmarkCategoryDocument> = { $set: omit(data, 'id') };
     const category = await BookmarkCategoryModel.findOneAndUpdate(filter, update, { new: true });
     if (!category) {
-      throw new BusinessError(bookmarkCategoryCodeMessages.updateCategoryError);
+      throw new BusinessError(bookmarkCategoryCodeMessages.updateError);
     }
 
     return category?.toJSON<CategoryResponse>();

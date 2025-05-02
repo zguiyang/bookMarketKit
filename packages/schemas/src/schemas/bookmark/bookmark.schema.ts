@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { createPaginatedRequestSchema, createPaginatedResponseSchema, PaginationDirectionEnum } from '../common/response.schema';
-import { categoryResponseSchema } from './category.schema';
-import { tagResponseSchema  } from './tag.schema';
+import { categoryResponseSchema } from './bookmark.category.schema';
+import { tagResponseSchema  } from './bookmark.tag.schema';
 
 
 // 书签排序字段枚举

@@ -4,7 +4,7 @@ import {
   UpdateTagBody,
   TagIdParam,
 } from '@bookmark/schemas';
-import { BookmarkTagService } from './tag.service.js';
+import { BookmarkTagService } from './bookmark.tag.service.js';
 
 export class BookmarkTagController {
   constructor(private readonly tagService: BookmarkTagService) {}

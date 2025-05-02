@@ -4,7 +4,7 @@ import {
   UpdateCategoryBody,
   CategoryIdParam,
 } from '@bookmark/schemas';
-import { BookmarkCategoryService } from './category.service.js';
+import { BookmarkCategoryService } from './bookmark.category.service.js';
 
 export class BookmarkCategoryController {
   constructor(private readonly categoryService: BookmarkCategoryService) {}

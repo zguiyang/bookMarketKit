@@ -72,11 +72,11 @@ export const userCodeMessages = {
 };
 
 export const bookmarkCodeMessages = {
-  notFoundBookmark: {
+  notFound: {
     code: CodeEnums.BOOKMARK_NOT_FOUND,
     message: '书签不存在',
   },
-  existedBookmark: {
+  existed: {
     code: CodeEnums.BOOKMARK_ALREADY_EXISTS,
     message: '该URL已被收藏',
   },
@@ -96,23 +96,23 @@ export const bookmarkCodeMessages = {
 
 // 书签标签相关错误码
 export const bookmarkTagCodeMessages = {
-  notFoundTag: {
+  notFound: {
     code: CodeEnums.BOOKMARK_TAG_NOT_FOUND,
     message: '标签不存在',
   },
-  existedTag: {
+  existed: {
     code: CodeEnums.BOOKMARK_TAG_ALREADY_EXISTS,
     message: '标签已存在',
   },
-  createTagError: {
+  createError: {
     code: CodeEnums.BOOKMARK_TAG_CREATE_ERROR,
     message: '创建标签失败',
   },
-  updateTagError: {
+  updateError: {
     code: CodeEnums.BOOKMARK_TAG_UPDATE_ERROR,
     message: '更新标签失败',
   },
-  deleteTagError: {
+  deleteError: {
     code: CodeEnums.BOOKMARK_TAG_DELETE_ERROR,
     message: '删除标签失败',
   },
@@ -120,23 +120,23 @@ export const bookmarkTagCodeMessages = {
 
 // 书签分类相关错误码
 export const bookmarkCategoryCodeMessages = {
-  notFoundCategory: {
+  notFound: {
     code: CodeEnums.BOOKMARK_CATEGORY_NOT_FOUND,
     message: '分类不存在',
   },
-  existedCategory: {
+  existed: {
     code: CodeEnums.BOOKMARK_CATEGORY_ALREADY_EXISTS,
     message: '分类已存在',
   },
-  createCategoryError: {
+  createError: {
     code: CodeEnums.BOOKMARK_CATEGORY_CREATE_ERROR,
     message: '创建分类失败',
   },
-  updateCategoryError: {
+  updateError: {
     code: CodeEnums.BOOKMARK_CATEGORY_UPDATE_ERROR,
     message: '更新分类失败',
   },
-  deleteCategoryError: {
+  deleteError: {
     code: CodeEnums.BOOKMARK_CATEGORY_DELETE_ERROR,
     message: '删除分类失败',
   },
