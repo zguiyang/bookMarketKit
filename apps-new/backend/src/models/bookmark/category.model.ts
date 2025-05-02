@@ -1,18 +1,19 @@
-import mongoose, { Schema, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin.js';
 import { commonTransform } from '@/shared/mongoose/common-transform.js';
-import { IBaseDocument } from '@/shared/mongoose/mongoose-type.js';
+import { CategoryResponse } from '@bookmark/schemas';
+import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type.js';
 
-// 书签分类
-export interface IBookmarkCategory extends IBaseDocument {
-  user: Types.ObjectId;
-  name: string;
-  description?: string;
-  icon?: string;
-  parent?: string;
-}
+// Mongoose 文档类型
+export type IBookmarkCategoryDocument = CreateDocument<
+  CategoryResponse,
+  'user' | 'parent'
+>;
 
-const BookmarkCategorySchema = new Schema<IBookmarkCategory>(
+// Lean 查询结果类型
+export type IBookmarkCategoryLean = CreateLeanDocument<CategoryResponse>;
+
+const BookmarkCategorySchema = new Schema<IBookmarkCategoryDocument>(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true },
@@ -31,4 +32,4 @@ const BookmarkCategorySchema = new Schema<IBookmarkCategory>(
 
 BookmarkCategorySchema.plugin(leanTransformPlugin);
 
-export const BookmarkCategoryModel = mongoose.model<IBookmarkCategory>('BookmarkCategory', BookmarkCategorySchema);
+export const BookmarkCategoryModel = mongoose.model<IBookmarkCategoryDocument>('BookmarkCategory', BookmarkCategorySchema);

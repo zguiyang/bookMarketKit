@@ -6,8 +6,8 @@ export const tagResponseSchema = z.object({
   user: z.string(),
   name: z.string(),
   color: z.string().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export const tagListResponseSchema = z.array(tagResponseSchema);

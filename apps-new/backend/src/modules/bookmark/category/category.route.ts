@@ -31,7 +31,7 @@ export default async function categoryRoutes(fastify: FastifyInstance) {
 
   fastify.get('/all', {
     schema: categorySchemas.all,
-    handler: () => categoryController.all(),
+    handler: (req) => categoryController.all(req),
   });
 
   fastify.get<{ Params: CategoryIdParam }>('/detail/:id', {

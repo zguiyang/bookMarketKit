@@ -29,7 +29,7 @@ export default async function tagRoutes(fastify: FastifyInstance) {
 
   fastify.get('/all', {
     schema:tagSchemas.all,
-    handler: () => tagController.all(),
+    handler: (req) => tagController.all(req),
   });
 
   fastify.get<{ Params: TagIdParam }>('/detail/:id', {

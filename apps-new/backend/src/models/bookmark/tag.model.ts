@@ -1,16 +1,19 @@
-import mongoose, { Schema, Types } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin.js';
 import { commonTransform } from '@/shared/mongoose/common-transform.js';
-import { IBaseDocument } from '@/shared/mongoose/mongoose-type.js';
+import { TagResponse } from '@bookmark/schemas';
+import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type.js';
 
-// 书签标签
-export interface IBookmarkTag extends IBaseDocument {
-  user: Types.ObjectId;
-  name: string;
-  color?: string;
-}
+// Mongoose 文档类型
+export type IBookmarkTagDocument = CreateDocument<
+  TagResponse,
+  'user'
+>;
 
-const BookmarkTagSchema = new Schema<IBookmarkTag>(
+// Lean 查询结果类型
+export type IBookmarkTagLean = CreateLeanDocument<TagResponse>;
+
+const BookmarkTagSchema = new Schema<IBookmarkTagDocument>(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true },
@@ -27,4 +30,4 @@ const BookmarkTagSchema = new Schema<IBookmarkTag>(
 
 BookmarkTagSchema.plugin(leanTransformPlugin);
 
-export const BookmarkTagModel = mongoose.model<IBookmarkTag>('BookmarkTag', BookmarkTagSchema);
+export const BookmarkTagModel = mongoose.model<IBookmarkTagDocument>('BookmarkTag', BookmarkTagSchema);

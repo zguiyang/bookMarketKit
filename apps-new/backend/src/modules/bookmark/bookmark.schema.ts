@@ -57,7 +57,7 @@ export const bookmarkSchemas: {
     tags: ['Bookmark'],
     summary: '获取所有书签',
     description: '获取当前用户的所有书签列表',
-    querystring: z.void(),
+    querystring: z.object({}),
     response: { 200: bookmarkListResponseSchema },
   },
   detail: {

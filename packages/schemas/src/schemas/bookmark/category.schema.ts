@@ -8,8 +8,8 @@ export const categoryResponseSchema = z.object({
   description: z.string().optional(),
   icon: z.string().optional(),
   parent: z.string().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export const categoryListResponseSchema = z.array(categoryResponseSchema);
@@ -19,7 +19,7 @@ export const createCategoryBodySchema = z.object({
   name: z.string().min(1, { message: '分类名称不能为空' }),
   description: z.string().optional(),
   icon: z.string().optional(),
-  parentId: z.string().optional(),
+  parent: z.string().optional(),
 }).strict();
 
 export const updateCategoryBodySchema = z.object({
@@ -27,7 +27,7 @@ export const updateCategoryBodySchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
   icon: z.string().optional(),
-  parentId: z.string().optional(),
+  parent: z.string().optional(),
 }).strict();
 
 // 分类ID参数Schema
