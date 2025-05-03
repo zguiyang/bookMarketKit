@@ -15,7 +15,7 @@ export const userSchemas = {
     tags: ['User'],
     summary: '获取所有用户',
     description: '获取系统中所有用户的列表',
-    querystring: z.void(),
+    querystring: z.any({}),
     response: {
       200: allUsersResponseSchema,
     },

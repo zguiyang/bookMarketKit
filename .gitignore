@@ -90,6 +90,11 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
+.output
+.data
+.nuxt
+.nitro
+.cache
 dist
 
 # Gatsby files
@@ -146,12 +151,6 @@ dist
 # production
 /build
 
-# misc
-.DS_Store
-*.pem
-# local env files
-.env*.local
-
 # vercel
 .vercel
 
@@ -175,3 +174,13 @@ prd
 
 docker-compose.yaml
 !docker-compose.yaml.example
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example

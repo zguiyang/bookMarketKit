@@ -25,8 +25,7 @@ export class UserService {
   }
 
   async getAll(): Promise<UserResponse[]> {
-    return UserModel.find({}, { password: 0 })
-      .lean<IUserLean[]>();
+   return await UserModel.find({}, { password: 0 }).lean<IUserLean[]>();
   }
 
   async getByUsernameOrEmail({ 

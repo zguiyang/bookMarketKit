@@ -1,5 +1,6 @@
 import Fastify, { fastify } from 'fastify';
 import autoload from '@fastify/autoload';
+import cors from '@fastify/cors';
 import sensiblePlugin from '@fastify/sensible';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -49,6 +50,30 @@ const app = Fastify({
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
   app.withTypeProvider<ZodTypeProvider>();
+
+  app.register(cors, {
+    origin: (origin, cb) => {
+      console.log('origin', origin);
+      if (!origin) {
+        cb(null, true);
+        return;
+      }
+      const hostname = new URL(origin).hostname;
+      const allowedOrigins = ['https://bookmark.9crd.com'];
+
+      if (hostname === 'localhost' || allowedOrigins.includes(origin)) {
+        cb(null, true);
+        return;
+      }
+
+      // 拒绝其他来源
+      cb(new Error("Not allowed by CORS"), false);
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    maxAge: 86400
+  });
 
 async function bootstrap() {
 

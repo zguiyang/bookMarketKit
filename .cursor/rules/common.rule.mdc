@@ -22,7 +22,7 @@ alwaysApply: true
 project-root/
 ├── apps/                  # 应用程序目录
 │   ├── backend/          # 后端服务（Fastify + mongoose）
-│   └── client/           # 前端应用（Nuxt 3 + Nuxt UI 3）
+│   └── web/              # 前端应用（Nuxt 3 + Nuxt UI 3，主目录为 src）
 ├── packages/             # 共享依赖包
 │   ├── schemas/         # 通用数据模型和类型定义
 │   │   ├── src/        # 源代码
@@ -39,6 +39,10 @@ project-root/
 ├── pnpm-workspace.yaml   # pnpm 工作区配置
 └── README.md             # 项目总体说明
 ```
+
+- 前端主业务代码必须放在 `apps/web/src` 目录下，根目录仅保留配置和依赖文件。
+- 所有前端目录结构和扩展必须严格遵循 Nuxt 3 官方约定式规范，扩展自定义目录时不得与 Nuxt 3 约定目录冲突。
+- 类型定义建议全部放在 `src/types/`，Nuxt 会自动合并类型声明。
 
 ### packages 目录规范
 

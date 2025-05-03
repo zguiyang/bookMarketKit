@@ -94,10 +94,8 @@ function leanTransformPlugin(schema: Schema): void {
       res: any,
       next: CallbackWithoutResultAndOptionalError
     ): void {
-      const options = this.getOptions();
-
-      if (options?.lean && res) {
-          transformLeanResult(res); // Modifies res in place
+      if (res) {
+        transformLeanResult(res);
       }
 
       next();
