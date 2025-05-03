@@ -1,6 +1,6 @@
 import { omit } from 'lodash-es';
 import { CreateUserBody, UserResponse } from "@bookmark/schemas";
-import { UserModel, IUserDocument, IUserLean } from '@/models/user.model.js';
+import { UserModel, IUserLean } from '@/models/user.model.js';
 import { hashPassword } from '@/utils/bcrypt.js';
 import { BusinessError } from '@/core/business-error.js';
 import { userCodeMessages } from '@bookmark/code-definitions';
@@ -25,7 +25,7 @@ export class UserService {
   }
 
   async getAll(): Promise<UserResponse[]> {
-   return await UserModel.find({}, { password: 0 }).lean<IUserLean[]>();
+  return await UserModel.find({}, { password: 0 }).lean<IUserLean[]>();
   }
 
   async getByUsernameOrEmail({ 

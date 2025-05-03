@@ -1,5 +1,6 @@
 import { ofetch } from 'ofetch'
 import type { ApiResponse } from '@bookmark/schemas'
+import { CodeEnums } from '@bookmark/code-definitions';
 
 export default defineNuxtPlugin(() => {
   const runtimeConfig = useRuntimeConfig()
@@ -17,7 +18,6 @@ export default defineNuxtPlugin(() => {
       'Content-Type': 'application/json',
     },
 
-    // 1 & 2. 请求拦截器：可以在发送前修改请求，例如添加 Token
     onRequest({ request, options }) {
       console.log('[fetch request]', request, options)
       // 假设 token 存在 Pinia store 或 localStorage 中
@@ -40,24 +40,21 @@ export default defineNuxtPlugin(() => {
       })
     },
 
-    // 2. 响应拦截器：在接收到响应后处理，可以统一处理数据结构或业务错误
-    onResponse({ request, response }) {
-      console.log('[fetch response]', request, response.status, response._data)
-      // 从响应体中提取数据 (如果你的 API 有固定结构)
-      const apiData = response._data as ApiResponse<any> // 类型断言
+    onResponse({  response }) {
+      const apiData = response._data as ApiResponse<any> | null
 
-      // 检查业务错误码 (示例)
-      if (apiData && apiData.code !== 0 && apiData.code !== 200) { // 假设 0 或 200 是成功
-        console.error(`[API Business Error] Code: ${apiData.code}, Message: ${apiData.message}`, request)
-        // 可以抛出一个自定义错误，或者进行其他处理 (如全局提示)
-        // throw new Error(apiData.message || `API Error Code: ${apiData.code}`);
-        // 注意：在 onResponse 中抛出错误会触发 onResponseError
-        // 如果你希望在这里静默处理或转换数据，可以不抛错
+      if (apiData) {
+        if (apiData.code !== CodeEnums.COMMON_SUCCESSFUL) {
+          toast.add({
+            title: apiData.message,
+            description: apiData.data ? JSON.stringify(apiData.data) : apiData.message,
+            color: 'error',
+          })
+        }
+        
+      } else {
+        console.error('apiData is null', response)
       }
-
-      // 自动解包 data 字段 (可选)
-      // response._data = apiData.data;
-      // 注意：如果这样做，后续获取数据时就直接是 data 字段的内容了
     },
 
     // 2. 错误拦截器：处理 HTTP 错误 (4xx, 5xx) 或网络错误
