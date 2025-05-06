@@ -184,3 +184,6 @@ docker-compose.yaml
 .env
 .env.*
 !.env.example
+
+# trae
+.trae/

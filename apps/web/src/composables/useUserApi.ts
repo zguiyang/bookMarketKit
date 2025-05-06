@@ -5,7 +5,7 @@ export const useUserApi = () => {
 
   // 3. API 请求统一管理：获取用户列表
   const fetchUsers = () => {
-    return  $api<ApiResponse<UserResponse[]>>('/user/all', { method: 'GET' });
+    return useAsyncData('users', () => $api<ApiResponse<UserResponse[]>>('/user/all', { method: 'GET' }))
   }
 
   // 3. API 请求统一管理：获取单个用户信息
