@@ -4,18 +4,12 @@
   "description": "书签管理平台",
   "private": true,
   "scripts": {
-    "client:dev": "pnpm --filter client dev",
-    "client:build": "pnpm --filter client build",
-    "client:start": "pnpm --filter client start",
+    "web:dev": "pnpm --filter web dev",
+    "web:build": "pnpm --filter web build",
     "backend:dev": "pnpm --filter backend start:dev",
     "backend:build": "pnpm --filter backend build",
-    "backend:start": "pnpm --filter backend start:prod",
-    "dev": "pnpm run --parallel client:dev backend:dev",
-    "build": "pnpm run --sequential client:build backend:build",
-    "start": "pnpm run --parallel client:start backend:start",
-    "test": "pnpm run --parallel test",
-    "lint": "pnpm run --parallel lint",
-    "format": "pnpm run --parallel format"
+    "lint": "pnpm run lint",
+    "format": "pnpm run format"
   },
   "keywords": [
     "bookmark"

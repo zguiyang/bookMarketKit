@@ -48,7 +48,7 @@ const userMenuItems = ref<DropdownMenuItem[]>([
       label: '切换主题',
       icon: 'i-ph:sun-duotone',
       type: 'button',
-      onClick: () => toggleTheme()
+      onSelect: () => toggleTheme()
     },
   ],
   [
@@ -57,7 +57,7 @@ const userMenuItems = ref<DropdownMenuItem[]>([
       icon: 'i-ph:sign-out',
       type: 'button',
       color: 'error',
-      onClick: () => handleLogout()
+      onSelect: () => handleLogout()
     }
   ]
 ])
@@ -87,7 +87,8 @@ function handleTagClick(tag: any) {
 }
 
 function toggleTheme() {
-  colorMode.value = isDark.value ? 'light' : 'dark'
+console.log("🚀 ~ toggleTheme ~ toggleTheme: ", isDark.value);
+   isDark.value = !isDark.value; // 切换主题
 }
 
 function handleLogout() {
@@ -115,8 +116,7 @@ function handleLogout() {
 
     <!-- 可滚动内容区域 -->
     <div class="flex-1 overflow-hidden">
-      <!-- TODO: ScrollArea 迁移，暂用 div 占位 -->
-      <div class="w-full h-full overflow-y-auto">
+      <scroll-area class="w-full h-full">
         <!-- 视图选择区域 -->
         <div class="p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase mb-4">我的书签</h2>
@@ -165,7 +165,7 @@ function handleLogout() {
           </div>
           <ul v-if="!categoriesLoading && categories.length > 0" class="space-y-1">
             <li
-v-for="cat in categories" :key="cat.id"
+               v-for="cat in categories" :key="cat.id"
                 :class="[
                   'group flex items-center justify-between p-2 rounded-lg cursor-pointer transition',
                   route.path === `/my-bookmarks/category/${cat.id}`
@@ -185,7 +185,7 @@ v-for="cat in categories" :key="cat.id"
             </li>
           </ul>
           <div v-else-if="categoriesLoading" class="flex justify-center items-center py-4">
-            <u-spinner size="sm" />
+            <Spinner size="sm" />
           </div>
           <div v-else class="text-center py-4 text-gray-500 dark:text-gray-400">暂无分类</div>
         </div>
@@ -197,12 +197,12 @@ v-for="cat in categories" :key="cat.id"
             <u-button icon="i-ph:plus" size="xs" color="primary" variant="ghost" @click="showAddTag = true" />
           </div>
           <div v-if="tagsLoading" class="flex justify-center items-center py-4">
-            <u-spinner size="sm" />
+            <Spinner size="sm" />
           </div>
           <div v-else-if="tags.length === 0" class="text-center py-4 text-gray-500 dark:text-gray-400">暂无标签</div>
           <div v-else class="flex flex-wrap gap-2">
             <span
-v-for="tag in tags" :key="tag.id"
+              v-for="tag in tags" :key="tag.id"
               class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium text-white cursor-pointer transition-colors duration-200"
               :style="{ backgroundColor: tag.color }"
               @click="handleTagClick(tag)"
@@ -211,7 +211,7 @@ v-for="tag in tags" :key="tag.id"
             </span>
           </div>
         </div>
-      </div>
+      </scroll-area>
     </div>
 
     <!-- 用户信息区域 -->
@@ -220,9 +220,6 @@ v-for="tag in tags" :key="tag.id"
         :items="userMenuItems"
         :ui="{
           content: 'w-50',
-        }"
-        :content="{
-          side: 'top',
         }"
       >
         <div class="flex items-center w-full space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">

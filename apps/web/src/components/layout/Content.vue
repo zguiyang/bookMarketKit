@@ -1,9 +1,8 @@
 <template>
-  <div class="flex-1 flex flex-col overflow-hidden">
-    <!-- TODO: 迁移 ScrollArea 组件或使用 Nuxt UI 替代 -->
-    <div class="h-full w-full">
+  <div class="flex-1 flex flex-col p-4 overflow-hidden">
+    <scroll-area class="w-full h-full">
       <slot />
-    </div>
+    </scroll-area>
   </div>
 </template>
 
