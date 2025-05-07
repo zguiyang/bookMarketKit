@@ -78,7 +78,7 @@ export const bookmarkCodeMessages = {
   },
   existed: {
     code: CodeEnums.BOOKMARK_ALREADY_EXISTS,
-    message: '该URL已被收藏',
+    message: '已存在相同URL或标题的书签',
   },
   createError: {
     code: CodeEnums.BOOKMARK_CREATE_ERROR,

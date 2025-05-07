@@ -20,6 +20,14 @@ export class BookmarkService {
   constructor() {}
 
   async create(userId: string, data: CreateBookmarkBody): Promise<BookmarkResponse> {
+    const exists = await BookmarkModel.exists({
+      url: { $or: [{ url: data.url }, { title: data.title }] },
+      user: userId,
+    });
+    if (exists) {
+      throw new BusinessError(bookmarkCodeMessages.existed);
+    }
+
     const bookmark = await BookmarkModel.create({
       ...data,
       user: userId,

@@ -9,6 +9,10 @@ export class BookmarkTagService {
   constructor() {}
 
   async create(userId: string, data: CreateTagBody): Promise<TagResponse> {
+    const exists = await BookmarkTagModel.exists({ name: data.name, user: userId });
+    if (exists) {
+      throw new BusinessError(bookmarkTagCodeMessages.existed);
+    }
     const tag = await BookmarkTagModel.create({ ...data, user: userId });
     return tag.toJSON<TagResponse>();
   }
@@ -31,7 +35,11 @@ export class BookmarkTagService {
     return BookmarkTagModel.find({ user: userId }).lean<IBookmarkTagLean[]>();
   }
 
-  async findOne(userId: string, id: string): Promise<TagResponse | null> {
-    return BookmarkTagModel.findOne({ _id: id, user: userId }).lean<IBookmarkTagLean>();
+  async findOne(userId: string, id: string): Promise<TagResponse> {
+    const tag = await BookmarkTagModel.findOne({ _id: id, user: userId }).lean<IBookmarkTagLean>();
+    if (!tag) {
+      throw new BusinessError(bookmarkTagCodeMessages.notFound);
+    }
+    return tag;
   }
 }

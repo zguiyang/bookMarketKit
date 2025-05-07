@@ -9,6 +9,10 @@ export class BookmarkCategoryService {
   constructor() {}
 
   async create(userId: string, data: CreateCategoryBody): Promise<CategoryResponse> {
+    const exists = await BookmarkCategoryModel.exists({ name: data.name, user: userId });
+    if (exists) {
+      throw new BusinessError(bookmarkCategoryCodeMessages.existed);
+    }
     const category = await BookmarkCategoryModel.create({ ...data, user: userId });
     return category.toJSON<CategoryResponse>();
   }
@@ -32,7 +36,12 @@ export class BookmarkCategoryService {
     return BookmarkCategoryModel.find({ user: userId }).lean<IBookmarkCategoryLean[]>();
   }
 
-  async findOne(userId: string, id: string): Promise<CategoryResponse | null> {
-    return BookmarkCategoryModel.findOne({ _id: id, user: userId }).lean<IBookmarkCategoryLean>();
+  async findOne(userId: string, id: string): Promise<CategoryResponse> {
+    const category = await BookmarkCategoryModel.findOne({ _id: id, user: userId }).lean<IBookmarkCategoryLean>();
+
+    if (!category) {
+      throw new BusinessError(bookmarkCategoryCodeMessages.notFound);
+    }
+    return category;
   }
 }
