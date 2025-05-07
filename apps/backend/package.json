@@ -4,9 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "cross-env NODE_ENV=development tsx watch src/app.ts",
+    "start": "cross-env NODE_ENV=development tsx src/app.ts",
+    "build": "cross-env NODE_ENV=production tsx build src/app.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write ."
+    "test:watch": "cross-env NODE_ENV=development NODE_OPTIONS=\"--import tsx\" vitest -w",
+    "test": "cross-env NODE_ENV=development NODE_OPTIONS=\"--import tsx\" vitest run tests/mock.test.ts",
+    "test:mock": "cross-env NODE_ENV=development NODE_OPTIONS=\"--import tsx\" vitest run tests/mock.test.ts"
   },
   "dependencies": {
     "@bookmark/code-definitions": "workspace:^",

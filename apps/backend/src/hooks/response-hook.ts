@@ -8,11 +8,12 @@ function isApiResponse(obj: any): obj is Partial<ApiResponse> {
 
 /**
  * Fastify onSend Hook 回调
+ * must be async function!!!
  *
  * 在响应即将发送给客户端时运行。
  * 适用于需要处理各种 payload 类型（包括 string, null）并进行最终修改的场景。
  */
-export function onSendHookHandler(request: FastifyRequest, reply: FastifyReply, payload: any): Promise<any> {
+export async function onSendHookHandler(request: FastifyRequest, reply: FastifyReply, payload: any): Promise<any> {
   const url = request.raw.url;
   if (url && url.startsWith('/docs')) {
     // 如果是 Swagger UI 的请求，直接返回原始 payload，不做任何修改
@@ -43,7 +44,7 @@ export function onSendHookHandler(request: FastifyRequest, reply: FastifyReply, 
     if (typeof payload === 'string' && !reply.getHeader('content-type')?.toString().includes('application/json')) {
       reply.header('content-type', 'application/json; charset=utf-8');
     }
-    return Promise.resolve(JSON.stringify(wrapped));
+    return JSON.stringify(wrapped);
   }
 
   const wrappedPayloadObject: ApiResponse = {
@@ -55,6 +56,5 @@ export function onSendHookHandler(request: FastifyRequest, reply: FastifyReply, 
   const finalPayloadString = JSON.stringify(wrappedPayloadObject);
 
   reply.header('content-type', 'application/json; charset=utf-8');
-
-  return Promise.resolve(finalPayloadString);
+  return finalPayloadString;
 }

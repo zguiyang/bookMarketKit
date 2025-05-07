@@ -53,7 +53,6 @@ app.withTypeProvider<ZodTypeProvider>();
 
 app.register(cors, {
   origin: (origin, cb) => {
-    console.log('origin', origin);
     if (!origin) {
       cb(null, true);
       return;
@@ -78,7 +77,7 @@ app.register(cors, {
 async function bootstrap() {
   // 注册全局响应钩子
   app.addHook('onSend', onSendHookHandler);
-
+  //
   // 注册全局404处理器
   app.setNotFoundHandler(notFoundHandler);
 
