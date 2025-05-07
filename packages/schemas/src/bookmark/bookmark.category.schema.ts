@@ -7,7 +7,7 @@ export const categoryResponseSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   icon: z.string().optional(),
-  parent: z.string().optional(),
+  parent: z.string().nullable().default(null),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -20,7 +20,7 @@ export const createCategoryBodySchema = z
     name: z.string().min(1, { message: '分类名称不能为空' }),
     description: z.string().optional(),
     icon: z.string().optional(),
-    parent: z.string().optional(),
+    parent: z.string().nullable().default(null),
   })
   .strict();
 
@@ -30,7 +30,7 @@ export const updateCategoryBodySchema = z
     name: z.string().optional(),
     description: z.string().optional(),
     icon: z.string().optional(),
-    parent: z.string().optional(),
+    parent: z.string().nullable().default(null),
   })
   .strict();
 

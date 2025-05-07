@@ -10,8 +10,8 @@ withDefaults(defineProps<IProps>(), {});
 </script>
 
 <template>
-  <u-card
-    class="group relative overflow-hidden transition-all hover:-translate-y-1 border-gray-100 dark:border-gray-700 sm:p-2 bg-white dark:bg-gray-800">
+  <u-container
+    class="group rounded-xl relative overflow-hidden transition-all hover:-translate-y-1 border-gray-100 dark:border-gray-700 sm:p-2 bg-white dark:bg-gray-800">
     <div class="flex items-center justify-between mb-3 sm:mb-2">
       <div class="flex items-center space-x-2 max-w-[70%] sm:max-w-[60%]">
         <div
@@ -22,7 +22,9 @@ withDefaults(defineProps<IProps>(), {});
         <h3
           class="text-base font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors cursor-pointer"
           :title="bookmark.title">
-          {{ bookmark.title }}
+          <a :href="bookmark.url" target="_blank">
+            {{ bookmark.title }}
+          </a>
         </h3>
       </div>
 
@@ -41,32 +43,24 @@ withDefaults(defineProps<IProps>(), {});
         <u-button
           variant="ghost"
           size="sm"
-          :icon="bookmark.isPinned === BookmarkPinnedEnum.YES ? 'i-heroicons-map-pin-solid' : 'i-heroicons-map-pin'"
+          :icon="bookmark.isPinned === BookmarkPinnedEnum.YES ? 'i-gravity-ui-pin-slash' : 'i-gravity-ui-pin'"
           class="size-8 sm:size-7 cursor-pointer transition-colors"
           square />
 
-        <u-dropdown-menu :items="[]" :popper="{ placement: 'bottom-end' }">
+        <u-dropdown-menu :items="[]">
           <u-button
             color="neutral"
             variant="ghost"
             icon="i-heroicons-ellipsis-horizontal"
             class="size-8 sm:size-7"
             square />
-          <template #item="{ item }">
-            <span class="truncate">{{ item.label }}</span>
-            <u-icon
-              v-if="item.icon"
-              :name="item.icon"
-              :class="['flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto', item.iconClass]" />
-          </template>
         </u-dropdown-menu>
       </div>
     </div>
 
     <!-- 描述部分 -->
     <div v-if="bookmark.description" class="mb-3">
-      <p
-        class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all duration-200">
+      <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 transition-all duration-200">
         {{ bookmark.description }}
       </p>
     </div>
@@ -88,6 +82,5 @@ withDefaults(defineProps<IProps>(), {});
     </div>
     <div
       class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-    <div class="h-4 w-full relative"></div>
-  </u-card>
+  </u-container>
 </template>

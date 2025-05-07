@@ -1,8 +1,6 @@
-const userId = '68132ee40d897d85ab29cca4';
-
+// 修改后的 mockBookmarks，移除 tags 字段
 const mockBookmarks = [
   {
-    user: userId,
     url: 'https://www.google.com',
     icon: 'https://www.google.com/favicon.ico',
     title: 'Google',
@@ -13,25 +11,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '搜索工具',
-        user: userId,
-        icon: '',
-      },
-      {
-        name: '搜索工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '搜索工具',
-        user: userId,
-        color: '#333',
-      },
+      { name: '搜索工具', color: '#333' },
     ],
   },
   {
-    user: userId,
     url: 'https://github.com',
     icon: 'https://github.com/favicon.ico',
     title: 'GitHub',
@@ -42,25 +30,16 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '代码',
-        user: userId,
-        color: '#6e5494',
-      },
-      {
-        name: '开源',
-        user: userId,
-        color: '#24292e',
-      },
+      { name: '代码', color: '#6e5494' },
+      { name: '开源', color: '#24292e' },
     ],
   },
   {
-    user: userId,
     url: 'https://stackoverflow.com',
     icon: 'https://stackoverflow.com/favicon.ico',
     title: 'Stack Overflow',
@@ -71,20 +50,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '问答',
-        user: userId,
-        color: '#f48024',
-      },
+      { name: '问答', color: '#f48024' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.amazon.com',
     icon: 'https://www.amazon.com/favicon.ico',
     title: 'Amazon',
@@ -95,20 +69,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '购物',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '电商',
-        user: userId,
-        color: '#ff9900',
-      },
+      { name: '电商', color: '#ff9900' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.netflix.com',
     icon: 'https://www.netflix.com/favicon.ico',
     title: 'Netflix',
@@ -119,20 +88,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '娱乐',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '视频',
-        user: userId,
-        color: '#e50914',
-      },
+      { name: '视频', color: '#e50914' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.facebook.com',
     icon: 'https://www.facebook.com/favicon.ico',
     title: 'Facebook',
@@ -143,20 +107,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '社交媒体',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '社交',
-        user: userId,
-        color: '#1877f2',
-      },
+      { name: '社交', color: '#1877f2' },
     ],
   },
   {
-    user: userId,
     url: 'https://twitter.com',
     icon: 'https://twitter.com/favicon.ico',
     title: 'Twitter',
@@ -167,20 +126,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '社交媒体',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '社交',
-        user: userId,
-        color: '#1da1f2',
-      },
+      { name: '社交', color: '#1877f2' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.linkedin.com',
     icon: 'https://www.linkedin.com/favicon.ico',
     title: 'LinkedIn',
@@ -191,25 +145,20 @@ const mockBookmarks = [
     categories: [
       {
         name: '社交媒体',
-        user: userId,
         icon: '',
       },
       {
         name: '职业发展',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '职场',
-        user: userId,
-        color: '#0a66c2',
-      },
+      { name: '社交', color: '#1877f2' },
+      { name: '职场', color: '#0a66c2' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.reddit.com',
     icon: 'https://www.reddit.com/favicon.ico',
     title: 'Reddit',
@@ -220,20 +169,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '社交媒体',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '论坛',
-        user: userId,
-        color: '#ff4500',
-      },
+      { name: '论坛', color: '#ff4500' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.wikipedia.org',
     icon: 'https://www.wikipedia.org/favicon.ico',
     title: 'Wikipedia',
@@ -244,20 +188,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '知识',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '百科',
-        user: userId,
-        color: '#000000',
-      },
+      { name: '百科', color: '#000000' },
     ],
   },
   {
-    user: userId,
     url: 'https://medium.com',
     icon: 'https://medium.com/favicon.ico',
     title: 'Medium',
@@ -268,20 +207,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '博客',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '阅读',
-        user: userId,
-        color: '#000000',
-      },
+      { name: '阅读', color: '#000000' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.nytimes.com',
     icon: 'https://www.nytimes.com/favicon.ico',
     title: 'The New York Times',
@@ -292,20 +226,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '新闻',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '时事',
-        user: userId,
-        color: '#000000',
-      },
+      { name: '时事', color: '#000000' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.bbc.com',
     icon: 'https://www.bbc.com/favicon.ico',
     title: 'BBC',
@@ -316,20 +245,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '新闻',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '国际',
-        user: userId,
-        color: '#bb1919',
-      },
+      { name: '国际', color: '#bb1919' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.cnn.com',
     icon: 'https://www.cnn.com/favicon.ico',
     title: 'CNN',
@@ -340,20 +264,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '新闻',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '时事',
-        user: userId,
-        color: '#cc0000',
-      },
+      { name: '时事', color: '#000000' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.instagram.com',
     icon: 'https://www.instagram.com/favicon.ico',
     title: 'Instagram',
@@ -364,20 +283,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '社交媒体',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '照片',
-        user: userId,
-        color: '#c13584',
-      },
+      { name: '照片', color: '#c13584' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.pinterest.com',
     icon: 'https://www.pinterest.com/favicon.ico',
     title: 'Pinterest',
@@ -388,20 +302,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '社交媒体',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '创意',
-        user: userId,
-        color: '#e60023',
-      },
+      { name: '创意', color: '#e60023' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.twitch.tv',
     icon: 'https://www.twitch.tv/favicon.ico',
     title: 'Twitch',
@@ -412,25 +321,16 @@ const mockBookmarks = [
     categories: [
       {
         name: '娱乐',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '游戏',
-        user: userId,
-        color: '#9146ff',
-      },
-      {
-        name: '直播',
-        user: userId,
-        color: '#6441a5',
-      },
+      { name: '游戏', color: '#9146ff' },
+      { name: '直播', color: '#6441a5' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.spotify.com',
     icon: 'https://www.spotify.com/favicon.ico',
     title: 'Spotify',
@@ -441,20 +341,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '音乐',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '音乐流媒体',
-        user: userId,
-        color: '#1db954',
-      },
+      { name: '音乐流媒体', color: '#1db954' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.apple.com',
     icon: 'https://www.apple.com/favicon.ico',
     title: 'Apple',
@@ -465,20 +360,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '科技',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '硬件',
-        user: userId,
-        color: '#555555',
-      },
+      { name: '硬件', color: '#555555' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.microsoft.com',
     icon: 'https://www.microsoft.com/favicon.ico',
     title: 'Microsoft',
@@ -489,20 +379,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '科技',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '软件',
-        user: userId,
-        color: '#00a4ef',
-      },
+      { name: '软件', color: '#00a4ef' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.airbnb.com',
     icon: 'https://www.airbnb.com/favicon.ico',
     title: 'Airbnb',
@@ -513,20 +398,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '旅行',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '住宿',
-        user: userId,
-        color: '#ff5a5f',
-      },
+      { name: '住宿', color: '#ff5a5f' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.booking.com',
     icon: 'https://www.booking.com/favicon.ico',
     title: 'Booking.com',
@@ -537,20 +417,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '旅行',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '酒店',
-        user: userId,
-        color: '#003580',
-      },
+      { name: '酒店', color: '#003580' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.udemy.com',
     icon: 'https://www.udemy.com/favicon.ico',
     title: 'Udemy',
@@ -561,20 +436,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '教育',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '在线课程',
-        user: userId,
-        color: '#a435f0',
-      },
+      { name: '在线课程', color: '#a435f0' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.coursera.org',
     icon: 'https://www.coursera.org/favicon.ico',
     title: 'Coursera',
@@ -585,20 +455,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '教育',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '在线课程',
-        user: userId,
-        color: '#0056d2',
-      },
+      { name: '在线课程', color: '#a435f0' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.notion.so',
     icon: 'https://www.notion.so/favicon.ico',
     title: 'Notion',
@@ -609,25 +474,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '生产力',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '笔记',
-        user: userId,
-        color: '#000000',
-      },
-      {
-        name: '协作',
-        user: userId,
-        color: '#333333',
-      },
+      { name: '笔记', color: '#000000' },
     ],
   },
   {
-    user: userId,
     url: 'https://trello.com',
     icon: 'https://trello.com/favicon.ico',
     title: 'Trello',
@@ -638,20 +493,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '生产力',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '项目管理',
-        user: userId,
-        color: '#0079bf',
-      },
+      { name: '项目管理', color: '#0079bf' },
     ],
   },
   {
-    user: userId,
     url: 'https://slack.com',
     icon: 'https://slack.com/favicon.ico',
     title: 'Slack',
@@ -662,25 +512,19 @@ const mockBookmarks = [
     categories: [
       {
         name: '生产力',
-        user: userId,
         icon: '',
       },
       {
         name: '协作工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '沟通',
-        user: userId,
-        color: '#4a154b',
-      },
+      { name: '沟通', color: '#4a154b' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.figma.com',
     icon: 'https://www.figma.com/favicon.ico',
     title: 'Figma',
@@ -691,25 +535,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '设计',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: 'UI设计',
-        user: userId,
-        color: '#0acf83',
-      },
-      {
-        name: '协作',
-        user: userId,
-        color: '#1abcfe',
-      },
+      { name: 'UI设计', color: '#0acf83' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.canva.com',
     icon: 'https://www.canva.com/favicon.ico',
     title: 'Canva',
@@ -720,44 +554,34 @@ const mockBookmarks = [
     categories: [
       {
         name: '设计',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '图形设计',
-        user: userId,
-        color: '#00c4cc',
-      },
+      { name: '图形设计', color: '#00c4cc' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.dropbox.com',
     icon: 'https://www.dropbox.com/favicon.ico',
     title: 'Dropbox',
-    description: 'Store, share, and access your files from anywhere.',
+    description: 'Store files online and access them from any device.',
     visitCount: 3,
     screenshotUrl: 'https://example.com/screenshots/dropbox.png',
     lastVisitedAt: '2025-04-30T14:15:35Z',
     categories: [
       {
         name: '云存储',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '文件共享',
-        user: userId,
-        color: '#0061ff',
-      },
+      { name: '文件共享', color: '#0061ff' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.drive.google.com',
     icon: 'https://www.drive.google.com/favicon.ico',
     title: 'Google Drive',
@@ -768,20 +592,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '云存储',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '文件共享',
-        user: userId,
-        color: '#4285f4',
-      },
+      { name: '文件共享', color: '#0061ff' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.paypal.com',
     icon: 'https://www.paypal.com/favicon.ico',
     title: 'PayPal',
@@ -792,20 +611,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '金融',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '支付',
-        user: userId,
-        color: '#003087',
-      },
+      { name: '支付', color: '#003087' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.stripe.com',
     icon: 'https://www.stripe.com/favicon.ico',
     title: 'Stripe',
@@ -816,25 +630,19 @@ const mockBookmarks = [
     categories: [
       {
         name: '金融',
-        user: userId,
         icon: '',
       },
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '支付API',
-        user: userId,
-        color: '#635bff',
-      },
+      { name: '支付API', color: '#635bff' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.wordpress.org',
     icon: 'https://www.wordpress.org/favicon.ico',
     title: 'WordPress',
@@ -845,20 +653,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: 'CMS',
-        user: userId,
-        color: '#21759b',
-      },
+      { name: 'CMS', color: '#21759b' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.shopify.com',
     icon: 'https://www.shopify.com/favicon.ico',
     title: 'Shopify',
@@ -869,20 +672,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '电商',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '网店',
-        user: userId,
-        color: '#96bf48',
-      },
+      { name: '网店', color: '#96bf48' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.wix.com',
     icon: 'https://www.wix.com/favicon.ico',
     title: 'Wix',
@@ -893,20 +691,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '网站建设',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '建站工具',
-        user: userId,
-        color: '#faad4d',
-      },
+      { name: '建站工具', color: '#faad4d' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.squarespace.com',
     icon: 'https://www.squarespace.com/favicon.ico',
     title: 'Squarespace',
@@ -917,20 +710,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '网站建设',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '建站工具',
-        user: userId,
-        color: '#000000',
-      },
+      { name: '建站工具', color: '#faad4d' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.digitalocean.com',
     icon: 'https://www.digitalocean.com/favicon.ico',
     title: 'DigitalOcean',
@@ -941,25 +729,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '云服务',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '服务器',
-        user: userId,
-        color: '#0080ff',
-      },
-      {
-        name: '开发',
-        user: userId,
-        color: '#0069ff',
-      },
+      { name: '服务器', color: '#0080ff' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.aws.amazon.com',
     icon: 'https://www.aws.amazon.com/favicon.ico',
     title: 'Amazon Web Services',
@@ -970,25 +748,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '云服务',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '云计算',
-        user: userId,
-        color: '#ff9900',
-      },
-      {
-        name: '服务器',
-        user: userId,
-        color: '#232f3e',
-      },
+      { name: '云计算', color: '#ff9900' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.azure.microsoft.com',
     icon: 'https://www.azure.microsoft.com/favicon.ico',
     title: 'Microsoft Azure',
@@ -999,20 +767,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '云服务',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '云计算',
-        user: userId,
-        color: '#0078d4',
-      },
+      { name: 'PaaS', color: '#430098' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.cloudflare.com',
     icon: 'https://www.cloudflare.com/favicon.ico',
     title: 'Cloudflare',
@@ -1023,25 +786,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '网络安全',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: 'CDN',
-        user: userId,
-        color: '#f48120',
-      },
-      {
-        name: '安全',
-        user: userId,
-        color: '#404041',
-      },
+      { name: 'CDN', color: '#f48120' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.vercel.com',
     icon: 'https://www.vercel.com/favicon.ico',
     title: 'Vercel',
@@ -1052,25 +805,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '部署',
-        user: userId,
-        color: '#000000',
-      },
-      {
-        name: '前端',
-        user: userId,
-        color: '#333333',
-      },
+      { name: '部署', color: '#000000' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.netlify.com',
     icon: 'https://www.netlify.com/favicon.ico',
     title: 'Netlify',
@@ -1081,25 +824,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '部署',
-        user: userId,
-        color: '#00c7b7',
-      },
-      {
-        name: '前端',
-        user: userId,
-        color: '#4d9abf',
-      },
+      { name: '部署', color: '#000000' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.heroku.com',
     icon: 'https://www.heroku.com/favicon.ico',
     title: 'Heroku',
@@ -1110,20 +843,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '云服务',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: 'PaaS',
-        user: userId,
-        color: '#430098',
-      },
+      { name: 'PaaS', color: '#430098' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.mongodb.com',
     icon: 'https://www.mongodb.com/favicon.ico',
     title: 'MongoDB',
@@ -1134,20 +862,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '数据库',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: 'NoSQL',
-        user: userId,
-        color: '#13aa52',
-      },
+      { name: 'NoSQL', color: '#13aa52' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.postgresql.org',
     icon: 'https://www.postgresql.org/favicon.ico',
     title: 'PostgreSQL',
@@ -1158,20 +881,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '数据库',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '关系型数据库',
-        user: userId,
-        color: '#336791',
-      },
+      { name: '关系型数据库', color: '#336791' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.mysql.com',
     icon: 'https://www.mysql.com/favicon.ico',
     title: 'MySQL',
@@ -1182,20 +900,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '数据库',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '关系型数据库',
-        user: userId,
-        color: '#00758f',
-      },
+      { name: '关系型数据库', color: '#336791' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.redis.io',
     icon: 'https://www.redis.io/favicon.ico',
     title: 'Redis',
@@ -1206,20 +919,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '数据库',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '缓存',
-        user: userId,
-        color: '#dc382d',
-      },
+      { name: '缓存', color: '#dc382d' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.docker.com',
     icon: 'https://www.docker.com/favicon.ico',
     title: 'Docker',
@@ -1230,25 +938,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '容器化',
-        user: userId,
-        color: '#2496ed',
-      },
-      {
-        name: 'DevOps',
-        user: userId,
-        color: '#0db7ed',
-      },
+      { name: '容器化', color: '#2496ed' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.kubernetes.io',
     icon: 'https://www.kubernetes.io/favicon.ico',
     title: 'Kubernetes',
@@ -1259,25 +957,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '容器编排',
-        user: userId,
-        color: '#326ce5',
-      },
-      {
-        name: 'DevOps',
-        user: userId,
-        color: '#3371e3',
-      },
+      { name: '容器编排', color: '#326ce5' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.jenkins.io',
     icon: 'https://www.jenkins.io/favicon.ico',
     title: 'Jenkins',
@@ -1288,25 +976,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: 'CI/CD',
-        user: userId,
-        color: '#d33833',
-      },
-      {
-        name: 'DevOps',
-        user: userId,
-        color: '#335061',
-      },
+      { name: 'CI/CD', color: '#d33833' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.gitlab.com',
     icon: 'https://www.gitlab.com/favicon.ico',
     title: 'GitLab',
@@ -1317,25 +995,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '代码仓库',
-        user: userId,
-        color: '#fc6d26',
-      },
-      {
-        name: 'DevOps',
-        user: userId,
-        color: '#e24329',
-      },
+      { name: '代码仓库', color: '#fc6d26' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.bitbucket.org',
     icon: 'https://www.bitbucket.org/favicon.ico',
     title: 'Bitbucket',
@@ -1346,20 +1014,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '开发工具',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '代码仓库',
-        user: userId,
-        color: '#0052cc',
-      },
+      { name: '代码仓库', color: '#fc6d26' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.jira.com',
     icon: 'https://www.jira.com/favicon.ico',
     title: 'Jira',
@@ -1370,25 +1033,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '生产力',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '项目管理',
-        user: userId,
-        color: '#0052cc',
-      },
-      {
-        name: '敏捷',
-        user: userId,
-        color: '#172b4d',
-      },
+      { name: '敏捷', color: '#172b4d' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.asana.com',
     icon: 'https://www.asana.com/favicon.ico',
     title: 'Asana',
@@ -1399,20 +1052,15 @@ const mockBookmarks = [
     categories: [
       {
         name: '生产力',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '项目管理',
-        user: userId,
-        color: '#fc636b',
-      },
+      { name: '项目管理', color: '#0079bf' },
     ],
   },
   {
-    user: userId,
     url: 'https://www.monday.com',
     icon: 'https://www.monday.com/favicon.ico',
     title: 'Monday.com',
@@ -1423,18 +1071,97 @@ const mockBookmarks = [
     categories: [
       {
         name: '生产力',
-        user: userId,
         icon: '',
       },
     ],
+    // 新增 tags 属性
     tags: [
-      {
-        name: '项目管理',
-        user: userId,
-        color: '#ff3d57',
-      },
+      { name: '项目管理', color: '#0079bf' },
     ],
   },
 ];
 
-export default mockBookmarks;
+// 新增分类数组
+const mockCategories = [
+  { name: '搜索工具', icon: '' },
+  { name: '开发工具', icon: '' },
+  { name: '购物', icon: '' },
+  { name: '娱乐', icon: '' },
+  { name: '社交媒体', icon: '' },
+  { name: '职业发展', icon: '' },
+  { name: '知识', icon: '' },
+  { name: '博客', icon: '' },
+  { name: '新闻', icon: '' },
+  { name: '旅行', icon: '' },
+  { name: '教育', icon: '' },
+  { name: '生产力', icon: '' },
+  { name: '设计', icon: '' },
+  { name: '云存储', icon: '' },
+  { name: '金融', icon: '' },
+  { name: '电商', icon: '' },
+  { name: '网站建设', icon: '' },
+  { name: '云服务', icon: '' },
+  { name: '网络安全', icon: '' },
+  { name: '数据库', icon: '' },
+  { name: '编程语言', icon: '' },
+  { name: '框架', icon: '' },
+  { name: '测试', icon: '' },
+  { name: '版本控制', icon: '' },
+  { name: '其他', icon: '' },
+];
+
+// 新增：提取标签数据
+const mockTags = [
+  { name: '搜索工具', color: '#333' },
+  { name: '代码', color: '#6e5494' },
+  { name: '开源', color: '#24292e' },
+  { name: '问答', color: '#f48024' },
+  { name: '电商', color: '#ff9900' },
+  { name: '视频', color: '#e50914' },
+  { name: '社交', color: '#1877f2' },
+  { name: '职场', color: '#0a66c2' },
+  { name: '论坛', color: '#ff4500' },
+  { name: '百科', color: '#000000' },
+  { name: '阅读', color: '#000000' },
+  { name: '时事', color: '#000000' },
+  { name: '国际', color: '#bb1919' },
+  { name: '照片', color: '#c13584' },
+  { name: '创意', color: '#e60023' },
+  { name: '游戏', color: '#9146ff' },
+  { name: '直播', color: '#6441a5' },
+  { name: '音乐流媒体', color: '#1db954' },
+  { name: '硬件', color: '#555555' },
+  { name: '软件', color: '#00a4ef' },
+  { name: '住宿', color: '#ff5a5f' },
+  { name: '酒店', color: '#003580' },
+  { name: '在线课程', color: '#a435f0' },
+  { name: '笔记', color: '#000000' },
+  { name: '协作', color: '#333333' },
+  { name: '项目管理', color: '#0079bf' },
+  { name: '沟通', color: '#4a154b' },
+  { name: 'UI设计', color: '#0acf83' },
+  { name: '图形设计', color: '#00c4cc' },
+  { name: '文件共享', color: '#0061ff' },
+  { name: '支付', color: '#003087' },
+  { name: '支付API', color: '#635bff' },
+  { name: 'CMS', color: '#21759b' },
+  { name: '网店', color: '#96bf48' },
+  { name: '建站工具', color: '#faad4d' },
+  { name: '服务器', color: '#0080ff' },
+  { name: '云计算', color: '#ff9900' },
+  { name: 'CDN', color: '#f48120' },
+  { name: '安全', color: '#404041' },
+  { name: '部署', color: '#000000' },
+  { name: '前端', color: '#333333' },
+  { name: 'PaaS', color: '#430098' },
+  { name: 'NoSQL', color: '#13aa52' },
+  { name: '关系型数据库', color: '#336791' },
+  { name: '缓存', color: '#dc382d' },
+  { name: '容器化', color: '#2496ed' },
+  { name: '容器编排', color: '#326ce5' },
+  { name: 'CI/CD', color: '#d33833' },
+  { name: '代码仓库', color: '#fc6d26' },
+  { name: '敏捷', color: '#172b4d' },
+];
+
+export { mockBookmarks, mockCategories, mockTags };

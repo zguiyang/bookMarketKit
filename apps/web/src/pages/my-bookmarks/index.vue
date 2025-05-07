@@ -3,54 +3,16 @@ import type { BookmarkResponse } from '@bookmark/schemas';
 definePageMeta({
   layout: 'bookmark-layout',
 });
+const bookmarks = ref<BookmarkResponse[]>([]);
+const { fetchPageList } = useBookmarkApi();
+const { data } = await fetchPageList({
+  page: 1,
+  pageSize: 20,
+});
 
-const bookmarks: BookmarkResponse[] = [
-  {
-    _id: '1',
-    title: 'Bookmark 1',
-    description: 'This is a bookmark',
-    url: 'https://www.google.com',
-    icon: 'https://www.google.com/favicon.ico',
-    tags: [],
-    categories: [],
-    createdAt: '2023-01-01T00:00:00.000Z',
-    updatedAt: '2023-01-01T00:00:00.000Z',
-    visitCount: 0,
-    isFavorite: 1,
-    isPinned: 0,
-    user: '1',
-  },
-  {
-    _id: '2',
-    title: 'Bookmark 2',
-    description: 'This is a bookmark',
-    url: 'https://www.google.com',
-    icon: 'https://www.google.com/favicon.ico',
-    tags: [],
-    categories: [],
-    createdAt: '2023-01-01T00:00:00.000Z',
-    updatedAt: '2023-01-01T00:00:00.000Z',
-    visitCount: 0,
-    isFavorite: 1,
-    isPinned: 0,
-    user: '1',
-  },
-  {
-    _id: '3',
-    title: 'Bookmark 3',
-    description: 'This is a bookmark',
-    url: 'https://www.google.com',
-    icon: 'https://www.google.com/favicon.ico',
-    tags: [],
-    categories: [],
-    createdAt: '2023-01-01T00:00:00.000Z',
-    updatedAt: '2023-01-01T00:00:00.000Z',
-    visitCount: 0,
-    isFavorite: 1,
-    isPinned: 0,
-    user: '1',
-  },
-];
+if (data.value && data.value.data) {
+  bookmarks.value = data.value.data.content;
+}
 </script>
 
 <template>
