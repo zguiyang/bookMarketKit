@@ -2,11 +2,16 @@
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import type { DropdownMenuItem } from '@nuxt/ui';
-import SpinnerLoading from '~/components/spinner-loading.vue';
 
 const router = useRouter();
 const route = useRoute();
+
 const colorMode = useColorMode();
+
+const { fetchAllCategories, fetchAllTags } = useBookmarkApi();
+const { data: categoriesRes, pending: categoriesLoading } = fetchAllCategories();
+const { data: tagsRes, pending: tagsLoading } = fetchAllTags();
+
 const isDark = computed({
   get() {
     return colorMode.value === 'dark';
@@ -16,22 +21,7 @@ const isDark = computed({
   },
 });
 
-// 分类 mock 数据与状态
-const categories = ref([
-  { id: '1', name: '前端', icon: '💻' },
-  { id: '2', name: 'AI', icon: '🤖' },
-  { id: '3', name: '设计', icon: '🎨' },
-]);
-const categoriesLoading = ref(false);
 const showAddCategory = ref(false);
-
-// 标签 mock 数据与状态
-const tags = ref([
-  { id: 't1', name: 'ü', color: '#F59E42' },
-  { id: 't2', name: '测试', color: '#F97316' },
-  { id: 't3', name: '哈哈哈', color: '#A78BFA' },
-]);
-const tagsLoading = ref(false);
 const showAddTag = ref(false);
 
 const user = ref({ nickname: 'Joy', email: 'joy@example.com' });
@@ -169,13 +159,13 @@ function handleLogout() {
             <h2 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase">分类</h2>
             <u-button icon="i-ph:plus" size="xs" color="primary" variant="ghost" @click="showAddCategory = true" />
           </div>
-          <ul v-if="!categoriesLoading && categories.length > 0" class="space-y-1">
+          <ul v-if="!categoriesLoading && categoriesRes" class="space-y-1">
             <li
-              v-for="cat in categories"
-              :key="cat.id"
+              v-for="cat in categoriesRes"
+              :key="cat._id"
               :class="[
                 'group flex items-center justify-between p-2 rounded-lg cursor-pointer transition',
-                route.path === `/my-bookmarks/category/${cat.id}`
+                route.path === `/my-bookmarks/category/${cat._id}`
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
               ]"
@@ -215,11 +205,13 @@ function handleLogout() {
           <div v-if="tagsLoading" class="flex justify-center items-center py-4">
             <spinner-loading size="sm" />
           </div>
-          <div v-else-if="tags.length === 0" class="text-center py-4 text-gray-500 dark:text-gray-400">暂无标签</div>
+          <div v-else-if="!tagsRes || tagsRes.length < 1" class="text-center py-4 text-gray-500 dark:text-gray-400">
+            暂无标签
+          </div>
           <div v-else class="flex flex-wrap gap-2">
             <span
-              v-for="tag in tags"
-              :key="tag.id"
+              v-for="tag in tagsRes"
+              :key="tag._id"
               class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium text-white cursor-pointer transition-colors duration-200"
               :style="{ backgroundColor: tag.color }"
               @click="handleTagClick(tag)">

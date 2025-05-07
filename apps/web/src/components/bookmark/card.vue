@@ -75,7 +75,13 @@ withDefaults(defineProps<IProps>(), {});
       </template>
       <template v-for="tag in bookmark.tags" :key="tag.id">
         <span
-          class="px-2 py-0.5 rounded-md text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors">
+          class="px-2 py-0.5 rounded-md text-xs transition-colors"
+          :style="tag.color ? `--dynamic-tag-color:${tag.color}` : ''"
+          :class="[
+            tag.color
+              ? `bg-[var(--dynamic-tag-color)] text-white`
+              : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300',
+          ]">
           # {{ tag.name }}
         </span>
       </template>

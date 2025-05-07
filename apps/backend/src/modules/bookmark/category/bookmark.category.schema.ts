@@ -36,7 +36,7 @@ export const categorySchemas: {
     tags: ['BookmarkCategory'],
     summary: '获取所有分类',
     description: '获取当前用户的所有书签分类列表',
-    querystring: z.void(),
+    querystring: z.any({}),
     response: { 200: categoryListResponseSchema },
   },
   detail: {
