@@ -6,7 +6,7 @@ import * as bcrypt from 'bcryptjs';
  * **/
 export async function hashPassword(password: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
-  return await bcrypt.hash(password, salt);
+  return bcrypt.hash(password, salt);
 }
 
 /**
@@ -14,9 +14,6 @@ export async function hashPassword(password: string): Promise<string> {
  * @param password 明文密码
  * @param hashedPassword 加密后的密码
  * **/
-export async function comparePassword(
-  password: string,
-  hashedPassword: string,
-): Promise<boolean> {
-  return await bcrypt.compare(password, hashedPassword);
+export function comparePassword(password: string, hashedPassword: string): Promise<boolean> {
+  return bcrypt.compare(password, hashedPassword);
 }

@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { IBaseDocument } from './mongoose-type.js';
 import { recursiveTransform } from './recursive-transform.util';
 
@@ -8,6 +7,6 @@ import { recursiveTransform } from './recursive-transform.util';
  * @param ret 转换后的普通对象
  * @returns 处理后的对象
  */
-export const commonTransform = (_:IBaseDocument, ret: Record<string, any>) => {
+export const commonTransform = (_: IBaseDocument, ret: Record<string, any>) => {
   return recursiveTransform(ret);
 };

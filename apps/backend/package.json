@@ -4,12 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development tsx watch src/app.ts",
-    "start": "cross-env NODE_ENV=development tsx src/app.ts",
-    "build": "cross-env NODE_ENV=production tsx build src/app.ts",
-    "format": "prettier --write .",
-    "test:watch": "cross-env NODE_ENV=development NODE_OPTIONS=\"--import tsx\" vitest -w",
-    "test": "cross-env NODE_ENV=development NODE_OPTIONS=\"--import tsx\" vitest run"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@bookmark/code-definitions": "workspace:^",
@@ -33,13 +30,16 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.26.0",
     "@types/bcryptjs": "^3.0.0",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.15.3",
     "dotenv": "^16.4.7",
-    "eslint": "^9.25.1",
+    "eslint": "^9.26.0",
+    "globals": "^16.1.0",
     "pino-pretty": "^13.0.0",
     "tsx": "^4.19.4",
+    "typescript-eslint": "^8.32.0",
     "vitest": "^3.1.2"
   }
 }

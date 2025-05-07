@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from 'vue';
 
 interface Props {
   // 尺寸：sm, md, lg，或者直接传递 Tailwind 的 w-h- 类名，例如 'w-12 h-12'
@@ -17,21 +17,21 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   size: 'md',
   color: 'text-blue-600', // 默认颜色
-  thickness: 'border-2',  // 默认粗细
-  speed: 'animate-spin',    // 默认使用 Tailwind 的 animate-spin
+  thickness: 'border-2', // 默认粗细
+  speed: 'animate-spin', // 默认使用 Tailwind 的 animate-spin
   class: '',
-})
+});
 
 const sizeClasses = computed(() => {
-  if (props.size === 'sm') return 'w-4 h-4'
-  if (props.size === 'md') return 'w-8 h-8'
-  if (props.size === 'lg') return 'w-12 h-12'
+  if (props.size === 'sm') return 'w-4 h-4';
+  if (props.size === 'md') return 'w-8 h-8';
+  if (props.size === 'lg') return 'w-12 h-12';
   // 如果是自定义字符串，直接使用
   if (typeof props.size === 'string' && (props.size.startsWith('w-') || props.size.startsWith('h-'))) {
-    return props.size
+    return props.size;
   }
-  return 'w-8 h-8' // 默认 fallback
-})
+  return 'w-8 h-8'; // 默认 fallback
+});
 
 const spinnerClasses = computed(() => [
   'rounded-full',
@@ -43,15 +43,11 @@ const spinnerClasses = computed(() => [
   props.color,
   props.thickness,
   props.class, // 允许传入额外的class
-])
+]);
 </script>
 
 <template>
-  <div
-    role="status"
-    :class="spinnerClasses"
-    aria-label="Loading..."
-  >
+  <div role="status" :class="spinnerClasses" aria-label="Loading...">
     <span class="sr-only">Loading...</span>
   </div>
 </template>

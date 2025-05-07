@@ -3,6 +3,7 @@
 本目录为重构后的后端服务，基于 Fastify.js + MongoDB（mongoose）技术栈。
 
 ## 技术栈
+
 - Fastify.js
 - MongoDB
 - mongoose

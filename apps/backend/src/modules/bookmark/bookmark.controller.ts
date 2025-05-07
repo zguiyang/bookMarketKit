@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyRequest } from 'fastify';
 import {
   CreateBookmarkBody,
   UpdateBookmarkBody,
@@ -71,4 +71,4 @@ export class BookmarkController {
     const userId = req.currentUser.id;
     return this.bookmarkService.search(userId, req.query.keyword);
   }
-} 
+}

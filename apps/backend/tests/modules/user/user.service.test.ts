@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { UserService } from '../../../src/modules/user/user.service';
-import { UserModel } from '../../../src/models/user.model';
-import type { IUser } from '../../../src/models/user.model';
+import { UserService } from '@/modules/user/user.service';
+import { UserModel } from '@/models/user.model';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -15,11 +14,11 @@ describe('UserService', () => {
       const userData = {
         username: 'testuser',
         email: 'test@example.com',
-        password: 'password123'
+        password: 'password123',
       };
 
       const user = await userService.create(userData);
-      
+
       expect(user).toHaveProperty('id');
       expect(user.username).toBe(userData.username);
       expect(user.email).toBe(userData.email);
@@ -31,13 +30,13 @@ describe('UserService', () => {
       const userData = {
         username: 'testuser2',
         email: 'test2@example.com',
-        password: 'password123'
+        password: 'password123',
       };
 
       // 直接从数据库获取用户以检查密码哈希
       const user = await UserModel.create(userData);
       expect(user.password).not.toBe(userData.password);
-      
+
       // 清理测试数据
       await UserModel.deleteOne({ _id: user._id });
     });
@@ -49,21 +48,21 @@ describe('UserService', () => {
       await userService.create({
         username: 'user1',
         email: 'user1@example.com',
-        password: 'password123'
+        password: 'password123',
       });
 
       await userService.create({
         username: 'user2',
         email: 'user2@example.com',
-        password: 'password123'
+        password: 'password123',
       });
 
       const users = await userService.getAll();
-      
+
       expect(Array.isArray(users)).toBe(true);
       expect(users.length).toBeGreaterThanOrEqual(2);
       // 验证密码字段被排除
-      users.forEach(user => {
+      users.forEach((user) => {
         expect(user).not.toHaveProperty('password');
       });
     });
@@ -74,14 +73,14 @@ describe('UserService', () => {
       const userData = {
         username: 'finduser',
         email: 'find@example.com',
-        password: 'password123'
+        password: 'password123',
       };
 
       const createdUser = await userService.create(userData);
-      const foundUser = await userService.getById(createdUser.id);
-      
+      const foundUser = await userService.getById(createdUser._id);
+
       expect(foundUser).toBeDefined();
-      expect(foundUser?.id).toBe(createdUser.id);
+      expect(foundUser?._id).toBe(createdUser._id);
       expect(foundUser?.username).toBe(userData.username);
       // 验证密码字段被排除
       expect(foundUser).not.toHaveProperty('password');
@@ -92,4 +91,4 @@ describe('UserService', () => {
       expect(foundUser).toBeNull();
     });
   });
-}); 
+});

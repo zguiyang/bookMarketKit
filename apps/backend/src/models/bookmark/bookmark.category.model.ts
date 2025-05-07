@@ -5,10 +5,7 @@ import { CategoryResponse } from '@bookmark/schemas';
 import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type.js';
 
 // Mongoose 文档类型
-export type IBookmarkCategoryDocument = CreateDocument<
-  CategoryResponse,
-  'user' | 'parent'
->;
+export type IBookmarkCategoryDocument = CreateDocument<CategoryResponse, 'user' | 'parent'>;
 
 // Lean 查询结果类型
 export type IBookmarkCategoryLean = CreateLeanDocument<CategoryResponse>;
@@ -21,15 +18,18 @@ const BookmarkCategorySchema = new Schema<IBookmarkCategoryDocument>(
     icon: { type: String },
     parent: { type: Schema.Types.ObjectId, ref: 'BookmarkCategory', default: null },
   },
-  { 
+  {
     timestamps: true,
     versionKey: false,
     toJSON: {
-      transform: commonTransform
-    }
-   }
+      transform: commonTransform,
+    },
+  }
 );
 
 BookmarkCategorySchema.plugin(leanTransformPlugin);
 
-export const BookmarkCategoryModel = mongoose.model<IBookmarkCategoryDocument>('BookmarkCategory', BookmarkCategorySchema);
+export const BookmarkCategoryModel = mongoose.model<IBookmarkCategoryDocument>(
+  'BookmarkCategory',
+  BookmarkCategorySchema
+);

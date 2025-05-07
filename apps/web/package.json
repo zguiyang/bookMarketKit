@@ -3,11 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "format": "prettier --write src",
     "build": "nuxt build --dotenv .env.production",
     "dev": "nuxt dev --dotenv .env.development",
     "generate": "nuxt generate --dotenv .env.production",
     "preview": "nuxt preview --dotenv .env.production",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@bookmark/code-definitions": "workspace:^",

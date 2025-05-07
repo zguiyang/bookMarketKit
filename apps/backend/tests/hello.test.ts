@@ -2,7 +2,6 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { app, bootstrap } from '../src/bootstrap';
 
 describe('Hello Route Tests', () => {
-
   beforeAll(async () => {
     await bootstrap(); // 初始化应用
   });
@@ -14,7 +13,7 @@ describe('Hello Route Tests', () => {
   it('GET / should return 200 and correct payload', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: '/'
+      url: '/',
     });
 
     expect(response.statusCode).toBe(200);
@@ -22,8 +21,8 @@ describe('Hello Route Tests', () => {
       code: 0,
       message: 'success',
       data: {
-        status: 'server is running!!!'
-      }
+        status: 'server is running!!!',
+      },
     });
   });
 });

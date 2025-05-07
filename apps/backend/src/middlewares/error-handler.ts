@@ -30,15 +30,11 @@ function createErrorResponse(
 function handleMongooseError(error: MongooseError): { response: ApiResponse; statusCode: number } {
   // CastError: 类型转换错误，比如 ObjectId 格式错误
   if (error instanceof MongooseError.CastError) {
-    return createErrorResponse(
-      mongooseCodeMessages.castError.code,
-      mongooseCodeMessages.castError.message,
-      {
-        field: error.path,
-        value: error.value,
-        type: error.kind
-      }
-    );
+    return createErrorResponse(mongooseCodeMessages.castError.code, mongooseCodeMessages.castError.message, {
+      field: error.path,
+      value: error.value,
+      type: error.kind,
+    });
   }
 
   // ValidationError: 数据验证错误
@@ -46,34 +42,24 @@ function handleMongooseError(error: MongooseError): { response: ApiResponse; sta
     return createErrorResponse(
       mongooseCodeMessages.validationError.code,
       mongooseCodeMessages.validationError.message,
-      Object.values(error.errors).map(err => ({
+      Object.values(error.errors).map((err) => ({
         field: err.path,
-        message: err.message
+        message: err.message,
       }))
     );
   }
 
   // DocumentNotFoundError: 文档未找到
   if (error instanceof MongooseError.DocumentNotFoundError) {
-    return createErrorResponse(
-      mongooseCodeMessages.notFound.code,
-      mongooseCodeMessages.notFound.message,
-      null,
-      404
-    );
+    return createErrorResponse(mongooseCodeMessages.notFound.code, mongooseCodeMessages.notFound.message, null, 404);
   }
 
   // 其他 Mongoose 错误
-  return createErrorResponse(
-    mongooseCodeMessages.error.code,
-    mongooseCodeMessages.error.message,
-    null,
-    500
-  );
+  return createErrorResponse(mongooseCodeMessages.error.code, mongooseCodeMessages.error.message, null, 500);
 }
 
 export default function errorHandler(
-  error: FastifyError & { validation?: any } | BusinessError | MongooseError,
+  error: (FastifyError & { validation?: any }) | BusinessError | MongooseError,
   request: FastifyRequest,
   reply: FastifyReply
 ) {
@@ -83,11 +69,7 @@ export default function errorHandler(
 
   // 处理业务异常（优先级最高）
   if (error instanceof BusinessError) {
-    errorResponse = createErrorResponse(
-      error.code ?? commonCodeMessages.fail.code,
-      error.message,
-      error.data
-    );
+    errorResponse = createErrorResponse(error.code ?? commonCodeMessages.fail.code, error.message, error.data);
   }
   // 处理 Mongoose 错误
   else if (error instanceof MongooseError) {
@@ -103,12 +85,7 @@ export default function errorHandler(
   }
   // Fastify 内部错误
   else if (isNumber(error.statusCode) && error.statusCode >= 400 && error.statusCode < 600) {
-    errorResponse = createErrorResponse(
-      error.statusCode,
-      error.message,
-      null,
-      error.statusCode
-    );
+    errorResponse = createErrorResponse(error.statusCode, error.message, null, error.statusCode);
   }
   // 未知异常
   else {
@@ -120,7 +97,5 @@ export default function errorHandler(
     );
   }
 
-  return reply
-    .status(errorResponse.statusCode)
-    .send(errorResponse.response);
-} 
+  return reply.status(errorResponse.statusCode).send(errorResponse.response);
+}

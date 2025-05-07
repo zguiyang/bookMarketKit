@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
-import { app, bootstrap } from '../../../src/bootstrap';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { app, bootstrap } from '@/bootstrap';
 import type { CreateUserBody } from '@bookmark/schemas';
 
 describe('User Routes', () => {
@@ -15,14 +15,14 @@ describe('User Routes', () => {
     const validUser: CreateUserBody = {
       username: 'testuser',
       email: 'test@example.com',
-      password: 'password123'
+      password: 'password123',
     };
 
     it('should create a new user with valid data', async () => {
       const response = await app.inject({
         method: 'POST',
         url: '/user/create',
-        payload: validUser
+        payload: validUser,
       });
 
       expect(response.statusCode).toBe(200);
@@ -42,7 +42,7 @@ describe('User Routes', () => {
       const response = await app.inject({
         method: 'POST',
         url: '/user/create',
-        payload: invalidUser
+        payload: invalidUser,
       });
 
       expect(response.statusCode).toBe(400);
@@ -53,7 +53,7 @@ describe('User Routes', () => {
     it('should return all users', async () => {
       const response = await app.inject({
         method: 'GET',
-        url: '/user/all'
+        url: '/user/all',
       });
 
       expect(response.statusCode).toBe(200);
@@ -72,15 +72,17 @@ describe('User Routes', () => {
         payload: {
           username: 'detailtest',
           email: 'detail@example.com',
-          password: 'password123'
-        }
+          password: 'password123',
+        },
       });
-      
-      const { data: { id } } = JSON.parse(createResponse.payload);
+
+      const {
+        data: { id },
+      } = JSON.parse(createResponse.payload);
 
       const response = await app.inject({
         method: 'GET',
-        url: `/user/detail/${id}`
+        url: `/user/detail/${id}`,
       });
 
       expect(response.statusCode).toBe(200);
@@ -92,10 +94,10 @@ describe('User Routes', () => {
     it('should return 404 for non-existent user', async () => {
       const response = await app.inject({
         method: 'GET',
-        url: '/user/detail/nonexistentid'
+        url: '/user/detail/nonexistentid',
       });
 
       expect(response.statusCode).toBe(404);
     });
   });
-}); 
+});

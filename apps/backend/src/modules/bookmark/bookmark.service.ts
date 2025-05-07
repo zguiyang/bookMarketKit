@@ -40,7 +40,9 @@ export class BookmarkService {
       { _id: data.id, user: userId },
       { $set: updateData },
       { new: true }
-    ).populate(['categories', 'tags']).lean<IBookmarkLean>();
+    )
+      .populate(['categories', 'tags'])
+      .lean<IBookmarkLean>();
 
     if (!bookmark) {
       throw new BusinessError(bookmarkCodeMessages.updateError);
@@ -58,12 +60,14 @@ export class BookmarkService {
       { _id: data.id, user: userId },
       { isFavorite: !!data.isFavorite },
       { new: true }
-    ).populate(['categories', 'tags']).lean<IBookmarkLean>();
-    
+    )
+      .populate(['categories', 'tags'])
+      .lean<IBookmarkLean>();
+
     if (!bookmark) {
       throw new BusinessError(bookmarkCodeMessages.notFound);
     }
-    
+
     return bookmark;
   }
 
@@ -72,12 +76,14 @@ export class BookmarkService {
       { _id: data.id, user: userId },
       { isPinned: !!data.isPinned },
       { new: true }
-    ).populate(['categories', 'tags']).lean<IBookmarkLean>();
-    
+    )
+      .populate(['categories', 'tags'])
+      .lean<IBookmarkLean>();
+
     if (!bookmark) {
       throw new BusinessError(bookmarkCodeMessages.notFound);
     }
-    
+
     return bookmark;
   }
 
@@ -101,13 +107,7 @@ export class BookmarkService {
   }
 
   async pageList(userId: string, query: BookmarkPageListQuery): Promise<BookmarkPageListResponse> {
-    const {
-      isPinned,
-      isFavorite,
-      keyword,
-      tagId,
-      categoryId,
-    } = query;
+    const { isPinned, isFavorite, keyword, tagId, categoryId } = query;
 
     const filter: any = { user: userId };
 
@@ -158,19 +158,22 @@ export class BookmarkService {
       BookmarkModel.find({ user: userId, isPinned: true })
         .populate(['categories', 'tags'])
         .sort({ updatedAt: -1 })
-        .limit(10).lean<IBookmarkLean[]>(),
+        .limit(10)
+        .lean<IBookmarkLean[]>(),
 
       // 最近访问的书签
       BookmarkModel.find({ user: userId, lastVisitedAt: { $exists: true } })
         .populate(['categories', 'tags'])
         .sort({ lastVisitedAt: -1 })
-        .limit(10).lean<IBookmarkLean[]>(),
+        .limit(10)
+        .lean<IBookmarkLean[]>(),
 
       // 最近添加的书签
       BookmarkModel.find({ user: userId })
         .populate(['categories', 'tags'])
         .sort({ createdAt: -1 })
-        .limit(10).lean<IBookmarkLean[]>(),
+        .limit(10)
+        .lean<IBookmarkLean[]>(),
     ]);
 
     return {
@@ -183,17 +186,19 @@ export class BookmarkService {
   async updateLastVisitTime(userId: string, id: string): Promise<BookmarkResponse> {
     const bookmark = await BookmarkModel.findOneAndUpdate(
       { _id: id, user: userId },
-      { 
+      {
         lastVisitedAt: new Date(),
-        $inc: { visitCount: 1 }
+        $inc: { visitCount: 1 },
       },
       { new: true }
-    ).populate(['categories', 'tags']).lean<IBookmarkLean>();
-    
+    )
+      .populate(['categories', 'tags'])
+      .lean<IBookmarkLean>();
+
     if (!bookmark) {
       throw new BusinessError(bookmarkCodeMessages.notFound);
     }
-    
+
     return bookmark;
   }
 
@@ -205,30 +210,29 @@ export class BookmarkService {
         $or: [
           { title: { $regex: keyword, $options: 'i' } },
           { description: { $regex: keyword, $options: 'i' } },
-          { url: { $regex: keyword, $options: 'i' } }
-        ]
-      }).populate(['categories', 'tags']).lean(),
+          { url: { $regex: keyword, $options: 'i' } },
+        ],
+      })
+        .populate(['categories', 'tags'])
+        .lean(),
 
       // 搜索分类
       BookmarkCategoryModel.find({
         user: userId,
-        $or: [
-          { name: { $regex: keyword, $options: 'i' } },
-          { description: { $regex: keyword, $options: 'i' } }
-        ]
+        $or: [{ name: { $regex: keyword, $options: 'i' } }, { description: { $regex: keyword, $options: 'i' } }],
       }).lean(),
 
       // 搜索标签
       BookmarkTagModel.find({
         user: userId,
-        name: { $regex: keyword, $options: 'i' }
-      }).lean()
+        name: { $regex: keyword, $options: 'i' },
+      }).lean(),
     ]);
 
     return {
       bookmarks,
       categories,
-      tags
+      tags,
     };
   }
-} 
+}

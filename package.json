@@ -5,11 +5,9 @@
   "private": true,
   "scripts": {
     "web:dev": "pnpm --filter web dev",
-    "web:build": "pnpm --filter web build",
-    "backend:dev": "pnpm --filter backend start:dev",
-    "backend:build": "pnpm --filter backend build",
-    "lint": "pnpm run lint",
-    "format": "pnpm run format"
+    "backend:dev": "pnpm --filter backend dev",
+    "format": "prettier --write .",
+    "lint": "pnpm --filter web lint && pnpm --filter backend lint"
   },
   "keywords": [
     "bookmark"
@@ -20,5 +18,12 @@
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
   },
-  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "3.5.3",
+    "typescript-eslint": "^8.32.0"
+  }
 }

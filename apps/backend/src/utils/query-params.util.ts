@@ -6,9 +6,7 @@ import { SortOrder } from 'mongoose';
  * @param params 需要过滤的对象
  * @returns 过滤后的对象（只包含有效值）
  */
-export function filterNullOrUndefined<T extends Record<string, any>>(
-  params: T,
-): Partial<T> {
+export function filterNullOrUndefined<T extends Record<string, any>>(params: T): Partial<T> {
   if (!params || typeof params !== 'object') {
     return {};
   }

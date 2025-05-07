@@ -2,10 +2,10 @@ export default defineAppConfig({
   ui: {
     colors: {
       primary: 'purple',
-      neutral: 'slate'
+      neutral: 'slate',
     },
     button: {
-      base: 'cursor-pointer'
-    }
-  }
-})
+      base: 'cursor-pointer',
+    },
+  },
+});

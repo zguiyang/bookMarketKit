@@ -55,11 +55,13 @@ Book Market Kit is a full-stack solution for web bookmark collection, smart cate
 ## Getting Started
 
 1. **Install dependencies**
+
    ```bash
    pnpm install
    ```
 
 2. **Start development**
+
    ```bash
    # Start both frontend and backend
    pnpm dev

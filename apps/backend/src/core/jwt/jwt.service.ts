@@ -1,5 +1,4 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import type { JWT } from '@fastify/jwt';
 
 /**
  * JWT 核心服务
@@ -24,6 +23,7 @@ export class JwtService {
     try {
       return await this.fastify.jwt.verify(token);
     } catch (err) {
+      this.fastify.log.error('JWT 验证失败:', err);
       return null;
     }
   }
@@ -37,11 +37,12 @@ export class JwtService {
     try {
       await request.jwtVerify();
     } catch (err) {
+      this.fastify.log.error('JWT 验证失败:', err);
       reply.code(401).send({
         code: 401,
         message: '未授权或 token 已过期',
-        data: null
+        data: null,
       });
     }
   }
-} 
+}

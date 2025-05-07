@@ -29,12 +29,10 @@ export class BookmarkCategoryService {
   }
 
   async findAll(userId: string): Promise<CategoryResponse[]> {
-    return BookmarkCategoryModel.find({ user: userId })
-      .lean<IBookmarkCategoryLean[]>();
+    return BookmarkCategoryModel.find({ user: userId }).lean<IBookmarkCategoryLean[]>();
   }
 
   async findOne(userId: string, id: string): Promise<CategoryResponse | null> {
-    return BookmarkCategoryModel.findOne({ _id: id, user: userId })
-      .lean<IBookmarkCategoryLean>();
+    return BookmarkCategoryModel.findOne({ _id: id, user: userId }).lean<IBookmarkCategoryLean>();
   }
 }

@@ -24,25 +24,16 @@ export interface IBaseLeanDocument {
  * @template K - 需要替换为 ObjectId 的字段
  * @template O - 需要重写的字段类型
  */
-export type CreateDocument<
-  T,
-  K extends keyof T = never,
-  O = {}
-> = IBaseDocument & 
-  Omit<T, '_id' | 'createdAt' | 'updatedAt' | K | keyof O> & 
-  {
+export type CreateDocument<T, K extends keyof T = never, O extends object = object> = IBaseDocument &
+  Omit<T, '_id' | 'createdAt' | 'updatedAt' | K | keyof O> & {
     [P in K]: P extends `${string}s` ? Types.ObjectId[] : Types.ObjectId;
-  } &
-  O;
+  } & O;
 
 /**
  * 创建 Lean 文档类型的工具类型
  * @template T - 响应类型（如 BookmarkResponse）
  * @template O - 需要重写的字段类型
  */
-export type CreateLeanDocument<
-  T,
-  O = {}
-> = IBaseLeanDocument & 
-  Omit<T, '_id' | 'createdAt' | 'updatedAt' | keyof O> & 
+export type CreateLeanDocument<T, O extends object = object> = IBaseLeanDocument &
+  Omit<T, '_id' | 'createdAt' | 'updatedAt' | keyof O> &
   O;

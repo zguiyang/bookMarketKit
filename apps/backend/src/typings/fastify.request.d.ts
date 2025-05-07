@@ -5,4 +5,4 @@ declare module 'fastify' {
     currentUser: User;
     _currentUser?: User;
   }
-} 
+}

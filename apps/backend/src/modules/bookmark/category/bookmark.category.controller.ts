@@ -1,9 +1,5 @@
 import { FastifyRequest } from 'fastify';
-import {
-  CreateCategoryBody,
-  UpdateCategoryBody,
-  CategoryIdParam,
-} from '@bookmark/schemas';
+import { CreateCategoryBody, UpdateCategoryBody, CategoryIdParam } from '@bookmark/schemas';
 import { BookmarkCategoryService } from './bookmark.category.service.js';
 
 export class BookmarkCategoryController {

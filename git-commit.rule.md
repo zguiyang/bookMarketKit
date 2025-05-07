@@ -70,4 +70,4 @@ Fixes #456
 
 ---
 
-> 所有生成的提交信息不遵循中文规范，遵循 Conventional Commits 规范，Conventional Commits 是第一优先级。 
+> 所有生成的提交信息不遵循中文规范，遵循 Conventional Commits 规范，Conventional Commits 是第一优先级。

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Query, CallbackWithoutResultAndOptionalError } from 'mongoose';
+import { Schema, Query, CallbackWithoutResultAndOptionalError } from 'mongoose';
 import { recursiveTransformInPlace } from './recursive-transform.util';
 
 /**
@@ -19,12 +19,8 @@ function leanTransformPlugin(schema: Schema) {
     // 'aggregate' // Be cautious with aggregate + lean
   ];
 
-  queryHooks.forEach(hook => {
-    schema.post(hook as any, function(
-      this: Query<any, any>,
-      res: any,
-      next: CallbackWithoutResultAndOptionalError
-    ) {
+  queryHooks.forEach((hook) => {
+    schema.post(hook as any, function (this: Query<any, any>, res: any, next: CallbackWithoutResultAndOptionalError) {
       if (res) {
         recursiveTransformInPlace(res);
       }
@@ -34,4 +30,3 @@ function leanTransformPlugin(schema: Schema) {
 }
 
 export default leanTransformPlugin;
-

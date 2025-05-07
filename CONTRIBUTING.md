@@ -36,4 +36,4 @@ Thank you for considering contributing to Book Market Kit! We welcome all kinds 
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the ISC License. 
+By contributing, you agree that your contributions will be licensed under the ISC License.

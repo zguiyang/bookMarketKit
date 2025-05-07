@@ -55,11 +55,13 @@ Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要�
 ## 快速开始
 
 1. **安装依赖**
+
    ```bash
    pnpm install
    ```
 
 2. **启动开发环境**
+
    ```bash
    # 启动前后端
    pnpm dev
@@ -87,4 +89,4 @@ Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要�
 
 ## 许可证
 
-[ISC](./LICENSE) 
+[ISC](./LICENSE)

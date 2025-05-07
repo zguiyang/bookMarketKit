@@ -38,7 +38,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   });
 
   fastify.patch<{ Body: SetPinnedBody }>('/pinned', {
-    schema:bookmarkSchemas.pinned,
+    schema: bookmarkSchemas.pinned,
     handler: (req) => bookmarkController.pinned(req),
   });
 
@@ -71,4 +71,4 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
     schema: bookmarkSchemas.search,
     handler: (req) => bookmarkController.search(req),
   });
-} 
+}

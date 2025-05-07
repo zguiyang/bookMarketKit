@@ -5,10 +5,7 @@ import { TagResponse } from '@bookmark/schemas';
 import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type.js';
 
 // Mongoose 文档类型
-export type IBookmarkTagDocument = CreateDocument<
-  TagResponse,
-  'user'
->;
+export type IBookmarkTagDocument = CreateDocument<TagResponse, 'user'>;
 
 // Lean 查询结果类型
 export type IBookmarkTagLean = CreateLeanDocument<TagResponse>;
@@ -19,13 +16,13 @@ const BookmarkTagSchema = new Schema<IBookmarkTagDocument>(
     name: { type: String, required: true },
     color: { type: String },
   },
-  { 
+  {
     timestamps: true,
     versionKey: false,
     toJSON: {
-      transform: commonTransform
-    }
-   }
+      transform: commonTransform,
+    },
+  }
 );
 
 BookmarkTagSchema.plugin(leanTransformPlugin);

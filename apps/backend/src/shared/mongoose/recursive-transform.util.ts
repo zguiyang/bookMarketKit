@@ -21,7 +21,7 @@ export function recursiveTransform<T>(data: T): T | T[] {
     return data;
   }
   if (isArray(data)) {
-    return data.map(item => recursiveTransform(item));
+    return data.map((item) => recursiveTransform(item));
   }
   if (isPlainObject(data)) {
     const result: any = {};
@@ -57,4 +57,4 @@ export function recursiveTransformInPlace(data: any): any {
     return data;
   }
   return formatFieldValue(data);
-} 
+}

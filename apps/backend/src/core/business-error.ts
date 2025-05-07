@@ -33,4 +33,4 @@ export class BusinessError extends Error {
     }
     this.name = 'BusinessError';
   }
-} 
+}

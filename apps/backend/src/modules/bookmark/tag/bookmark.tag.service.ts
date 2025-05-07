@@ -28,12 +28,10 @@ export class BookmarkTagService {
   }
 
   async findAll(userId: string): Promise<TagResponse[]> {
-    return BookmarkTagModel.find({ user: userId })
-      .lean<IBookmarkTagLean[]>();
+    return BookmarkTagModel.find({ user: userId }).lean<IBookmarkTagLean[]>();
   }
 
   async findOne(userId: string, id: string): Promise<TagResponse | null> {
-    return BookmarkTagModel.findOne({ _id: id, user: userId })
-      .lean<IBookmarkTagLean>();
+    return BookmarkTagModel.findOne({ _id: id, user: userId }).lean<IBookmarkTagLean>();
   }
-} 
+}

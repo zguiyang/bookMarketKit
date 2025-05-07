@@ -1,9 +1,5 @@
 import { FastifyRequest } from 'fastify';
-import {
-  CreateTagBody,
-  UpdateTagBody,
-  TagIdParam,
-} from '@bookmark/schemas';
+import { CreateTagBody, UpdateTagBody, TagIdParam } from '@bookmark/schemas';
 import { BookmarkTagService } from './bookmark.tag.service.js';
 
 export class BookmarkTagController {
@@ -35,4 +31,4 @@ export class BookmarkTagController {
     const { id } = req.params;
     return this.tagService.findOne(userId, id);
   }
-} 
+}

@@ -2,9 +2,7 @@ import { FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
 import { MOCK_USER, User } from '../interfaces/user';
 
-
 export default fp(async (fastify) => {
-  
   fastify.decorateRequest('currentUser', {
     getter() {
       // 使用私有属性 _currentUser 存储实际用户信息，默认返回 MOCK_USER
@@ -12,7 +10,7 @@ export default fp(async (fastify) => {
     },
     setter(value: User) {
       this._currentUser = value;
-    }
+    },
   });
 
   fastify.addHook('onRequest', async (request: FastifyRequest) => {
@@ -23,4 +21,4 @@ export default fp(async (fastify) => {
     // 3. 获取用户信息
     request.currentUser = MOCK_USER;
   });
-}); 
+});

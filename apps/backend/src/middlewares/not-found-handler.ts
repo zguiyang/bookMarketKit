@@ -8,4 +8,4 @@ export default function notFoundHandler(request: FastifyRequest, reply: FastifyR
     data: null,
   };
   return reply.status(404).send(response);
-} 
+}

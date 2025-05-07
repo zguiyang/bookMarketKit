@@ -1,8 +1,11 @@
 import { z } from 'zod';
-import { createPaginatedRequestSchema, createPaginatedResponseSchema, PaginationDirectionEnum } from '../common/response.schema';
+import {
+  createPaginatedRequestSchema,
+  createPaginatedResponseSchema,
+  PaginationDirectionEnum,
+} from '../common/response.schema';
 import { categoryResponseSchema } from './bookmark.category.schema';
-import { tagResponseSchema  } from './bookmark.tag.schema';
-
+import { tagResponseSchema } from './bookmark.tag.schema';
 
 // 书签排序字段枚举
 export const BookmarkOrderByEnum = {
@@ -13,6 +16,18 @@ export const BookmarkOrderByEnum = {
   TITLE: 'title',
 } as const;
 
+// enums for bookmark YES
+export const BookmarkFavoriteEnum = {
+  YES: 'FAVORITE',
+  NO: 'UN_FAVORITE',
+} as const;
+
+// enums for bookmark YES
+export const BookmarkPinnedEnum = {
+  YES: 'PINNED',
+  NO: 'UN_PINNED',
+} as const;
+
 // 书签基础Schema
 export const bookmarkResponseSchema = z.object({
   _id: z.string(),
@@ -21,8 +36,8 @@ export const bookmarkResponseSchema = z.object({
   icon: z.string(),
   title: z.string(),
   visitCount: z.number(),
-  isFavorite: z.number(),
-  isPinned: z.number(),
+  isFavorite: z.enum([BookmarkFavoriteEnum.YES, BookmarkFavoriteEnum.NO]),
+  isPinned: z.enum([BookmarkPinnedEnum.YES, BookmarkPinnedEnum.NO]),
   description: z.string().optional(),
   screenshotUrl: z.string().optional(),
   lastVisitedAt: z.string().optional(),
@@ -44,24 +59,28 @@ export const bookmarkCollectionResponseSchema = z.object({
 });
 
 // 书签创建和更新Schema
-export const createBookmarkBodySchema = z.object({
-  title: z.string().min(1, { message: '书签标题不能为空' }),
-  url: z.string().url({ message: '请输入有效的URL' }),
-  description: z.string().optional(),
-  icon: z.string().optional(),
-  categoryIds: z.array(z.string()).optional(),
-  tagIds: z.array(z.string()).optional(),
-}).strict();
+export const createBookmarkBodySchema = z
+  .object({
+    title: z.string().min(1, { message: '书签标题不能为空' }),
+    url: z.string().url({ message: '请输入有效的URL' }),
+    description: z.string().optional(),
+    icon: z.string().optional(),
+    categoryIds: z.array(z.string()).optional(),
+    tagIds: z.array(z.string()).optional(),
+  })
+  .strict();
 
-export const updateBookmarkBodySchema = z.object({
-  id: z.string().min(1, { message: '书签ID不能为空' }),
-  title: z.string().optional(),
-  url: z.string().url({ message: '请输入有效的URL' }).optional(),
-  description: z.string().optional(),
-  icon: z.string().optional(),
-  categoryIds: z.array(z.string()).optional(),
-  tagIds: z.array(z.string()).optional(),
-}).strict();
+export const updateBookmarkBodySchema = z
+  .object({
+    id: z.string().min(1, { message: '书签ID不能为空' }),
+    title: z.string().optional(),
+    url: z.string().url({ message: '请输入有效的URL' }).optional(),
+    description: z.string().optional(),
+    icon: z.string().optional(),
+    categoryIds: z.array(z.string()).optional(),
+    tagIds: z.array(z.string()).optional(),
+  })
+  .strict();
 
 // 书签ID参数Schema
 export const bookmarkIdParamSchema = z.object({
@@ -113,4 +132,4 @@ export type SetPinnedBody = z.infer<typeof setPinnedBodySchema>;
 export type UpdateLastVisitTimeBody = z.infer<typeof updateLastVisitTimeBodySchema>;
 export type SearchQuery = z.infer<typeof searchQuerySchema>;
 export type BookmarkPageListQuery = z.infer<typeof bookmarkPageListQuerySchema>;
-export type BookmarkOrderBy = keyof typeof BookmarkOrderByEnum; 
+export type BookmarkOrderBy = keyof typeof BookmarkOrderByEnum;

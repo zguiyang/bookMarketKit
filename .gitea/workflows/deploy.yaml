@@ -21,7 +21,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-
       # Skip pnpm cache to reduce overhead
       - name: Install pnpm
         run: |
@@ -57,11 +56,11 @@ jobs:
           mkdir deploy_apps
           mkdir -p deploy_apps/client
           mkdir -p deploy_apps/backend
-          
+
           cp -r apps/backend/dist/**/*  deploy_apps/backend
           cp -r apps/backend/package.json  deploy_apps/backend
           cp -r apps/backend/.env.prod  deploy_apps/backend
-          
+
           cp -r apps/client/.next/**/*  deploy_apps/client
           cp -r apps/client/package.json  deploy_apps/client
           cp -r apps/client/.env.prod  deploy_apps/client
@@ -72,6 +71,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
-          SOURCE: "/deploy_apps/"
-          TARGET: "/opt/1panel/apps/openresty/openresty/www/sites/bookmark.9crd.com"
-          EXCLUDE: "/node_modules/"
+          SOURCE: '/deploy_apps/'
+          TARGET: '/opt/1panel/apps/openresty/openresty/www/sites/bookmark.9crd.com'
+          EXCLUDE: '/node_modules/'

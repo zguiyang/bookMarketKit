@@ -23,4 +23,4 @@ export default async function userRoutes(fastify: FastifyInstance) {
     schema: userSchemas.findOne,
     handler: (req) => userController.findOne(req),
   });
-} 
+}

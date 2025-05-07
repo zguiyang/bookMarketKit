@@ -1,5 +1,5 @@
 import { omit } from 'lodash-es';
-import { CreateUserBody, UserResponse } from "@bookmark/schemas";
+import { CreateUserBody, UserResponse } from '@bookmark/schemas';
 import { UserModel, IUserLean } from '@/models/user.model.js';
 import { hashPassword } from '@/utils/bcrypt.js';
 import { BusinessError } from '@/core/business-error.js';
@@ -25,26 +25,17 @@ export class UserService {
   }
 
   async getAll(): Promise<UserResponse[]> {
-  return await UserModel.find({}, { password: 0 }).lean<IUserLean[]>();
+    return await UserModel.find({}, { password: 0 }).lean<IUserLean[]>();
   }
 
-  async getByUsernameOrEmail({ 
-    username, 
-    email 
-  }: { 
-    username?: string; 
-    email?: string; 
-  }): Promise<IUserLean | null> {
-    return UserModel.findOne({ 
-      $or: [{ username }, { email }] 
+  async getByUsernameOrEmail({ username, email }: { username?: string; email?: string }): Promise<IUserLean | null> {
+    return UserModel.findOne({
+      $or: [{ username }, { email }],
     }).lean<IUserLean>();
   }
 
   async getById(id: string): Promise<UserResponse> {
-    const user = await UserModel.findById(
-      { _id: id }, 
-      { password: 0 }
-    ).lean<IUserLean>();
+    const user = await UserModel.findById({ _id: id }, { password: 0 }).lean<IUserLean>();
 
     if (!user) {
       throw new BusinessError(userCodeMessages.notFoundUser);

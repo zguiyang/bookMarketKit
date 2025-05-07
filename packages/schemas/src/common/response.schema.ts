@@ -47,7 +47,7 @@ export function createPaginatedRequestSchema<T extends ZodObject<ZodRawShape>>(
   schema: T,
   options?: {
     defaultPageSize?: number;
-    defaultDirection?: typeof PaginationDirectionEnum[keyof typeof PaginationDirectionEnum];
+    defaultDirection?: (typeof PaginationDirectionEnum)[keyof typeof PaginationDirectionEnum];
     orderByEnum?: Record<string, string>;
   }
 ) {
@@ -59,26 +59,14 @@ export function createPaginatedRequestSchema<T extends ZodObject<ZodRawShape>>(
 
   const paginationSchema = z.object({
     // 页码：最小为1
-    page: z.coerce.number()
-      .int()
-      .min(1)
-      .positive()
-      .default(PaginationDefaults.PAGE),
-    pageSize: z.coerce.number()
-      .int()
-      .min(1)
-      .positive()
-      .default(defaultPageSize),
+    page: z.coerce.number().int().min(1).positive().default(PaginationDefaults.PAGE),
+    pageSize: z.coerce.number().int().min(1).positive().default(defaultPageSize),
 
     // 排序字段：如果提供了orderByEnum则限制可选值
-    orderBy: orderByEnum
-      ? z.enum(Object.keys(orderByEnum) as [string, ...string[]])
-      : z.string().optional(),
+    orderBy: orderByEnum ? z.enum(Object.keys(orderByEnum) as [string, ...string[]]) : z.string().optional(),
 
     // 排序方向：asc或desc
-    direction: z.enum([PaginationDirectionEnum.ASC, PaginationDirectionEnum.DESC])
-      .default(defaultDirection)
-      .optional(),
+    direction: z.enum([PaginationDirectionEnum.ASC, PaginationDirectionEnum.DESC]).default(defaultDirection).optional(),
   });
 
   return paginationSchema.merge(schema);
@@ -94,7 +82,7 @@ export function createPaginatedResponseSchema<T extends ZodTypeAny>(itemSchema: 
     pages: z.coerce.number().int().min(0),
     pageSize: z.coerce.number().int().min(1).positive(),
     total: z.coerce.number().int().min(0),
-  })
+  });
 }
 
 /**
