@@ -76,13 +76,9 @@ export default defineNuxtPlugin(() => {
       // 可以选择向上抛出错误，让调用处也能感知到
       // return Promise.reject(error);
     },
-
     // 默认忽略 refetch 警告 (如果需要可以开启)
     // ignoreResponseError: true,
   });
-
-  // 将配置好的 fetcher 注入到 Nuxt app 上下文中
-  // 这样你可以在任何地方通过 useNuxtApp().$api 来访问
   return {
     provide: {
       api: apiFetcher,

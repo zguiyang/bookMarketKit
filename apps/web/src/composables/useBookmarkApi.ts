@@ -1,14 +1,21 @@
 import type { ApiResponse, BookmarkPageListQuery, BookmarkPageListResponse } from '@bookmark/schemas';
 
 export const useBookmarkApi = () => {
-  const { $api } = useNuxtApp(); // 获取注入的 $api 实例
+  const { $api } = useNuxtApp();
 
   const fetchPageList = (query: BookmarkPageListQuery) => {
-    return useAsyncData('bookmarkPageList', () =>
-      $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/pageList', {
-        method: 'GET',
-        params: query,
-      })
+    return useAsyncData(
+      'bookmarkPageList',
+      () =>
+        $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/pageList', {
+          method: 'GET',
+          params: query,
+        }),
+      {
+        transform: (res) => {
+          return res.data;
+        },
+      }
     );
   };
 
