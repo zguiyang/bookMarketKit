@@ -8,7 +8,8 @@ const route = useRoute();
 
 const colorMode = useColorMode();
 
-const { fetchAllCategories, fetchAllTags } = useBookmarkApi();
+const { fetchAllCategories } = useBookmarkCategoryApi();
+const { fetchAllTags } = useBookmarkTagApi();
 const { data: categoriesRes, pending: categoriesLoading } = fetchAllCategories();
 const { data: tagsRes, pending: tagsLoading } = fetchAllTags();
 
@@ -99,11 +100,13 @@ function handleLogout() {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2">
+            stroke-width="2"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+              d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"
+            />
           </svg>
         </div>
         <div class="flex items-center gap-1.5">
@@ -127,7 +130,8 @@ function handleLogout() {
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
               ]"
-              @click="handleViewClick()">
+              @click="handleViewClick()"
+            >
               <span class="mr-2">✨</span>快捷访问
             </li>
             <li
@@ -137,17 +141,19 @@ function handleLogout() {
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
               ]"
-              @click="handleViewClick('all')">
+              @click="handleViewClick('all')"
+            >
               <span class="mr-2">🔖</span>所有书签
             </li>
             <li
               :class="[
                 'flex items-center w-full p-2 rounded-lg text-sm cursor-pointer transition',
-                route.path === '/my-bookmarks/YES'
+                route.path === '/my-bookmarks/favorite'
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
               ]"
-              @click="handleViewClick('YES')">
+              @click="handleViewClick('favorite')"
+            >
               <span class="mr-2">❤️</span>最喜欢的
             </li>
           </ul>
@@ -169,7 +175,8 @@ function handleLogout() {
                   ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
               ]"
-              @click="handleCategoryClick(cat)">
+              @click="handleCategoryClick(cat)"
+            >
               <div class="flex items-center">
                 <span class="mr-2">{{ cat.icon || '📁' }}</span>
                 <span class="text-sm">{{ cat.name }}</span>
@@ -180,13 +187,15 @@ function handleLogout() {
                   size="xs"
                   color="neutral"
                   variant="ghost"
-                  @click.stop="handleEditCategory(cat)" />
+                  @click.stop="handleEditCategory(cat)"
+                />
                 <u-button
                   icon="i-ph:trash"
                   size="xs"
                   color="error"
                   variant="ghost"
-                  @click.stop="handleDeleteCategory(cat)" />
+                  @click.stop="handleDeleteCategory(cat)"
+                />
               </div>
             </li>
           </ul>
@@ -214,7 +223,8 @@ function handleLogout() {
               :key="tag._id"
               class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium text-white cursor-pointer transition-colors duration-200"
               :style="{ backgroundColor: tag.color }"
-              @click="handleTagClick(tag)">
+              @click="handleTagClick(tag)"
+            >
               # {{ tag.name }}
             </span>
           </div>
@@ -228,9 +238,11 @@ function handleLogout() {
         :items="userMenuItems"
         :ui="{
           content: 'w-50',
-        }">
+        }"
+      >
         <div
-          class="flex items-center w-full space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">
+          class="flex items-center w-full space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
+        >
           <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
             <span class="text-white text-lg font-medium">{{ user.nickname }}</span>
           </div>

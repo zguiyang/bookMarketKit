@@ -90,12 +90,12 @@ export const bookmarkIdParamSchema = z.object({
 // 功能相关Schema
 export const setFavoriteBodySchema = z.object({
   id: z.string().min(1, { message: '书签ID不能为空' }),
-  isFavorite: z.boolean(),
+  favorite: z.enum([BookmarkFavoriteEnum.YES, BookmarkFavoriteEnum.NO]),
 });
 
 export const setPinnedBodySchema = z.object({
   id: z.string().min(1, { message: '书签ID不能为空' }),
-  isPinned: z.boolean(),
+  pinned: z.enum([BookmarkPinnedEnum.YES, BookmarkPinnedEnum.NO]),
 });
 
 export const updateLastVisitTimeBodySchema = z.object({
@@ -111,8 +111,8 @@ const bookmarkPageListBaseSchema = z.object({
   categoryId: z.string().optional(),
   tagId: z.string().optional(),
   keyword: z.string().optional(),
-  isPinned: z.number().optional(),
-  isFavorite: z.number().optional(),
+  isFavorite: z.enum([BookmarkFavoriteEnum.YES, BookmarkFavoriteEnum.NO]).optional(),
+  isPinned: z.enum([BookmarkPinnedEnum.YES, BookmarkPinnedEnum.NO]).optional(),
   orderBy: z.nativeEnum(BookmarkOrderByEnum).optional(),
   direction: z.nativeEnum(PaginationDirectionEnum).optional(),
 });

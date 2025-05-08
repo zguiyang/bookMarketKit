@@ -66,7 +66,7 @@ export class BookmarkService {
   async favorite(userId: string, data: SetFavoriteBody): Promise<BookmarkResponse> {
     const bookmark = await BookmarkModel.findOneAndUpdate(
       { _id: data.id, user: userId },
-      { isFavorite: !!data.isFavorite },
+      { isFavorite: data.favorite },
       { new: true }
     )
       .populate(['categories', 'tags'])
@@ -82,7 +82,7 @@ export class BookmarkService {
   async pinned(userId: string, data: SetPinnedBody): Promise<BookmarkResponse> {
     const bookmark = await BookmarkModel.findOneAndUpdate(
       { _id: data.id, user: userId },
-      { isPinned: !!data.isPinned },
+      { isPinned: data.pinned },
       { new: true }
     )
       .populate(['categories', 'tags'])

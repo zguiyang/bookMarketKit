@@ -38,7 +38,8 @@ const selected = ref([]);
       color="neutral"
       variant="subtle"
       class="bg-neutral-100 dark:bg-neutral-600 h-10 justify-start"
-      block>
+      block
+    >
       <u-icon name="i-lucide-search" class="size-4"></u-icon>
       <span class="text-neutral-500 dark:text-neutral-300">搜索书签、标签、关键词...</span>
     </u-button>
@@ -48,7 +49,8 @@ const selected = ref([]);
         multiple
         nullable
         label="peoples"
-        :groups="[{ id: 'peoples', commands: people }]" />
+        :groups="[{ id: 'peoples', commands: people }]"
+      />
     </template>
   </u-modal>
 </template>

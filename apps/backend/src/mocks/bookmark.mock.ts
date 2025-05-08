@@ -15,9 +15,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '搜索工具', color: '#333' },
-    ],
+    tags: [{ name: '搜索工具', color: '#333' }],
   },
   {
     url: 'https://github.com',
@@ -54,9 +52,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '问答', color: '#f48024' },
-    ],
+    tags: [{ name: '问答', color: '#f48024' }],
   },
   {
     url: 'https://www.amazon.com',
@@ -73,9 +69,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '电商', color: '#ff9900' },
-    ],
+    tags: [{ name: '电商', color: '#ff9900' }],
   },
   {
     url: 'https://www.netflix.com',
@@ -92,9 +86,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '视频', color: '#e50914' },
-    ],
+    tags: [{ name: '视频', color: '#e50914' }],
   },
   {
     url: 'https://www.facebook.com',
@@ -111,9 +103,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '社交', color: '#1877f2' },
-    ],
+    tags: [{ name: '社交', color: '#1877f2' }],
   },
   {
     url: 'https://twitter.com',
@@ -130,9 +120,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '社交', color: '#1877f2' },
-    ],
+    tags: [{ name: '社交', color: '#1877f2' }],
   },
   {
     url: 'https://www.linkedin.com',
@@ -173,9 +161,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '论坛', color: '#ff4500' },
-    ],
+    tags: [{ name: '论坛', color: '#ff4500' }],
   },
   {
     url: 'https://www.wikipedia.org',
@@ -192,9 +178,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '百科', color: '#000000' },
-    ],
+    tags: [{ name: '百科', color: '#000000' }],
   },
   {
     url: 'https://medium.com',
@@ -211,9 +195,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '阅读', color: '#000000' },
-    ],
+    tags: [{ name: '阅读', color: '#000000' }],
   },
   {
     url: 'https://www.nytimes.com',
@@ -230,9 +212,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '时事', color: '#000000' },
-    ],
+    tags: [{ name: '时事', color: '#000000' }],
   },
   {
     url: 'https://www.bbc.com',
@@ -249,9 +229,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '国际', color: '#bb1919' },
-    ],
+    tags: [{ name: '国际', color: '#bb1919' }],
   },
   {
     url: 'https://www.cnn.com',
@@ -268,9 +246,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '时事', color: '#000000' },
-    ],
+    tags: [{ name: '时事', color: '#000000' }],
   },
   {
     url: 'https://www.instagram.com',
@@ -287,9 +263,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '照片', color: '#c13584' },
-    ],
+    tags: [{ name: '照片', color: '#c13584' }],
   },
   {
     url: 'https://www.pinterest.com',
@@ -306,9 +280,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '创意', color: '#e60023' },
-    ],
+    tags: [{ name: '创意', color: '#e60023' }],
   },
   {
     url: 'https://www.twitch.tv',
@@ -345,9 +317,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '音乐流媒体', color: '#1db954' },
-    ],
+    tags: [{ name: '音乐流媒体', color: '#1db954' }],
   },
   {
     url: 'https://www.apple.com',
@@ -364,9 +334,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '硬件', color: '#555555' },
-    ],
+    tags: [{ name: '硬件', color: '#555555' }],
   },
   {
     url: 'https://www.microsoft.com',
@@ -383,9 +351,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '软件', color: '#00a4ef' },
-    ],
+    tags: [{ name: '软件', color: '#00a4ef' }],
   },
   {
     url: 'https://www.airbnb.com',
@@ -402,9 +368,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '住宿', color: '#ff5a5f' },
-    ],
+    tags: [{ name: '住宿', color: '#ff5a5f' }],
   },
   {
     url: 'https://www.booking.com',
@@ -421,9 +385,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '酒店', color: '#003580' },
-    ],
+    tags: [{ name: '酒店', color: '#003580' }],
   },
   {
     url: 'https://www.udemy.com',
@@ -440,9 +402,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '在线课程', color: '#a435f0' },
-    ],
+    tags: [{ name: '在线课程', color: '#a435f0' }],
   },
   {
     url: 'https://www.coursera.org',
@@ -459,9 +419,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '在线课程', color: '#a435f0' },
-    ],
+    tags: [{ name: '在线课程', color: '#a435f0' }],
   },
   {
     url: 'https://www.notion.so',
@@ -478,9 +436,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '笔记', color: '#000000' },
-    ],
+    tags: [{ name: '笔记', color: '#000000' }],
   },
   {
     url: 'https://trello.com',
@@ -497,9 +453,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '项目管理', color: '#0079bf' },
-    ],
+    tags: [{ name: '项目管理', color: '#0079bf' }],
   },
   {
     url: 'https://slack.com',
@@ -520,9 +474,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '沟通', color: '#4a154b' },
-    ],
+    tags: [{ name: '沟通', color: '#4a154b' }],
   },
   {
     url: 'https://www.figma.com',
@@ -539,9 +491,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: 'UI设计', color: '#0acf83' },
-    ],
+    tags: [{ name: 'UI设计', color: '#0acf83' }],
   },
   {
     url: 'https://www.canva.com',
@@ -558,9 +508,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '图形设计', color: '#00c4cc' },
-    ],
+    tags: [{ name: '图形设计', color: '#00c4cc' }],
   },
   {
     url: 'https://www.dropbox.com',
@@ -577,9 +525,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '文件共享', color: '#0061ff' },
-    ],
+    tags: [{ name: '文件共享', color: '#0061ff' }],
   },
   {
     url: 'https://www.drive.google.com',
@@ -596,9 +542,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '文件共享', color: '#0061ff' },
-    ],
+    tags: [{ name: '文件共享', color: '#0061ff' }],
   },
   {
     url: 'https://www.paypal.com',
@@ -615,9 +559,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '支付', color: '#003087' },
-    ],
+    tags: [{ name: '支付', color: '#003087' }],
   },
   {
     url: 'https://www.stripe.com',
@@ -638,9 +580,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '支付API', color: '#635bff' },
-    ],
+    tags: [{ name: '支付API', color: '#635bff' }],
   },
   {
     url: 'https://www.wordpress.org',
@@ -657,9 +597,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: 'CMS', color: '#21759b' },
-    ],
+    tags: [{ name: 'CMS', color: '#21759b' }],
   },
   {
     url: 'https://www.shopify.com',
@@ -676,9 +614,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '网店', color: '#96bf48' },
-    ],
+    tags: [{ name: '网店', color: '#96bf48' }],
   },
   {
     url: 'https://www.wix.com',
@@ -695,9 +631,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '建站工具', color: '#faad4d' },
-    ],
+    tags: [{ name: '建站工具', color: '#faad4d' }],
   },
   {
     url: 'https://www.squarespace.com',
@@ -714,9 +648,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '建站工具', color: '#faad4d' },
-    ],
+    tags: [{ name: '建站工具', color: '#faad4d' }],
   },
   {
     url: 'https://www.digitalocean.com',
@@ -733,9 +665,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '服务器', color: '#0080ff' },
-    ],
+    tags: [{ name: '服务器', color: '#0080ff' }],
   },
   {
     url: 'https://www.aws.amazon.com',
@@ -752,9 +682,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '云计算', color: '#ff9900' },
-    ],
+    tags: [{ name: '云计算', color: '#ff9900' }],
   },
   {
     url: 'https://www.azure.microsoft.com',
@@ -771,9 +699,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: 'PaaS', color: '#430098' },
-    ],
+    tags: [{ name: 'PaaS', color: '#430098' }],
   },
   {
     url: 'https://www.cloudflare.com',
@@ -790,9 +716,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: 'CDN', color: '#f48120' },
-    ],
+    tags: [{ name: 'CDN', color: '#f48120' }],
   },
   {
     url: 'https://www.vercel.com',
@@ -809,9 +733,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '部署', color: '#000000' },
-    ],
+    tags: [{ name: '部署', color: '#000000' }],
   },
   {
     url: 'https://www.netlify.com',
@@ -828,9 +750,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '部署', color: '#000000' },
-    ],
+    tags: [{ name: '部署', color: '#000000' }],
   },
   {
     url: 'https://www.heroku.com',
@@ -847,9 +767,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: 'PaaS', color: '#430098' },
-    ],
+    tags: [{ name: 'PaaS', color: '#430098' }],
   },
   {
     url: 'https://www.mongodb.com',
@@ -866,9 +784,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: 'NoSQL', color: '#13aa52' },
-    ],
+    tags: [{ name: 'NoSQL', color: '#13aa52' }],
   },
   {
     url: 'https://www.postgresql.org',
@@ -885,9 +801,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '关系型数据库', color: '#336791' },
-    ],
+    tags: [{ name: '关系型数据库', color: '#336791' }],
   },
   {
     url: 'https://www.mysql.com',
@@ -904,9 +818,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '关系型数据库', color: '#336791' },
-    ],
+    tags: [{ name: '关系型数据库', color: '#336791' }],
   },
   {
     url: 'https://www.redis.io',
@@ -923,9 +835,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '缓存', color: '#dc382d' },
-    ],
+    tags: [{ name: '缓存', color: '#dc382d' }],
   },
   {
     url: 'https://www.docker.com',
@@ -942,9 +852,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '容器化', color: '#2496ed' },
-    ],
+    tags: [{ name: '容器化', color: '#2496ed' }],
   },
   {
     url: 'https://www.kubernetes.io',
@@ -961,9 +869,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '容器编排', color: '#326ce5' },
-    ],
+    tags: [{ name: '容器编排', color: '#326ce5' }],
   },
   {
     url: 'https://www.jenkins.io',
@@ -980,9 +886,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: 'CI/CD', color: '#d33833' },
-    ],
+    tags: [{ name: 'CI/CD', color: '#d33833' }],
   },
   {
     url: 'https://www.gitlab.com',
@@ -999,9 +903,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '代码仓库', color: '#fc6d26' },
-    ],
+    tags: [{ name: '代码仓库', color: '#fc6d26' }],
   },
   {
     url: 'https://www.bitbucket.org',
@@ -1018,9 +920,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '代码仓库', color: '#fc6d26' },
-    ],
+    tags: [{ name: '代码仓库', color: '#fc6d26' }],
   },
   {
     url: 'https://www.jira.com',
@@ -1037,9 +937,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '敏捷', color: '#172b4d' },
-    ],
+    tags: [{ name: '敏捷', color: '#172b4d' }],
   },
   {
     url: 'https://www.asana.com',
@@ -1056,9 +954,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '项目管理', color: '#0079bf' },
-    ],
+    tags: [{ name: '项目管理', color: '#0079bf' }],
   },
   {
     url: 'https://www.monday.com',
@@ -1075,9 +971,7 @@ const mockBookmarks = [
       },
     ],
     // 新增 tags 属性
-    tags: [
-      { name: '项目管理', color: '#0079bf' },
-    ],
+    tags: [{ name: '项目管理', color: '#0079bf' }],
   },
 ];
 
