@@ -103,7 +103,7 @@ export const updateLastVisitTimeBodySchema = z.object({
 });
 
 export const bookmarkSearchQuerySchema = z.object({
-  keyword: z.string().min(1, { message: '搜索关键词不能为空' }),
+  keyword: z.string().optional(),
 });
 
 export const bookmarkSearchResponseSchema = z.object({

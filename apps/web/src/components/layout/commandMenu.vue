@@ -16,19 +16,46 @@ defineShortcuts({
   },
 });
 
-const people = [
-  { id: 1, label: 'Wade Cooper' },
-  { id: 2, label: 'Arlene Mccoy' },
-  { id: 3, label: 'Devon Webb' },
-  { id: 4, label: 'Tom Cook' },
-  { id: 5, label: 'Tanya Fox' },
-  { id: 6, label: 'Hellen Schmidt' },
-  { id: 7, label: 'Caroline Schultz' },
-  { id: 8, label: 'Mason Heaney' },
-  { id: 9, label: 'Claudie Smitham' },
-  { id: 10, label: 'Emil Schaefer' },
-];
-const selected = ref([]);
+const { search } = useBookmarkApi();
+const keywordRef = ref('a');
+const { data: searchResult, status } = useAsyncData('command-search', () => search({ keyword: keywordRef.value }), {
+  watch: [keywordRef],
+  transform: (res) => {
+    return res.data;
+  },
+});
+
+const commandGroups = computed(() => {
+  return [
+    {
+      label: '书签',
+      id: 'bookmarks',
+      items: searchResult.value?.bookmarks?.map((bookmark) => ({
+        id: bookmark._id,
+        label: bookmark.title,
+        to: bookmark.url,
+        target: '_blank',
+        avatar: { src: bookmark.icon },
+      })),
+    },
+    {
+      label: '分类',
+      id: 'categories',
+      items: searchResult.value?.categories?.map((cat) => ({
+        id: cat._id,
+        label: cat.name,
+      })),
+    },
+    {
+      label: '标签',
+      id: 'tags',
+      items: searchResult.value?.tags?.map((tag) => ({
+        id: tag._id,
+        label: tag.name,
+      })),
+    },
+  ];
+});
 </script>
 
 <template>
@@ -45,11 +72,10 @@ const selected = ref([]);
     </u-button>
     <template #content>
       <u-command-palette
-        v-model="selected"
-        multiple
-        nullable
-        label="peoples"
-        :groups="[{ id: 'peoples', commands: people }]"
+        v-model:search-term="keywordRef"
+        :loading="status === 'pending'"
+        :groups="commandGroups"
+        class="h-80"
       />
     </template>
   </u-modal>

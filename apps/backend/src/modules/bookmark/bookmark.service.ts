@@ -211,7 +211,15 @@ export class BookmarkService {
     return bookmark;
   }
 
-  async search(userId: string, keyword: string) {
+  async search(userId: string, keyword?: string) {
+    if (!keyword) {
+      return {
+        bookmarks: [],
+        categories: [],
+        tags: [],
+      };
+    }
+
     const [bookmarks, categories, tags] = await Promise.all([
       // 搜索书签
       BookmarkModel.find({
