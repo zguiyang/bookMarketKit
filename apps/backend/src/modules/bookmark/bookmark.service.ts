@@ -10,6 +10,7 @@ import {
   SetFavoriteBody,
   SetPinnedBody,
   BookmarkPageListQuery,
+  BookmarkPinnedEnum,
 } from '@bookmark/schemas';
 import { BookmarkModel, BookmarkCategoryModel, BookmarkTagModel, IBookmarkLean } from '@/models/bookmark/index.js';
 import { BusinessError } from '@/core/business-error';
@@ -163,7 +164,7 @@ export class BookmarkService {
   async findCollection(userId: string): Promise<BookmarkCollectionResponse> {
     const [pinnedBookmarks, recentBookmarks, recentAddedBookmarks] = await Promise.all([
       // 置顶书签
-      BookmarkModel.find({ user: userId, isPinned: true })
+      BookmarkModel.find({ user: userId, isPinned: BookmarkPinnedEnum.YES })
         .populate(['categories', 'tags'])
         .sort({ updatedAt: -1 })
         .limit(10)

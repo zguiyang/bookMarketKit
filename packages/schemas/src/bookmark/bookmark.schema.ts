@@ -102,9 +102,14 @@ export const updateLastVisitTimeBodySchema = z.object({
   id: z.string().min(1, { message: '书签ID不能为空' }),
 });
 
-// 搜索和分页Schema
-export const searchQuerySchema = z.object({
+export const bookmarkSearchQuerySchema = z.object({
   keyword: z.string().min(1, { message: '搜索关键词不能为空' }),
+});
+
+export const bookmarkSearchResponseSchema = z.object({
+  bookmarks: bookmarkListResponseSchema,
+  categories: z.array(categoryResponseSchema),
+  tags: z.array(tagResponseSchema),
 });
 
 const bookmarkPageListBaseSchema = z.object({
@@ -130,6 +135,7 @@ export type BookmarkIdParam = z.infer<typeof bookmarkIdParamSchema>;
 export type SetFavoriteBody = z.infer<typeof setFavoriteBodySchema>;
 export type SetPinnedBody = z.infer<typeof setPinnedBodySchema>;
 export type UpdateLastVisitTimeBody = z.infer<typeof updateLastVisitTimeBodySchema>;
-export type SearchQuery = z.infer<typeof searchQuerySchema>;
+export type BookmarkSearchQuery = z.infer<typeof bookmarkSearchQuerySchema>;
+export type BookmarkSearchResponse = z.infer<typeof bookmarkSearchResponseSchema>;
 export type BookmarkPageListQuery = z.infer<typeof bookmarkPageListQuerySchema>;
 export type BookmarkOrderBy = keyof typeof BookmarkOrderByEnum;

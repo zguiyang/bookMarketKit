@@ -10,7 +10,8 @@ import {
   setFavoriteBodySchema,
   setPinnedBodySchema,
   updateLastVisitTimeBodySchema,
-  searchQuerySchema,
+  bookmarkSearchQuerySchema,
+  bookmarkSearchResponseSchema,
   bookmarkPageListQuerySchema,
   bookmarkCollectionResponseSchema,
 } from '@bookmark/schemas';
@@ -95,8 +96,8 @@ export const bookmarkSchemas: {
   search: {
     tags: ['Bookmark'],
     summary: '搜索书签',
-    description: '根据关键词搜索书签，返回匹配的书签列表',
-    querystring: searchQuerySchema,
-    response: { 200: bookmarkListResponseSchema },
+    description: '根据关键词搜索，返回匹配的书签、标签',
+    querystring: bookmarkSearchQuerySchema,
+    response: { 200: bookmarkSearchResponseSchema },
   },
 };

@@ -19,7 +19,6 @@ const showAddBookmarkForm = ref(false);
 function handleAddBookmark() {
   showAddBookmarkForm.value = true;
 }
-// TODO: handleSubmitBookmark 逻辑迁移
 </script>
 
 <style scoped></style>

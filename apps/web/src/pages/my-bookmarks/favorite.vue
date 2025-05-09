@@ -17,7 +17,7 @@ const handleRefresh = () => {
 </script>
 
 <template>
-  <div class="px-4 py-6">
+  <div>
     <section class="mb-8">
       <h2 class="text-2xl font-bold mb-4">♥️ 最喜欢的</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

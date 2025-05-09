@@ -7,6 +7,7 @@ import type {
   TagListResponse,
   SetFavoriteBody,
   SetPinnedBody,
+  BookmarkSearchQuery,
 } from '@bookmark/schemas';
 
 export const useBookmarkApi = () => {
@@ -43,6 +44,22 @@ export const useBookmarkApi = () => {
     );
   };
 
+  const search = (query: BookmarkSearchQuery) => {
+    return useAsyncData(
+      'bookmarkSearch',
+      () =>
+        $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/search', {
+          method: 'GET',
+          params: query,
+        }),
+      {
+        transform: (res) => {
+          return res.data;
+        },
+      }
+    );
+  };
+
   const visited = (id: string) => {
     return $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/visit', {
       method: 'PATCH',
@@ -67,6 +84,7 @@ export const useBookmarkApi = () => {
   return {
     fetchCollection,
     fetchPageList,
+    search,
     visited,
     pinned,
     favorite,

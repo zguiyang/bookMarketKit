@@ -6,7 +6,7 @@ import {
   SetFavoriteBody,
   SetPinnedBody,
   UpdateLastVisitTimeBody,
-  SearchQuery,
+  BookmarkSearchQuery,
   BookmarkPageListQuery,
 } from '@bookmark/schemas';
 import { BookmarkService } from './bookmark.service.js';
@@ -67,7 +67,7 @@ export class BookmarkController {
     return this.bookmarkService.updateLastVisitTime(userId, req.body.id);
   }
 
-  async search(req: FastifyRequest<{ Querystring: SearchQuery }>) {
+  async search(req: FastifyRequest<{ Querystring: BookmarkSearchQuery }>) {
     const userId = req.currentUser.id;
     return this.bookmarkService.search(userId, req.query.keyword);
   }

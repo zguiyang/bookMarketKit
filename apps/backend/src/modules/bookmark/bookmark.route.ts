@@ -8,7 +8,7 @@ import {
   SetFavoriteBody,
   SetPinnedBody,
   UpdateLastVisitTimeBody,
-  SearchQuery,
+  BookmarkSearchQuery,
   BookmarkPageListQuery,
 } from '@bookmark/schemas';
 import { bookmarkSchemas } from './bookmark.schema.js';
@@ -67,7 +67,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
     handler: (req) => bookmarkController.visit(req),
   });
 
-  fastify.get<{ Querystring: SearchQuery }>('/search', {
+  fastify.get<{ Querystring: BookmarkSearchQuery }>('/search', {
     schema: bookmarkSchemas.search,
     handler: (req) => bookmarkController.search(req),
   });
