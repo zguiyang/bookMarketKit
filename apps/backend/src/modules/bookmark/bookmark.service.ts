@@ -1,5 +1,6 @@
 import { omit } from 'lodash-es';
-import { Types } from 'mongoose';
+import { Types, FilterQuery } from 'mongoose';
+import escapeStringRegexp from 'escape-string-regexp';
 import {
   BookmarkResponse,
   BookmarkListResponse,
@@ -11,14 +12,20 @@ import {
   SetPinnedBody,
   BookmarkPageListQuery,
   BookmarkPinnedEnum,
+  BookmarkSearchResponse,
 } from '@bookmark/schemas';
-import { BookmarkModel, BookmarkCategoryModel, BookmarkTagModel, IBookmarkLean } from '@/models/bookmark/index.js';
+import { BookmarkModel, IBookmarkDocument, IBookmarkLean } from '@/models/bookmark/index.js';
 import { BusinessError } from '@/core/business-error';
 import { bookmarkCodeMessages } from '@bookmark/code-definitions';
 import { getPaginateOptions } from '@/utils/query-params.util';
+import { BookmarkTagService } from './tag/bookmark.tag.service';
+import { BookmarkCategoryService } from './category/bookmark.category.service';
 
 export class BookmarkService {
-  constructor() {}
+  constructor(
+    private readonly bookmarkCategoryService: BookmarkCategoryService,
+    private readonly bookmarkTagService: BookmarkTagService
+  ) {}
 
   async create(userId: string, data: CreateBookmarkBody): Promise<BookmarkResponse> {
     const exists = await BookmarkModel.exists({
@@ -211,7 +218,7 @@ export class BookmarkService {
     return bookmark;
   }
 
-  async search(userId: string, keyword?: string) {
+  async search(userId: string, keyword?: string): Promise<BookmarkSearchResponse> {
     if (!keyword) {
       return {
         bookmarks: [],
@@ -219,32 +226,16 @@ export class BookmarkService {
         tags: [],
       };
     }
+    const query: FilterQuery<IBookmarkDocument> = { user: userId };
+    const keywordRegex = escapeStringRegexp(keyword.trim());
+    query.$or = [{ title: { $regex: keywordRegex, $options: 'i' } }];
+    const bookmarks = await BookmarkModel.find(query)
+      .populate(['categories', 'tags'])
+      .lean<IBookmarkLean[]>()
+      .limit(50);
 
-    const [bookmarks, categories, tags] = await Promise.all([
-      // 搜索书签
-      BookmarkModel.find({
-        user: userId,
-        $or: [
-          { title: { $regex: keyword, $options: 'i' } },
-          { description: { $regex: keyword, $options: 'i' } },
-          { url: { $regex: keyword, $options: 'i' } },
-        ],
-      })
-        .populate(['categories', 'tags'])
-        .lean(),
-
-      // 搜索分类
-      BookmarkCategoryModel.find({
-        user: userId,
-        $or: [{ name: { $regex: keyword, $options: 'i' } }, { description: { $regex: keyword, $options: 'i' } }],
-      }).lean(),
-
-      // 搜索标签
-      BookmarkTagModel.find({
-        user: userId,
-        name: { $regex: keyword, $options: 'i' },
-      }).lean(),
-    ]);
+    const categories = await this.bookmarkCategoryService.search(userId, keyword);
+    const tags = await this.bookmarkTagService.search(userId, keyword);
 
     return {
       bookmarks,

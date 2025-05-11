@@ -1,7 +1,13 @@
-import { BookmarkCategoryModel, IBookmarkCategoryDocument, IBookmarkCategoryLean } from '@/models/bookmark/index.js';
+import type { FilterQuery, UpdateQuery } from 'mongoose';
+import escapeStringRegexp from 'escape-string-regexp';
+import {
+  BookmarkCategoryModel,
+  IBookmarkCategoryDocument,
+  IBookmarkCategoryLean,
+  IBookmarkTagDocument,
+} from '@/models/bookmark/index.js';
 import { CreateCategoryBody, UpdateCategoryBody, CategoryResponse } from '@bookmark/schemas';
 import { omit } from 'lodash-es';
-import type { FilterQuery, UpdateQuery } from 'mongoose';
 import { BusinessError } from '@/core/business-error';
 import { bookmarkCategoryCodeMessages } from '@bookmark/code-definitions';
 
@@ -43,5 +49,14 @@ export class BookmarkCategoryService {
       throw new BusinessError(bookmarkCategoryCodeMessages.notFound);
     }
     return category;
+  }
+  async search(userId: string, keyword?: string): Promise<CategoryResponse[]> {
+    if (!keyword) {
+      return [];
+    }
+    const query: FilterQuery<IBookmarkTagDocument> = { user: userId };
+    const keywordRegex = escapeStringRegexp(keyword.trim());
+    query.$or = [{ name: { $regex: keywordRegex, $options: 'i' } }];
+    return BookmarkCategoryModel.find(query).lean<IBookmarkCategoryLean[]>().limit(50);
   }
 }

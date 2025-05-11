@@ -59,24 +59,41 @@ const commandGroups = computed(() => {
 </script>
 
 <template>
-  <u-modal>
+  <u-modal v-model:open="isOpenRef">
     <u-button
       label="搜索书签"
       color="neutral"
       variant="subtle"
+      icon="i-lucide-search"
       class="bg-neutral-100 dark:bg-neutral-600 h-10 justify-start"
       block
     >
-      <u-icon name="i-lucide-search" class="size-4"></u-icon>
       <span class="text-neutral-500 dark:text-neutral-300">搜索书签、标签、关键词...</span>
+      <u-kbd value="meta"></u-kbd>
+      <u-kbd value="K"></u-kbd>
     </u-button>
     <template #content>
       <u-command-palette
         v-model:search-term="keywordRef"
         :loading="status === 'pending'"
         :groups="commandGroups"
+        placeholder="请输入任意关键字搜索书签、标签等"
+        loading-icon="i-uiw-loading"
+        :fuse="{
+          fuseOptions: { includeMatches: true },
+          resultLimit: 50,
+        }"
         class="h-80"
-      />
+      >
+        <template #empty="{ searchTerm }">
+          <div v-if="searchTerm" class="text-center text-neutral-500 dark:text-neutral-300">
+            没有找到与 <span class="font-medium">{{ searchTerm }}</span> 相关的项
+          </div>
+          <div v-else class="text-center text-neutral-500 dark:text-neutral-300">
+            请输入关键字搜索，如：GitHub、Google等
+          </div>
+        </template>
+      </u-command-palette>
     </template>
   </u-modal>
 </template>
