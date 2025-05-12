@@ -17,6 +17,7 @@ function createErrorResponse(
   return {
     response: {
       code,
+      success: false,
       message,
       data,
     },

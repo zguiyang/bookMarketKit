@@ -1,6 +1,4 @@
-<script setup lang="ts">
-defineEmits(['add-bookmark']);
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="border-b border-b-gray-200 dark:border-b-gray-700 bg-white dark:bg-gray-900">

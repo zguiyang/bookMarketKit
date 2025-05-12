@@ -1,6 +1,15 @@
 <script setup lang="ts">
-const isOpenRef = ref(false);
+const colorMode = useColorMode();
+const isDark = computed({
+  get() {
+    return colorMode.value === 'dark';
+  },
+  set() {
+    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark';
+  },
+});
 
+const isOpenRef = ref(false);
 defineShortcuts({
   meta_k: {
     usingInput: true,
@@ -76,7 +85,23 @@ const commandGroups = computed(() => {
       <u-command-palette
         v-model:search-term="keywordRef"
         :loading="status === 'pending'"
-        :groups="commandGroups"
+        :groups="[
+          ...commandGroups,
+          {
+            label: '操作',
+            id: 'actions',
+            items: [
+              {
+                id: 'dark-mode',
+                label: '切换主题',
+                icon: isDark ? 'i-lucide-sun' : 'i-lucide-moon',
+                onSelect: () => {
+                  isDark = !isDark;
+                },
+              },
+            ],
+          },
+        ]"
         placeholder="请输入任意关键字搜索书签、标签等"
         loading-icon="i-uiw-loading"
         :fuse="{

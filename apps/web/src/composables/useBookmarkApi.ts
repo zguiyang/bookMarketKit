@@ -9,10 +9,52 @@ import type {
   SetPinnedBody,
   BookmarkSearchQuery,
   BookmarkSearchResponse,
+  BookmarkResponse,
+  CreateBookmarkBody,
+  UpdateBookmarkBody,
 } from '@bookmark/schemas';
 
 export const useBookmarkApi = () => {
   const { $api } = useNuxtApp();
+
+  const create = (body: CreateBookmarkBody) => {
+    return $api<ApiResponse<BookmarkResponse>>('/bookmark/create', {
+      method: 'POST',
+      body,
+    });
+  };
+  const update = (body: UpdateBookmarkBody) => {
+    return $api<ApiResponse<BookmarkResponse>>('/bookmark/update', {
+      method: 'PUT',
+      body,
+    });
+  };
+  const del = (id: string) => {
+    return $api<ApiResponse<BookmarkPageListResponse>>(`/bookmark/delete/${id}`, {
+      method: 'DELETE',
+    });
+  };
+
+  const visited = (id: string) => {
+    return $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/visit', {
+      method: 'PATCH',
+      body: { id },
+    });
+  };
+
+  const pinned = (body: SetPinnedBody) => {
+    return $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/pinned', {
+      method: 'PATCH',
+      body,
+    });
+  };
+
+  const favorite = (body: SetFavoriteBody) => {
+    return $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/favorite', {
+      method: 'PATCH',
+      body,
+    });
+  };
 
   const fetchCollection = () => {
     return useAsyncData(
@@ -51,34 +93,16 @@ export const useBookmarkApi = () => {
       params: query,
     });
 
-  const visited = (id: string) => {
-    return $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/visit', {
-      method: 'PATCH',
-      body: { id },
-    });
-  };
-
-  const pinned = (body: SetPinnedBody) => {
-    return $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/pinned', {
-      method: 'PATCH',
-      body,
-    });
-  };
-
-  const favorite = (body: SetFavoriteBody) => {
-    return $api<ApiResponse<BookmarkPageListResponse>>('/bookmark/favorite', {
-      method: 'PATCH',
-      body,
-    });
-  };
-
   return {
-    fetchCollection,
-    fetchPageList,
-    search,
+    create,
+    update,
+    del,
     visited,
     pinned,
     favorite,
+    fetchCollection,
+    fetchPageList,
+    search,
   };
 };
 

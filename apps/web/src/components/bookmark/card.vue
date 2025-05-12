@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BookmarkResponse } from '@bookmark/schemas';
+import type { BookmarkResponse, CreateBookmarkBody } from '@bookmark/schemas';
 import { BookmarkFavoriteEnum, BookmarkPinnedEnum } from '@bookmark/schemas';
 
 interface IProps {
@@ -13,7 +13,7 @@ const emit = defineEmits<{
 }>();
 const toast = useToast();
 
-const { visited, favorite, pinned } = useBookmarkApi();
+const { visited, favorite, pinned, create, update, del } = useBookmarkApi();
 const { copied, copy: handleCopy } = useClipboard({
   legacy: true,
 });
@@ -35,6 +35,16 @@ const handleCopyLink = async (bookmark: BookmarkResponse) => {
       color: 'error',
     });
   }
+};
+
+const postCreateBookmark = async (body: CreateBookmarkBody) => {
+  const { success, data } = await create(body);
+  if (success) {
+    console.log(data);
+  }
+};
+const handleCreateBookmark = () => {
+  // do something
 };
 
 const handleVisitedBookmark = async (bookmark: BookmarkResponse) => {

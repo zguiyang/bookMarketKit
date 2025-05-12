@@ -1,6 +1,5 @@
 import { ofetch } from 'ofetch';
 import type { ApiResponse } from '@bookmark/schemas';
-import { CodeEnums } from '@bookmark/code-definitions';
 
 export default defineNuxtPlugin(() => {
   const runtimeConfig = useRuntimeConfig();
@@ -44,7 +43,7 @@ export default defineNuxtPlugin(() => {
       const apiData = response._data as ApiResponse<any> | null;
 
       if (apiData) {
-        if (apiData.code !== CodeEnums.COMMON_SUCCESSFUL) {
+        if (!apiData.success) {
           toast.add({
             title: apiData.message,
             description: apiData.data ? JSON.stringify(apiData.data) : apiData.message,

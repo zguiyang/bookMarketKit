@@ -3,7 +3,12 @@ import type { ApiResponse } from '@bookmark/schemas';
 import { commonCodeMessages } from '@bookmark/code-definitions';
 
 function isApiResponse(obj: any): obj is Partial<ApiResponse> {
-  return obj && typeof obj === 'object' && obj !== null && ('code' in obj || 'message' in obj || 'data' in obj);
+  return (
+    obj &&
+    typeof obj === 'object' &&
+    obj !== null &&
+    ('code' in obj || 'message' in obj || 'data' in obj || 'success' in obj)
+  );
 }
 
 /**
@@ -38,6 +43,7 @@ export async function onSendHookHandler(request: FastifyRequest, reply: FastifyR
   if (isApiResponse(objPayload)) {
     const wrapped: ApiResponse = {
       code: 'code' in objPayload ? objPayload.code! : 0,
+      success: 'success' in objPayload ? objPayload.success! : true,
       message: 'message' in objPayload ? objPayload.message! : 'success',
       data: 'data' in objPayload ? objPayload.data : null,
     };
@@ -49,6 +55,7 @@ export async function onSendHookHandler(request: FastifyRequest, reply: FastifyR
 
   const wrappedPayloadObject: ApiResponse = {
     code: commonCodeMessages.success.code,
+    success: true,
     message: commonCodeMessages.success.message,
     data: objPayload,
   };

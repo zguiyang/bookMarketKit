@@ -20,6 +20,7 @@ export const PaginationDefaults = {
 export type ApiResponse<T = any> = {
   code: number | string;
   message: string;
+  success: boolean;
   data: T;
   error?: any;
 };
@@ -91,6 +92,7 @@ export function createPaginatedResponseSchema<T extends ZodTypeAny>(itemSchema: 
 export function createApiResponseSchema<T extends ZodTypeAny>(dataSchema: T) {
   return z.object({
     code: z.union([z.string(), z.number()]),
+    success: z.boolean(),
     message: z.string(),
     data: dataSchema,
     error: z.any().optional(),
