@@ -20,18 +20,15 @@ export const createCategoryBodySchema = z
     name: z.string().min(1, { message: '分类名称不能为空' }),
     description: z.string().optional(),
     icon: z.string().optional(),
-    parent: z.string().nullable().default(null),
+    parent: z.string().nullable().optional(),
   })
   .strict();
 
 export const updateCategoryBodySchema = z
   .object({
     id: z.string().min(1, { message: '分类ID不能为空' }),
-    name: z.string().optional(),
-    description: z.string().optional(),
-    icon: z.string().optional(),
-    parent: z.string().nullable().default(null),
   })
+  .merge(createCategoryBodySchema)
   .strict();
 
 // 分类ID参数Schema

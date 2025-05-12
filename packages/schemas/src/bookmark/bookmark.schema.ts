@@ -73,13 +73,8 @@ export const createBookmarkBodySchema = z
 export const updateBookmarkBodySchema = z
   .object({
     id: z.string().min(1, { message: '书签ID不能为空' }),
-    title: z.string().optional(),
-    url: z.string().url({ message: '请输入有效的URL' }).optional(),
-    description: z.string().optional(),
-    icon: z.string().optional(),
-    categoryIds: z.array(z.string()).optional(),
-    tagIds: z.array(z.string()).optional(),
   })
+  .merge(createBookmarkBodySchema)
   .strict();
 
 // 书签ID参数Schema

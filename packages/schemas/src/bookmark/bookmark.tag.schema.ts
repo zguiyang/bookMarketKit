@@ -23,9 +23,8 @@ export const createTagBodySchema = z
 export const updateTagBodySchema = z
   .object({
     id: z.string().min(1, { message: '标签ID不能为空' }),
-    name: z.string().optional(),
-    color: z.string().optional(),
   })
+  .merge(createTagBodySchema)
   .strict();
 
 // 标签ID参数Schema
