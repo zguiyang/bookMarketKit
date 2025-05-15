@@ -18,7 +18,7 @@ export default function TagsPage() {
   const [tagInfo, setTagInfo] = useState<Partial<TagResponse>>({});
 
   // 获取标签详情
-  const { onSuccess: onSuccessTagInfo } = useRequest(() => BookmarkTagApi.queryOneTag(tagId));
+  const { onSuccess: onSuccessTagInfo } = useRequest(() => BookmarkTagApi.findOne(tagId));
 
   // 获取书签列表
   const {

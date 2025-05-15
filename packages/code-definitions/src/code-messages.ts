@@ -63,6 +63,10 @@ export const authCodeMessages = {
     code: CodeEnums.AUTH_TOKEN_ERROR,
     message: 'Token错误',
   },
+  authFailed: {
+    code: CodeEnums.AUTH_FAILED,
+    message: '用户认证失败',
+  },
 } as const;
 
 export const userCodeMessages = {

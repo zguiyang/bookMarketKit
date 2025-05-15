@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { BookmarkForm, FormValues } from './bookmark-form';
+import { UpdateBookmarkBody } from '@bookmark/schemas/src';
 
 interface BookmarkCardProps {
   bookmark: BookmarkResponse;
@@ -65,9 +66,7 @@ export function BookmarkCard({ bookmark, onUpdateBookmark }: BookmarkCardProps) 
   };
 
   const handleEditSubmit = async (values: FormValues) => {
-    const { success } = await updateBookmark({
-      ...values,
-    });
+    const { success } = await updateBookmark(values as UpdateBookmarkBody);
     if (success) {
       toast.success('更新成功');
       handleUpdateBookmark();
@@ -138,7 +137,12 @@ export function BookmarkCard({ bookmark, onUpdateBookmark }: BookmarkCardProps) 
                   bookmark.isFavorite && 'text-red-500 hover:text-red-600'
                 )}
               >
-                <Heart className={cn('size-4 sm:size-3.5', bookmark.isFavorite && 'fill-current')} />
+                <Heart
+                  className={cn(
+                    'size-4 sm:size-3.5',
+                    bookmark.isFavorite === BookmarkFavoriteEnum.YES && 'fill-current'
+                  )}
+                />
               </Button>
               <Button
                 variant="ghost"
@@ -146,10 +150,10 @@ export function BookmarkCard({ bookmark, onUpdateBookmark }: BookmarkCardProps) 
                 onClick={handlePinBookmark}
                 className="size-8 sm:size-7 cursor-pointer transition-colors"
               >
-                {bookmark.isPinned ? (
+                {bookmark.isPinned === BookmarkPinnedEnum.NO ? (
                   <Pin className="size-4 sm:size-3.5 fill-current" />
                 ) : (
-                  <PinOff className="size-4 sm:size-3.5" />
+                  <PinOff className="size-4 sm:size-3.5 fill-current" />
                 )}
               </Button>
 

@@ -4,14 +4,7 @@ import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Heart, Sparkle, Bookmark as BookmarkIcon, MoreHorizontal, Pencil, Trash2, Plus } from 'lucide-react';
 import { BookmarkTagApi, BookmarkCategoryApi } from '@/api';
-import {
-  TagResponse,
-  CategoryResponse,
-  CreateCategoryBody,
-  CreateTagBody,
-  UpdateTagBody,
-  UpdateCategoryBody,
-} from '@bookmark/schemas';
+import { TagResponse, CategoryResponse, CreateCategoryBody, CreateTagBody, UpdateTagBody } from '@bookmark/schemas';
 import { UserMenu } from './user-menu';
 import { toast } from 'sonner';
 import {
@@ -26,6 +19,7 @@ import { CategoryFormDialog } from '@/components/category/category-form-dialog';
 import { TagFormDialog } from '@/components/tag/tag-form-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useBookmarkData } from '@/hooks/bookmark-data';
+import { cn } from '@/lib/utils';
 
 // 视图选择组件
 function ViewSection() {
@@ -48,7 +42,7 @@ function ViewSection() {
         <button
           onClick={() => handleViewClick()}
           className={`flex items-center w-full p-2 rounded-lg text-sm cursor-pointer ${
-            pathname === '/my-bookmarks'
+            pathname === '/bookmarks'
               ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
               : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
           }`}
@@ -59,7 +53,7 @@ function ViewSection() {
         <button
           onClick={() => handleViewClick('all')}
           className={`flex items-center w-full p-2 rounded-lg text-sm cursor-pointer ${
-            pathname === '/my-bookmarks/all'
+            pathname === '/bookmarks/all'
               ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
               : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
           }`}
@@ -71,7 +65,7 @@ function ViewSection() {
         <button
           onClick={() => handleViewClick('favorite')}
           className={`flex items-center w-full p-2 rounded-lg text-sm cursor-pointer ${
-            pathname === '/my-bookmarks/favorite'
+            pathname === '/bookmarks/favorite'
               ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
               : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
           }`}
@@ -308,21 +302,22 @@ function TagSection() {
       ) : (
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => {
-            const tagStyle = tag.color
-              ? {
-                  color: '#FFFFFF',
-                  opacity: 0.9,
-                }
-              : undefined;
-
             return (
               <ContextMenu key={tag._id}>
                 <ContextMenuTrigger>
                   <span
-                    style={tagStyle}
-                    className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${
-                      !tag.color ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' : `${tag.color}`
-                    } cursor-pointer transition-colors duration-200 hover:opacity-100`}
+                    style={
+                      {
+                        '--tag-color': tag.color || '',
+                      } as React.CSSProperties
+                    }
+                    className={cn(
+                      'inline-flex items-center px-2 py-1 rounded-md text-xs font-medium',
+                      'cursor-pointer transition-colors duration-200 hover:opacity-100',
+                      !tag.color
+                        ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                        : `bg-[var(--tag-color)] text-white`
+                    )}
                     onClick={() => handleTagClick(tag)}
                   >
                     # {tag.name}
