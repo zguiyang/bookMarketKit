@@ -28,9 +28,9 @@ function ViewSection() {
 
   const handleViewClick = (view?: string) => {
     if (view) {
-      router.push(`/my-bookmarks/${view}`);
+      router.push(`/bookmarks/${view}`);
     } else {
-      router.push('/my-bookmarks');
+      router.push('/bookmarks');
     }
   };
 
@@ -90,7 +90,7 @@ function CategorySection() {
   const { categories, setCategories, categoriesLoading } = useBookmarkData();
 
   const handleCategoryClick = (category: CategoryResponse) => {
-    router.push(`/my-bookmarks/category/${category._id}`);
+    router.push(`/bookmarks/category/${category._id}`);
   };
 
   const handleAddCategory = async (params: CreateCategoryBody) => {
@@ -159,7 +159,7 @@ function CategorySection() {
         <div className="text-center py-4 text-gray-500 dark:text-gray-400">暂无分类</div>
       ) : (
         categories.map((category) => {
-          const categoryPath = `/my-bookmarks/category/${category._id}`;
+          const categoryPath = `/bookmarks/category/${category._id}`;
           const isActive = pathname === categoryPath;
 
           return (
@@ -238,7 +238,7 @@ function TagSection() {
   const { tags, setTags, tagsLoading } = useBookmarkData();
 
   const handleTagClick = (tag: TagResponse) => {
-    router.push(`/my-bookmarks/tag/${encodeURIComponent(tag._id)}`);
+    router.push(`/bookmarks/tag/${encodeURIComponent(tag._id)}`);
   };
 
   const handleAddTag = async (values: CreateTagBody) => {

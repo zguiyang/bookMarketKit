@@ -54,7 +54,7 @@ export default function RegisterPage() {
       },
       {
         onSuccess() {
-          router.replace('/auth/login');
+          router.replace('/auth/sign-in');
         },
       }
     );
@@ -226,7 +226,7 @@ export default function RegisterPage() {
 
       <p className="text-center text-sm text-muted-foreground">
         已有账号？{' '}
-        <Link href="/auth/login" className="font-medium text-primary hover:text-primary/90 hover:underline">
+        <Link href="/auth/sign-in" className="font-medium text-primary hover:text-primary/90 hover:underline">
           立即登录
         </Link>
       </p>

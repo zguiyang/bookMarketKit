@@ -36,18 +36,13 @@ export default function LoginPage() {
         {
           email: data.email,
           password: data.password,
-          callbackURL: '/bookmarks',
         },
         {
-          onSuccess: (res) => {
-            console.log('登录成功', res);
+          onSuccess: () => {
+            router.push('/bookmarks');
           },
         }
       );
-      // if (res.success) {
-      //   setAuthToken(res.data);
-      //   router.push('/my-bookmarks');
-      // }
     } catch (error) {
       console.error(error);
     } finally {
@@ -116,7 +111,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-muted-foreground">
           还没有账号？{' '}
-          <Link href="/auth/register" className="font-medium text-primary hover:text-primary/80">
+          <Link href="/auth/sign-up" className="font-medium text-primary hover:text-primary/80">
             立即注册
           </Link>
         </p>

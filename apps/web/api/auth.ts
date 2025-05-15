@@ -13,7 +13,7 @@ class Auth {
   }
 
   login(data: any) {
-    return request.Post<ApiResponse<string>>('/auth/login', data);
+    return request.Post<ApiResponse<string>>('/auth/sign-in', data);
   }
 
   logout() {

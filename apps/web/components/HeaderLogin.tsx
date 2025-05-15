@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
 import { useAuthStore } from '@/store/auth.store';
@@ -10,8 +10,11 @@ export default function HeaderLogin() {
   if (!authToken) {
     return (
       <>
-        <Link href="/auth/login">
-          <Button variant="outline" className="h-9 px-3 text-sm sm:h-10 sm:px-6 sm:text-base rounded-lg border-2 border-primary text-primary font-bold transition-all duration-200 hover:bg-primary/10 hover:text-primary-700 shadow-none cursor-pointer">
+        <Link href="/auth/sign-in">
+          <Button
+            variant="outline"
+            className="h-9 px-3 text-sm sm:h-10 sm:px-6 sm:text-base rounded-lg border-2 border-primary text-primary font-bold transition-all duration-200 hover:bg-primary/10 hover:text-primary-700 shadow-none cursor-pointer"
+          >
             登录
           </Button>
         </Link>
@@ -24,10 +27,13 @@ export default function HeaderLogin() {
     );
   }
   return (
-    <Link href="/my-bookmarks">
-      <Button variant="outline" className="h-9 px-3 text-sm sm:h-10 sm:px-6 sm:text-base rounded-lg border-2 border-primary text-primary font-bold transition-all duration-200 hover:bg-primary/10 hover:text-primary-700 shadow-none cursor-pointer">
+    <Link href="/bookmarks">
+      <Button
+        variant="outline"
+        className="h-9 px-3 text-sm sm:h-10 sm:px-6 sm:text-base rounded-lg border-2 border-primary text-primary font-bold transition-all duration-200 hover:bg-primary/10 hover:text-primary-700 shadow-none cursor-pointer"
+      >
         进入工作台
       </Button>
     </Link>
   );
-} 
+}

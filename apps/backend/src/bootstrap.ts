@@ -86,7 +86,7 @@ async function bootstrap() {
 
   await app.register(sensiblePlugin);
 
-  // register project plugins
+  // sign-up project plugins
   await app.register(envPlugin); // must be registered first
   await app.register(DBPlugin);
   await app.register(redisPlugin);
