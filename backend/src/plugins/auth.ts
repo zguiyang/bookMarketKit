@@ -5,14 +5,7 @@ import { fromNodeHeaders } from 'better-auth/node';
 import { auth } from '@bookmark/auth';
 
 export default fp(async (fastify) => {
-  // fastify.decorateRequest('currentUser', {
-  //   getter() {
-  //     return this._currentUser;
-  //   },
-  //   setter(value: SessionUser) {
-  //     this._currentUser = value;
-  //   },
-  // });
+  fastify.decorateRequest('currentUser', null);
 
   fastify.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
     if (request.url.startsWith('/auth')) {
@@ -29,9 +22,7 @@ export default fp(async (fastify) => {
       });
     }
 
-    // TODO: 需要通过fastify推荐方式添加
     request.currentUser = authSession.user;
-    console.log(request.currentUser);
   });
 
   if (fastify.auth) {
