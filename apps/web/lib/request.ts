@@ -11,9 +11,10 @@ const alovaInstance = createAlova({
   timeout: 60000,
   cacheFor: null,
   statesHook: reactHook,
+
   requestAdapter: axiosRequestAdapter(),
   beforeRequest(method) {
-    method.config.headers.Authorization = `Bearer 123`;
+    method.config.withCredentials = true;
   },
   responded: {
     onSuccess(response: AxiosResponse) {

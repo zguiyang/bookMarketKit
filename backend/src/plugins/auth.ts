@@ -29,7 +29,9 @@ export default fp(async (fastify) => {
       });
     }
 
-    // request.currentUser = authSession.user;
+    // TODO: 需要通过fastify推荐方式添加
+    request.currentUser = authSession.user;
+    console.log(request.currentUser);
   });
 
   if (fastify.auth) {
