@@ -1,21 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@bookmark/code-definitions",
-  "version": "1.0.0",
-  "description": "前后端共享的错误码、消息、常量定义包",
-  "main": "dist/index.mjs",
-  "types": "dist/index.d.mts",
-  "scripts": {
-    "build": "tsup"
-  },
-  "keywords": [
-    "shared",
-    "codes",
-    "constants",
-    "enums"
-  ],
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {},
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "tsup": "^8.4.0"
-  }
+  "license": "ISC"
 }

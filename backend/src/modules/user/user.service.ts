@@ -1,0 +1,45 @@
+import { omit } from 'lodash-es';
+import { CreateUserBody, UserResponse } from '@bookmark/schemas';
+import { UserModel, IUserLean } from '@/models/user.model';
+import { hashPassword } from '@/utils/bcrypt';
+import { BusinessError } from '@/core/business-error';
+import { userCodeMessages } from '@bookmark/code-definitions';
+
+export class UserService {
+  constructor() {}
+
+  async create(userData: CreateUserBody): Promise<UserResponse> {
+    const existingUser = await this.getByUsernameOrEmail({
+      username: userData.username,
+      email: userData.email,
+    });
+    if (existingUser) {
+      throw new BusinessError(userCodeMessages.existedUser);
+    }
+    const user = await UserModel.create({
+      ...userData,
+      password: await hashPassword(userData.password),
+    });
+    const userJson = user.toJSON<UserResponse>();
+    return omit(userJson, 'password');
+  }
+
+  async getAll(): Promise<UserResponse[]> {
+    return await UserModel.find({}, { password: 0 }).lean<IUserLean[]>();
+  }
+
+  async getByUsernameOrEmail({ username, email }: { username?: string; email?: string }): Promise<IUserLean | null> {
+    return UserModel.findOne({
+      $or: [{ username }, { email }],
+    }).lean<IUserLean>();
+  }
+
+  async getById(id: string): Promise<UserResponse> {
+    const user = await UserModel.findById({ _id: id }, { password: 0 }).lean<IUserLean>();
+
+    if (!user) {
+      throw new BusinessError(userCodeMessages.notFoundUser);
+    }
+    return user;
+  }
+}
