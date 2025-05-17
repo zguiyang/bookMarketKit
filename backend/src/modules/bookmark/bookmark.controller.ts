@@ -8,6 +8,7 @@ import {
   UpdateLastVisitTimeBody,
   BookmarkSearchQuery,
   BookmarkPageListQuery,
+  BookmarkImportBody,
 } from '@bookmark/schemas';
 import { BookmarkService } from './bookmark.service';
 
@@ -70,5 +71,10 @@ export class BookmarkController {
   async search(req: FastifyRequest<{ Querystring: BookmarkSearchQuery }>) {
     const userId = req.currentUser.id;
     return this.bookmarkService.search(userId, req.query.keyword);
+  }
+
+  async import(req: FastifyRequest<{ Body: BookmarkImportBody }>) {
+    const userId = req.currentUser.id;
+    return this.bookmarkService.import(userId, req.body);
   }
 }

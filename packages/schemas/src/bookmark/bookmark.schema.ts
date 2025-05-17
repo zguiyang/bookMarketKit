@@ -3,9 +3,9 @@ import {
   createPaginatedRequestSchema,
   createPaginatedResponseSchema,
   PaginationDirectionEnum,
-} from '../common/response.schema';
-import { categoryResponseSchema } from './bookmark.category.schema';
-import { tagResponseSchema } from './bookmark.tag.schema';
+} from '../response.schema.js';
+import { categoryResponseSchema } from './bookmark.category.schema.js';
+import { tagResponseSchema } from './bookmark.tag.schema.js';
 
 // 书签排序字段枚举
 export const BookmarkOrderByEnum = {
@@ -119,6 +119,10 @@ const bookmarkPageListBaseSchema = z.object({
 
 export const bookmarkPageListQuerySchema = createPaginatedRequestSchema(bookmarkPageListBaseSchema);
 
+export const bookmarkImportBodySchema = z.object({
+  filePath: z.string(),
+});
+
 // 类型导出
 export type BookmarkResponse = z.infer<typeof bookmarkResponseSchema>;
 export type BookmarkListResponse = z.infer<typeof bookmarkListResponseSchema>;
@@ -134,3 +138,5 @@ export type BookmarkSearchQuery = z.infer<typeof bookmarkSearchQuerySchema>;
 export type BookmarkSearchResponse = z.infer<typeof bookmarkSearchResponseSchema>;
 export type BookmarkPageListQuery = z.infer<typeof bookmarkPageListQuerySchema>;
 export type BookmarkOrderBy = keyof typeof BookmarkOrderByEnum;
+
+export type BookmarkImportBody = z.infer<typeof bookmarkImportBodySchema>;

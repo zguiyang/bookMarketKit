@@ -141,3 +141,31 @@ export const bookmarkCategoryCodeMessages = {
     message: '删除分类失败',
   },
 };
+
+// 上传相关错误码
+export const uploadCodeMessages = {
+  fileNotFound: {
+    code: CodeEnums.UPLOAD_FILE_NOT_FOUND,
+    message: '文件不存在',
+  },
+  fileTypeError: {
+    code: CodeEnums.UPLOAD_FILE_TYPE_ERROR,
+    message: '文件类型错误',
+  },
+  fileTooLarge: {
+    code: CodeEnums.UPLOAD_FILE_TOO_LARGE,
+    message: '文件大小超出限制',
+  },
+  fileNotAllowed: {
+    code: CodeEnums.UPLOAD_FILE_NOT_ALLOWED,
+    message: '文件类型不允许',
+  },
+  fileDeleteError: {
+    code: CodeEnums.UPLOAD_FILE_DELETE_ERROR,
+    message: '文件删除失败',
+  },
+  error: {
+    code: CodeEnums.UPLOAD_ERROR,
+    message: '上传失败',
+  },
+};

@@ -12,6 +12,7 @@ import {
   UpdateLastVisitTimeBody,
   BookmarkSearchQuery,
   BookmarkPageListQuery,
+  BookmarkImportBody,
 } from '@bookmark/schemas';
 import { bookmarkSchemas } from './bookmark.schema';
 
@@ -74,5 +75,10 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   fastify.get<{ Querystring: BookmarkSearchQuery }>('/search', {
     schema: bookmarkSchemas.search,
     handler: (req) => bookmarkController.search(req),
+  });
+
+  fastify.post<{ Body: BookmarkImportBody }>('/import', {
+    schema: bookmarkSchemas.import,
+    handler: (req) => bookmarkController.import(req),
   });
 }

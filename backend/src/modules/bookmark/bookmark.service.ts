@@ -13,11 +13,13 @@ import {
   BookmarkPageListQuery,
   BookmarkPinnedEnum,
   BookmarkSearchResponse,
+  BookmarkImportBody,
 } from '@bookmark/schemas';
 import { BookmarkModel, IBookmarkDocument, IBookmarkLean } from '@/models/bookmark';
 import { BusinessError } from '@/core/business-error';
 import { bookmarkCodeMessages } from '@bookmark/code-definitions';
 import { getPaginateOptions } from '@/utils/query-params.util';
+import { parseHtmlBookmarks } from '@/core/bookmarkParser';
 import { BookmarkTagService } from './tag/bookmark.tag.service';
 import { BookmarkCategoryService } from './category/bookmark.category.service';
 
@@ -251,5 +253,77 @@ export class BookmarkService {
       categories,
       tags,
     };
+  }
+
+  async import(userId: string, data: BookmarkImportBody) {
+    const { bookmarks, categories } = await parseHtmlBookmarks(data.filePath);
+
+    // 导入结果统计
+    const result = {
+      totalCategories: categories.length,
+      totalBookmarks: bookmarks.length,
+      importedCategories: 0,
+      importedBookmarks: 0,
+      errors: [] as string[],
+    };
+
+    const categoryNameToIdMap = new Map<string, string>();
+
+    const sortedCategories = [...categories].sort((a, b) => {
+      if (!a.parent) return -1;
+      if (!b.parent) return 1;
+      return 0;
+    });
+
+    // 创建分类
+    for (const category of sortedCategories) {
+      try {
+        let parentId = null;
+        if (category.parent && categoryNameToIdMap.has(category.parent)) {
+          parentId = categoryNameToIdMap.get(category.parent) || null;
+        }
+
+        const createdCategory = await this.bookmarkCategoryService.create(userId, {
+          name: category.name,
+          parent: parentId,
+        });
+
+        categoryNameToIdMap.set(category.name, createdCategory._id);
+
+        result.importedCategories++;
+      } catch (error: any) {
+        result.errors.push(`导入分类 "${category.name}" 失败: ${error.message}`);
+      }
+    }
+
+    for (const bookmark of bookmarks) {
+      try {
+        const categoryIds: string[] = [];
+        if (bookmark.categoryPath.length > 0) {
+          const categoryName = bookmark.categoryPath[bookmark.categoryPath.length - 1];
+          if (categoryNameToIdMap.has(categoryName)) {
+            const categoryId = categoryNameToIdMap.get(categoryName);
+            if (categoryId) {
+              categoryIds.push(categoryId);
+            }
+          }
+        }
+
+        // 调用已有服务创建书签
+        await this.create(userId, {
+          title: bookmark.title,
+          url: bookmark.url,
+          icon: `${bookmark.url}/favicon.ico`,
+          categoryIds,
+          tagIds: [],
+        });
+
+        result.importedBookmarks++;
+      } catch (error: any) {
+        result.errors.push(`导入书签 "${bookmark.title}" 失败: ${error.message}`);
+      }
+    }
+
+    return result;
   }
 }

@@ -14,6 +14,7 @@ import {
   bookmarkSearchResponseSchema,
   bookmarkPageListQuerySchema,
   bookmarkCollectionResponseSchema,
+  bookmarkImportBodySchema,
 } from '@bookmark/schemas';
 
 export const bookmarkSchemas: {
@@ -99,5 +100,12 @@ export const bookmarkSchemas: {
     description: '根据关键词搜索，返回匹配的书签、标签',
     querystring: bookmarkSearchQuerySchema,
     response: { 200: bookmarkSearchResponseSchema },
+  },
+  import: {
+    tags: ['Bookmark'],
+    summary: '导入书签',
+    description: '导入书签',
+    body: bookmarkImportBodySchema,
+    response: { 200: z.any({}) },
   },
 };

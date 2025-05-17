@@ -12,6 +12,7 @@ import DBPlugin from './plugins/db';
 import redisPlugin from './plugins/redis';
 import swaggerPlugin from './plugins/swagger';
 import authPlugin from './plugins/auth';
+import multipartPlugin from './plugins/multipart';
 
 import errorHandler from './middlewares/error-handler';
 import notFoundHandler from './middlewares/not-found-handler';
@@ -92,6 +93,7 @@ async function bootstrap() {
   await app.register(redisPlugin);
   await app.register(authPlugin);
   await app.register(swaggerPlugin);
+  await app.register(multipartPlugin);
 
   // 自动加载 modules 目录下的路由
   await app.register(autoload, {
