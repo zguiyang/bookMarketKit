@@ -42,12 +42,13 @@ export class BookmarkCategoryService {
     return BookmarkCategoryModel.find({ user: userId }).lean<IBookmarkCategoryLean[]>();
   }
 
-  async findOne(userId: string, id: string): Promise<CategoryResponse> {
+  async findOne(userId: string, id: string): Promise<CategoryResponse | null> {
     const category = await BookmarkCategoryModel.findOne({ _id: id, user: userId }).lean<IBookmarkCategoryLean>();
+    return category;
+  }
 
-    if (!category) {
-      throw new BusinessError(bookmarkCategoryCodeMessages.notFound);
-    }
+  async findByFields(userId: string, query: FilterQuery<IBookmarkCategoryDocument>): Promise<CategoryResponse | null> {
+    const category = await BookmarkCategoryModel.findOne(query).lean<IBookmarkCategoryLean>();
     return category;
   }
   async search(userId: string, keyword?: string): Promise<CategoryResponse[]> {

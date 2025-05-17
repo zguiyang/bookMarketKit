@@ -122,14 +122,15 @@ export class BookmarkService {
     return bookmarks;
   }
 
-  async findOne(userId: string, id: string): Promise<BookmarkResponse> {
+  async findOne(userId: string, id: string): Promise<BookmarkResponse | null> {
     const bookmark = await BookmarkModel.findOne({ _id: id, user: userId })
       .populate(['categories', 'tags'])
       .lean<IBookmarkLean>();
+    return bookmark;
+  }
 
-    if (!bookmark) {
-      throw new BusinessError(bookmarkCodeMessages.notFound);
-    }
+  async findByFields(userId: string, query: FilterQuery<IBookmarkDocument>): Promise<BookmarkResponse | null> {
+    const bookmark = await BookmarkModel.findOne(query).lean<IBookmarkLean>();
     return bookmark;
   }
 
@@ -155,7 +156,6 @@ export class BookmarkService {
       filter.tags = new Types.ObjectId(tagId);
     }
 
-    // 分页与排序参数
     const { page, pageSize, skip, sort } = getPaginateOptions(query);
 
     // 查询总数
@@ -277,6 +277,14 @@ export class BookmarkService {
 
     // 创建分类
     for (const category of sortedCategories) {
+      const exists = await this.bookmarkCategoryService.findByFields(userId, {
+        name: category.name,
+      });
+      if (exists) {
+        categoryNameToIdMap.set(category.name, exists._id);
+        continue;
+      }
+
       try {
         let parentId = null;
         if (category.parent && categoryNameToIdMap.has(category.parent)) {
@@ -297,6 +305,13 @@ export class BookmarkService {
     }
 
     for (const bookmark of bookmarks) {
+      const { title, url } = bookmark;
+      const existingBookmark = await this.findByFields(userId, {
+        $or: [{ title }, { url }],
+      });
+      if (existingBookmark) {
+        continue;
+      }
       try {
         const categoryIds: string[] = [];
         if (bookmark.categoryPath.length > 0) {
@@ -311,7 +326,7 @@ export class BookmarkService {
 
         // 调用已有服务创建书签
         await this.create(userId, {
-          title: bookmark.title,
+          title: bookmark.title || bookmark.url,
           url: bookmark.url,
           icon: `${bookmark.url}/favicon.ico`,
           categoryIds,
@@ -320,7 +335,7 @@ export class BookmarkService {
 
         result.importedBookmarks++;
       } catch (error: any) {
-        result.errors.push(`导入书签 "${bookmark.title}" 失败: ${error.message}`);
+        result.errors.push(`导入书签 "${bookmark.title}, ${bookmark.url}" 失败: ${error.message}`);
       }
     }
 

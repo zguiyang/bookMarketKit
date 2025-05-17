@@ -44,6 +44,6 @@ export const categorySchemas: {
     summary: '获取分类详情',
     description: '根据ID获取分类详情',
     params: categoryIdParamSchema,
-    response: { 200: categoryResponseSchema },
+    response: { 200: categoryResponseSchema.nullable() },
   },
 };

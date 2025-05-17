@@ -1,10 +1,14 @@
 import * as path from 'path';
 
+export const STATIC_DIR_NAME = 'static';
+
+export const TEMP_DIR_NAME = 'temp';
+
 // 文件存储根目录
-export const STATIC_ROOT_DIR = path.join(process.cwd(), 'statics');
+export const STATIC_ROOT_DIR = path.join(process.cwd(), STATIC_DIR_NAME);
 
 // 临时文件目录
-export const TEMP_DIR = path.join(STATIC_ROOT_DIR, 'temp');
+export const TEMP_DIR = path.join(STATIC_ROOT_DIR, TEMP_DIR_NAME);
 
 // 文件上传配置
 export const UPLOAD_CONFIG = {

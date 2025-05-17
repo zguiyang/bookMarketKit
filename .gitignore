@@ -187,3 +187,6 @@ docker-compose.yaml
 
 # trae
 .trae/
+
+# backend
+/backend/static

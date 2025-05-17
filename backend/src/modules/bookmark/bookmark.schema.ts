@@ -67,7 +67,7 @@ export const bookmarkSchemas: {
     summary: '获取书签详情',
     description: '根据ID获取书签详情',
     params: bookmarkIdParamSchema,
-    response: { 200: bookmarkResponseSchema },
+    response: { 200: bookmarkResponseSchema.nullable() },
   },
   pageList: {
     tags: ['Bookmark'],

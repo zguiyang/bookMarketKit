@@ -4,7 +4,6 @@ import * as path from 'path';
 import * as mime from 'mime-types';
 import { MultipartFile } from '@fastify/multipart';
 import * as uploadCfg from '@/config/upload.config';
-import { STATIC_ROOT_DIR } from '@/config/upload.config';
 
 /**
  * 确保目录存在
