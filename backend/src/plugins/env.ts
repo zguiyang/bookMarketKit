@@ -3,6 +3,10 @@ import type { FastifyInstance } from 'fastify';
 import env from '@/lib/env';
 
 export default fp(async (fastify: FastifyInstance) => {
+  if (fastify.env) {
+    return;
+  }
+
   try {
     fastify.decorate('env', env);
     fastify.log.info('Load env plugin success');

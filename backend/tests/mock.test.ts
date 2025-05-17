@@ -1,10 +1,31 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { app, bootstrap } from '@/bootstrap';
+import { assign } from 'lodash-es';
 import { mockBookmarks, mockCategories, mockTags } from '@/mocks/bookmark.mock';
 
 describe('生成书签mock数据', () => {
+  let authCookies: { [p: string]: string };
   beforeAll(async () => {
     await bootstrap();
+    const loginRes = await app.inject({
+      url: '/auth/sign-in/email',
+      method: 'POST',
+      body: {
+        email: '2770723534@qq.com',
+        password: 'Aa123456',
+      },
+    });
+    // 确保登录成功
+    expect(loginRes.cookies.length > 0).toBe(true);
+
+    const { name, value, ...restCookies } = loginRes.cookies[0];
+    authCookies = assign(
+      {},
+      {
+        [name]: value,
+      },
+      restCookies
+    );
   });
 
   afterAll(async () => {
@@ -23,6 +44,7 @@ describe('生成书签mock数据', () => {
             name: category.name,
             icon: category.icon,
           },
+          cookies: authCookies,
         });
         const newCategory = res.json().data;
         return {
@@ -43,6 +65,7 @@ describe('生成书签mock数据', () => {
             name: tag.name,
             color: tag.color,
           },
+          cookies: authCookies,
         });
         const newTag = res.json().data;
         return {
@@ -78,6 +101,7 @@ describe('生成书签mock数据', () => {
             categoryIds: categoryIds,
             tagIds: tagIds,
           },
+          cookies: authCookies,
         })
       );
     }

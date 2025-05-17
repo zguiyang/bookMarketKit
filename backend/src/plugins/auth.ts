@@ -1,14 +1,17 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import type { SessionUser } from '@bookmark/auth';
+
+import { FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
 import { fromNodeHeaders } from 'better-auth/node';
-// import type { SessionUser } from '@bookmark/auth';
 import { auth } from '@bookmark/auth';
+import { authCodeMessages } from '@bookmark/code-definitions';
+import { BusinessError } from '@/core/business-error';
 
 export default fp(async (fastify) => {
-  fastify.decorateRequest('currentUser', null);
+  fastify.decorateRequest<SessionUser | null>('currentUser', null);
 
-  fastify.addHook('onRequest', async (request: FastifyRequest, reply: FastifyReply) => {
-    if (request.url.startsWith('/auth')) {
+  fastify.addHook('onRequest', async (request: FastifyRequest) => {
+    if (request.url.startsWith('/auth') || request.url.startsWith('/docs')) {
       // 验证路由不需要验证
       return;
     }
@@ -17,9 +20,7 @@ export default fp(async (fastify) => {
     });
 
     if (!authSession) {
-      return reply.code(401).send({
-        message: 'Unauthorized',
-      });
+      throw new BusinessError(authCodeMessages.expired);
     }
 
     request.currentUser = authSession.user;

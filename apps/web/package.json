@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@alova/adapter-axios": "^2.0.13",
+    "@bookmark/auth": "workspace:^",
     "@bookmark/code-definitions": "workspace:^",
     "@bookmark/schemas": "workspace:^",
     "@emoji-mart/data": "^1.2.1",

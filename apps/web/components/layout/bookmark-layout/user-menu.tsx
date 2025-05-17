@@ -3,6 +3,7 @@
 import { ChevronDown, LogOut, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import {
   DropdownMenu,
@@ -18,6 +19,7 @@ import { authClient } from '@/lib/auth-client';
 
 export function UserMenu() {
   const { setTheme, resolvedTheme } = useTheme();
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [userInfo, setUserInfo] = useState<Partial<SessionUser>>({});
   useEffect(() => {
@@ -35,7 +37,7 @@ export function UserMenu() {
   const handleLogout = async () => {
     const res = await authClient.signOut();
     if (res.data?.success) {
-      console.log('Logout successful');
+      router.replace('/auth/sign-in');
     }
   };
 

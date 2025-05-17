@@ -3,6 +3,7 @@ import reactHook from 'alova/react';
 import { axiosRequestAdapter } from '@alova/adapter-axios';
 import type { AxiosResponse, AxiosError } from 'axios';
 import type { ApiResponse } from '@bookmark/schemas';
+import { CodeEnums } from '@bookmark/code-definitions';
 
 import { toast } from 'sonner';
 
@@ -26,8 +27,15 @@ const alovaInstance = createAlova({
       }
       return responseData;
     },
-    onError(error: AxiosError) {
+    onError(error: AxiosError<ApiResponse>) {
       console.error('An error occurred', error);
+      const responseData = error.response?.data;
+      if (responseData) {
+        if (responseData.code === CodeEnums.AUTH_LOGIN_EXPIRED) {
+          toast.error('登录已过期，请重新登录');
+          window.location.href = '/auth/sign-in';
+        }
+      }
     },
   },
 });

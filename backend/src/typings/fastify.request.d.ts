@@ -1,8 +1,7 @@
-import { User } from '../interfaces/user';
+import type { SessionUser } from '@bookmark/auth';
 
 declare module 'fastify' {
   interface FastifyRequest {
-    currentUser: User;
-    _currentUser?: User;
+    currentUser: SessionUser;
   }
 }

@@ -1,4 +1,4 @@
-import { CodeEnums } from './code-enums.js';
+import { CodeEnums } from './code-enums';
 
 export const commonCodeMessages = {
   success: { code: CodeEnums.COMMON_SUCCESSFUL, message: '操作成功' },
@@ -51,17 +51,13 @@ export const authCodeMessages = {
     code: CodeEnums.AUTH_EMAIL_CODE_TOO_FREQUENT,
     message: '发送太频繁，请稍后再试',
   },
-  notFoundToken: {
-    code: CodeEnums.AUTH_NOT_FOUND_TOKEN,
-    message: '未找到Token',
+  notFound: {
+    code: CodeEnums.AUTH_NOT_FOUND,
+    message: '登录凭证不存在',
   },
-  tokenExpired: {
-    code: CodeEnums.AUTH_TOKEN_EXPIRED,
-    message: 'Token已过期',
-  },
-  tokenError: {
-    code: CodeEnums.AUTH_TOKEN_ERROR,
-    message: 'Token错误',
+  expired: {
+    code: CodeEnums.AUTH_LOGIN_EXPIRED,
+    message: '登录凭证失效',
   },
   authFailed: {
     code: CodeEnums.AUTH_FAILED,

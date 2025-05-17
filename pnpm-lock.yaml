@@ -29,6 +29,9 @@ importers:
       '@alova/adapter-axios':
         specifier: ^2.0.13
         version: 2.0.13(alova@3.2.10)(axios@1.9.0)
+      '@bookmark/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@bookmark/code-definitions':
         specifier: workspace:^
         version: link:../../packages/code-definitions

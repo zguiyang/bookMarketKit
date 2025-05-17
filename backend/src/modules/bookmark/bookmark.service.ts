@@ -29,7 +29,16 @@ export class BookmarkService {
 
   async create(userId: string, data: CreateBookmarkBody): Promise<BookmarkResponse> {
     const exists = await BookmarkModel.exists({
-      url: { $or: [{ url: data.url }, { title: data.title }] },
+      $or: [
+        {
+          title: data.title,
+          user: userId,
+        },
+        {
+          url: data.url,
+          user: userId,
+        },
+      ],
       user: userId,
     });
     if (exists) {
