@@ -1,6 +1,8 @@
 import Redis from 'ioredis';
 import env from './env';
 
+console.log(env);
+
 const { REDIS_URL, REDIS_DB } = env;
 
 const url = new URL(REDIS_URL || 'redis://localhost:6379');

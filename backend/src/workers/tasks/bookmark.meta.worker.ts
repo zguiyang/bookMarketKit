@@ -5,11 +5,12 @@ import { BookmarkModel } from '@/models/bookmark/bookmark.model';
 import { fetchWebsiteMetadata } from '@/utils/meta-scraper';
 import redisClient from '@/lib/redis-client';
 
+// TODO: 解决worker中mongodb 连接问题
 const TASK_NAME = `${Queue.queueName}:${Queue.bookmark.fetchMeta}`;
 class BookmarkMetaWorker extends BaseWorker {
   protected async start(): Promise<void> {
     this.log('info', 'Bookmark fetch worker started');
-    this.startQueueListener();
+    // this.startQueueListener();
   }
 
   /**
@@ -20,7 +21,7 @@ class BookmarkMetaWorker extends BaseWorker {
 
     while (true) {
       try {
-        const result = await redisClient.brpop(TASK_NAME, 2);
+        const result = await redisClient.brpop(TASK_NAME, 3);
 
         if (result) {
           const [_, messageStr] = result;
@@ -38,7 +39,7 @@ class BookmarkMetaWorker extends BaseWorker {
       } catch (error) {
         console.error(`[Worker] Redis 队列监听错误:`, error);
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 3000));
       }
     }
   }
