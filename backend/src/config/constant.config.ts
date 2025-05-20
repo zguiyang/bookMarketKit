@@ -1,6 +1,6 @@
 export const Queue = {
-  queueName: 'Queue_Tasks',
+  queueName: 'queue_tasks',
   bookmark: {
-    fetchMeta: 'Bookmark_FetchMeta',
+    fetchMeta: 'bookmark_fetchMeta',
   },
 } as const;

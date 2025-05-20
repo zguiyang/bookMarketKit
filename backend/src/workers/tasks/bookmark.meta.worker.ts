@@ -5,8 +5,8 @@ import { BookmarkModel } from '@/models/bookmark/bookmark.model';
 import { fetchWebsiteMetadata } from '@/utils/meta-scraper';
 import redisClient from '@/lib/redis-client';
 
+const TASK_NAME = `${Queue.queueName}:${Queue.bookmark.fetchMeta}`;
 class BookmarkMetaWorker extends BaseWorker {
-  QueueTaskName = `${Queue.queueName}:${Queue.bookmark.fetchMeta}`;
   protected async start(): Promise<void> {
     this.log('info', 'Bookmark fetch worker started');
     this.startQueueListener();
@@ -16,11 +16,11 @@ class BookmarkMetaWorker extends BaseWorker {
    * 开始监听队列
    */
   protected async startQueueListener() {
-    console.log(`[Worker] 开始监听队列: ${this.QueueTaskName}`);
+    console.log(`[Worker] 开始监听队列: ${TASK_NAME}`);
 
     while (true) {
       try {
-        const result = await redisClient.brpop(this.QueueTaskName, 2);
+        const result = await redisClient.brpop(TASK_NAME, 2);
 
         if (result) {
           const [_, messageStr] = result;
