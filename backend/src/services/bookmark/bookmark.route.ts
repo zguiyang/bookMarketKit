@@ -1,8 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { BookmarkTagService } from './tag/bookmark.tag.service';
-import { BookmarkCategoryService } from './category/bookmark.category.service';
 import { BookmarkController } from './bookmark.controller';
-import { BookmarkService } from './bookmark.service';
 import {
   CreateBookmarkBody,
   UpdateBookmarkBody,
@@ -15,11 +12,16 @@ import {
   BookmarkImportBody,
 } from '@bookmark/schemas';
 import { bookmarkSchemas } from './bookmark.schema';
+import { BookmarkTagService } from './tag/bookmark.tag.service';
+import { BookmarkCategoryService } from './category/bookmark.category.service';
+import { BookmarkService } from './bookmark.service';
 
 export default async function bookmarkRoutes(fastify: FastifyInstance) {
-  const bookmarkCategoryService = new BookmarkCategoryService();
-  const bookmarkTagService = new BookmarkTagService();
-  const bookmarkService = new BookmarkService(bookmarkCategoryService, bookmarkTagService);
+  const bookmarkService = new BookmarkService(
+    new BookmarkCategoryService(),
+    new BookmarkTagService(),
+    fastify.services.queueService
+  );
   const bookmarkController = new BookmarkController(bookmarkService);
 
   fastify.post<{ Body: CreateBookmarkBody }>('/create', {

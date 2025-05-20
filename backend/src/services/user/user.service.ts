@@ -2,7 +2,7 @@ import { omit } from 'lodash-es';
 import { CreateUserBody, UserResponse } from '@bookmark/schemas';
 import { UserModel, IUserLean } from '@/models/user.model';
 import { hashPassword } from '@/utils/bcrypt';
-import { BusinessError } from '@/core/business-error';
+import { BusinessError } from '@/lib/business-error';
 import { userCodeMessages } from '@bookmark/code-definitions';
 
 export class UserService {

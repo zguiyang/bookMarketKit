@@ -1,6 +1,6 @@
 import * as fs from 'fs/promises';
 import * as cheerio from 'cheerio';
-import { getFileUrl } from '@/utils/file.util';
+import { getFileUrl } from '@/utils/file';
 
 // 简化的数据结构
 interface SimpleBookmark {

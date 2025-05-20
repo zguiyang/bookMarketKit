@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { UserController } from '@/modules/user/user.controller';
-import { UserService } from '@/modules/user/user.service';
+import { UserController } from '@/services/user/user.controller';
+import { UserService } from '@/services/user/user.service';
 import type { FastifyRequest } from 'fastify';
 import type { CreateUserBody, UserIdParam } from '@bookmark/schemas';
 

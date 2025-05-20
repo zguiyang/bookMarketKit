@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, Db } from 'mongodb';
 import { betterAuth } from 'better-auth';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 
@@ -6,8 +6,6 @@ import env from './env';
 
 const client = new MongoClient(env.DATABASE_URI);
 const db = client.db();
-
-console.log('WEB_URL', process.env.WEB_URL, env.WEB_URL);
 
 export const auth = betterAuth({
   database: mongodbAdapter(db),

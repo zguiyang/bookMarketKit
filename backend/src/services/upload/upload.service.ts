@@ -3,9 +3,9 @@ import { MultipartFile } from '@fastify/multipart';
 import * as path from 'path';
 import { UploadResponse, UploadAddBody, UploadStatusEnum } from '@bookmark/schemas';
 import { uploadCodeMessages } from '@bookmark/code-definitions';
-import { BusinessError } from '@/core/business-error';
+import { BusinessError } from '@/lib/business-error';
 import { UploadModel } from '@/models/upload.model';
-import * as fileUtil from '@/utils/file.util';
+import * as fileUtil from '@/utils/file';
 import * as uploadCfg from '@/config/upload.config';
 
 export class UploadService {

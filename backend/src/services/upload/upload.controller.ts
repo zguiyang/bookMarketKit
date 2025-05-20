@@ -1,7 +1,7 @@
 import { FastifyRequest } from 'fastify';
 import { UploadAddBody, UploadResponse } from '@bookmark/schemas';
 import { uploadCodeMessages } from '@bookmark/code-definitions';
-import { BusinessError } from '@/core/business-error';
+import { BusinessError } from '@/lib/business-error';
 
 import { UploadService } from './upload.service';
 

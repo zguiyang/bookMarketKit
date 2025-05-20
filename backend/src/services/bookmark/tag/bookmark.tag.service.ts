@@ -3,7 +3,7 @@ import escapeStringRegexp from 'escape-string-regexp';
 import { BookmarkTagModel, IBookmarkTagDocument, IBookmarkTagLean } from '@/models/bookmark';
 import { CreateTagBody, UpdateTagBody, TagResponse } from '@bookmark/schemas';
 import { omit } from 'lodash-es';
-import { BusinessError } from '@/core/business-error';
+import { BusinessError } from '@/lib/business-error';
 import { bookmarkTagCodeMessages } from '@bookmark/code-definitions';
 
 export class BookmarkTagService {

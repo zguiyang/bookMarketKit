@@ -8,7 +8,7 @@ import {
 } from '@/models/bookmark';
 import { CreateCategoryBody, UpdateCategoryBody, CategoryResponse } from '@bookmark/schemas';
 import { omit } from 'lodash-es';
-import { BusinessError } from '@/core/business-error';
+import { BusinessError } from '@/lib/business-error';
 import { bookmarkCategoryCodeMessages } from '@bookmark/code-definitions';
 
 export class BookmarkCategoryService {

@@ -12,22 +12,49 @@ import {
   SetPinnedBody,
   BookmarkPageListQuery,
   BookmarkPinnedEnum,
+  BookmarkMetaFetchStatusEnum,
   BookmarkSearchResponse,
   BookmarkImportBody,
 } from '@bookmark/schemas';
+import { Queue } from '@/config/constant.config';
 import { BookmarkModel, IBookmarkDocument, IBookmarkLean } from '@/models/bookmark';
-import { BusinessError } from '@/core/business-error';
+import { BusinessError } from '@/lib/business-error';
 import { bookmarkCodeMessages } from '@bookmark/code-definitions';
-import { getPaginateOptions } from '@/utils/query-params.util';
-import { parseHtmlBookmarks } from '@/core/bookmarkParser';
+import { getPaginateOptions } from '@/utils/query-params';
+import { parseHtmlBookmarks } from '@/utils/bookmark-parser';
+import { fetchWebsiteMetadata } from '@/utils/meta-scraper';
+import { QueueService } from '@/services/queue/queue.service';
 import { BookmarkTagService } from './tag/bookmark.tag.service';
 import { BookmarkCategoryService } from './category/bookmark.category.service';
+import { BookmarkFetchTask } from '@/interfaces/queue';
 
 export class BookmarkService {
   constructor(
-    private readonly bookmarkCategoryService: BookmarkCategoryService,
-    private readonly bookmarkTagService: BookmarkTagService
+    private readonly categoryService: BookmarkCategoryService,
+    private readonly tagService: BookmarkTagService,
+    private readonly queueService: QueueService
   ) {}
+
+  async processMetaFetch(data: { userId: string; id: string; url: string }) {
+    try {
+      const websiteMetadata = await fetchWebsiteMetadata(data.url);
+      return this.update(data.userId, {
+        id: data.id,
+        url: data.url,
+        title: websiteMetadata.title,
+        metaFetchStatus: BookmarkMetaFetchStatusEnum.SUCCESS,
+        description: websiteMetadata.description,
+        icon: websiteMetadata.logo,
+      });
+    } catch (err: any) {
+      console.error(err);
+      return this.update(data.userId, {
+        id: data.id,
+        url: data.url,
+        metaFetchStatus: BookmarkMetaFetchStatusEnum.FAILED,
+      });
+    }
+  }
 
   async create(userId: string, data: CreateBookmarkBody): Promise<BookmarkResponse> {
     const exists = await BookmarkModel.exists({
@@ -47,12 +74,26 @@ export class BookmarkService {
       throw new BusinessError(bookmarkCodeMessages.existed);
     }
 
+    // const websiteMetadata = await fetchWebsiteMetadata(data.url);
+    // console.log('抓取的网页信息', websiteMetadata);
+
     const bookmark = await BookmarkModel.create({
       ...data,
       user: userId,
       categories: data.categoryIds || [],
       tags: data.tagIds || [],
     });
+
+    console.log('创建成功~~~');
+
+    await this.queueService.addTask<BookmarkFetchTask>(Queue.bookmark.fetchMeta, {
+      id: bookmark._id.toString(),
+      url: data.url,
+      userId,
+    });
+
+    console.log('创建成功返回~~~');
+
     return bookmark.toJSON<BookmarkResponse>();
   }
 
@@ -245,8 +286,8 @@ export class BookmarkService {
       .lean<IBookmarkLean[]>()
       .limit(50);
 
-    const categories = await this.bookmarkCategoryService.search(userId, keyword);
-    const tags = await this.bookmarkTagService.search(userId, keyword);
+    const categories = await this.categoryService.search(userId, keyword);
+    const tags = await this.tagService.search(userId, keyword);
 
     return {
       bookmarks,
@@ -277,7 +318,7 @@ export class BookmarkService {
 
     // 创建分类
     for (const category of sortedCategories) {
-      const exists = await this.bookmarkCategoryService.findByFields(userId, {
+      const exists = await this.categoryService.findByFields(userId, {
         name: category.name,
       });
       if (exists) {
@@ -291,7 +332,7 @@ export class BookmarkService {
           parentId = categoryNameToIdMap.get(category.parent) || null;
         }
 
-        const createdCategory = await this.bookmarkCategoryService.create(userId, {
+        const createdCategory = await this.categoryService.create(userId, {
           name: category.name,
           parent: parentId,
         });
@@ -324,7 +365,6 @@ export class BookmarkService {
           }
         }
 
-        // 调用已有服务创建书签
         await this.create(userId, {
           title: bookmark.title || bookmark.url,
           url: bookmark.url,

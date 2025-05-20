@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { UserService } from '@/modules/user/user.service';
+import { UserService } from '@/services/user/user.service';
 import { UserModel } from '@/models/user.model';
 
 describe('UserService', () => {

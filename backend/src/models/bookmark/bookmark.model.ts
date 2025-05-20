@@ -1,7 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
 import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin';
 import { commonTransform } from '@/shared/mongoose/common-transform';
-import { BookmarkResponse, BookmarkFavoriteEnum, BookmarkPinnedEnum } from '@bookmark/schemas';
+import {
+  BookmarkResponse,
+  BookmarkFavoriteEnum,
+  BookmarkPinnedEnum,
+  BookmarkMetaFetchStatusEnum,
+} from '@bookmark/schemas';
 import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type';
 
 // Mongoose 文档类型
@@ -14,8 +19,8 @@ const BookmarkSchema = new Schema<IBookmarkDocument>(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     url: { type: String, required: true },
-    icon: { type: String, required: true },
-    title: { type: String, required: true },
+    icon: { type: String, required: false, default: '' },
+    title: { type: String, required: false, default: '' },
     description: { type: String },
     visitCount: { type: Number, default: 0 },
     isFavorite: {
@@ -27,6 +32,15 @@ const BookmarkSchema = new Schema<IBookmarkDocument>(
       type: String,
       enum: [BookmarkPinnedEnum.YES, BookmarkPinnedEnum.NO],
       default: BookmarkPinnedEnum.NO,
+    },
+    metaFetchStatus: {
+      type: String,
+      enum: [
+        BookmarkMetaFetchStatusEnum.PENDING,
+        BookmarkMetaFetchStatusEnum.SUCCESS,
+        BookmarkMetaFetchStatusEnum.FAILED,
+      ],
+      default: BookmarkMetaFetchStatusEnum.PENDING,
     },
     screenshotUrl: { type: String },
     lastVisitedAt: { type: Date },
