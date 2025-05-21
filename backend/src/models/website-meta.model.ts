@@ -15,12 +15,15 @@ const WebsiteMetaSchema = new Schema<IWebsiteMetaDocument>(
       ref: 'Bookmark',
       required: true,
     },
-    title: { type: String },
-    description: { type: String },
-    image: { type: String },
-    logo: { type: String },
-    fetchTime: { type: Number },
-    parseTime: { type: Number },
+    ogsResult: {
+      type: String,
+    },
+    ogsResponse: {
+      type: String,
+    },
+    ogsHtml: {
+      type: String,
+    },
     error: { type: String },
     fetchStatus: {
       type: String,

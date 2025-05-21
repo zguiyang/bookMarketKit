@@ -8,12 +8,9 @@ export const WebsiteMetaFetchEnums = {
 export const websiteMetaSchema = z.object({
   url: z.string(),
   bookmark: z.string(),
-  title: z.string().optional(),
-  description: z.string().optional(),
-  image: z.string().optional(),
-  logo: z.string().optional(),
-  fetchTime: z.number().optional(),
-  parseTime: z.number().optional(),
+  ogsResult: z.string().optional(),
+  ogsResponse: z.string().optional(),
+  ogsHtml: z.string().optional(),
   error: z.string().optional(),
   fetchStatus: z.enum([WebsiteMetaFetchEnums.SUCCESS, WebsiteMetaFetchEnums.FAILED]).nullable(),
 });

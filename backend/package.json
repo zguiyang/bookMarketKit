@@ -46,6 +46,7 @@
     "mime-types": "^3.0.1",
     "mongoose": "^8.14.0",
     "normalize-url": "^5.3.1",
+    "open-graph-scraper": "^6.10.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {
