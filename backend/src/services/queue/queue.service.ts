@@ -31,18 +31,24 @@ export class QueueService {
   private getQueueName(taskName: string): string {
     return `${this.queuePrefix}:${taskName}`;
   }
-
   /**
    * 添加任务到队列
    * @param taskName 任务名称
    * @param task 任务数据
+   * @param ttl 可选，队列的过期时间（秒）
    * @returns 添加后的队列长度
    */
-  async addTask<T = Record<string, any>>(taskName: string, task: T): Promise<number> {
+  async addTask<T = Record<string, any>>(taskName: string, task: T, ttl?: number): Promise<number> {
     try {
       const queueName = this.getQueueName(taskName);
       const taskString = JSON.stringify(task);
       const length = await this.redis.lpush(queueName, taskString);
+
+      // 如果设置了TTL，则为这个队列设置过期时间
+      if (typeof ttl === 'number' && ttl > 0) {
+        await this.redis.expire(queueName, ttl);
+      }
+
       return length;
     } catch (error) {
       this.logger.error(`Error adding task to queue ${taskName}: ${error}`);

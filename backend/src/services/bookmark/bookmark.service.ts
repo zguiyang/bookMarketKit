@@ -12,7 +12,6 @@ import {
   SetPinnedBody,
   BookmarkPageListQuery,
   BookmarkPinnedEnum,
-  BookmarkMetaFetchStatusEnum,
   BookmarkSearchResponse,
   BookmarkImportBody,
 } from '@bookmark/schemas';
@@ -22,7 +21,6 @@ import { BusinessError } from '@/lib/business-error';
 import { bookmarkCodeMessages } from '@bookmark/code-definitions';
 import { getPaginateOptions } from '@/utils/query-params';
 import { parseHtmlBookmarks } from '@/utils/bookmark-parser';
-import { fetchWebsiteMetadata } from '@/utils/meta-scraper';
 import { QueueService } from '@/services/queue/queue.service';
 import { BookmarkTagService } from './tag/bookmark.tag.service';
 import { BookmarkCategoryService } from './category/bookmark.category.service';
@@ -34,27 +32,6 @@ export class BookmarkService {
     private readonly tagService: BookmarkTagService,
     private readonly queueService: QueueService
   ) {}
-
-  async processMetaFetch(data: { userId: string; id: string; url: string }) {
-    try {
-      const websiteMetadata = await fetchWebsiteMetadata(data.url);
-      return this.update(data.userId, {
-        id: data.id,
-        url: data.url,
-        title: websiteMetadata.title,
-        metaFetchStatus: BookmarkMetaFetchStatusEnum.SUCCESS,
-        description: websiteMetadata.description,
-        icon: websiteMetadata.logo,
-      });
-    } catch (err: any) {
-      console.error(err);
-      return this.update(data.userId, {
-        id: data.id,
-        url: data.url,
-        metaFetchStatus: BookmarkMetaFetchStatusEnum.FAILED,
-      });
-    }
-  }
 
   async create(userId: string, data: CreateBookmarkBody): Promise<BookmarkResponse> {
     const exists = await BookmarkModel.exists({
@@ -74,9 +51,6 @@ export class BookmarkService {
       throw new BusinessError(bookmarkCodeMessages.existed);
     }
 
-    // const websiteMetadata = await fetchWebsiteMetadata(data.url);
-    // console.log('抓取的网页信息', websiteMetadata);
-
     const bookmark = await BookmarkModel.create({
       ...data,
       user: userId,
@@ -84,15 +58,15 @@ export class BookmarkService {
       tags: data.tagIds || [],
     });
 
-    console.log('创建成功~~~');
-
-    await this.queueService.addTask<BookmarkFetchTask>(Queue.bookmark.fetchMeta, {
-      id: bookmark._id.toString(),
-      url: data.url,
-      userId,
-    });
-
-    console.log('创建成功返回~~~');
+    await this.queueService.addTask<BookmarkFetchTask>(
+      Queue.bookmark.fetchMeta,
+      {
+        id: bookmark._id.toString(),
+        url: data.url,
+        userId,
+      },
+      60 * 60 * 12 // 12 hours expire
+    );
 
     return bookmark.toJSON<BookmarkResponse>();
   }

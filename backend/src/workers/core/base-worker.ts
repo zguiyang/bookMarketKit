@@ -1,17 +1,19 @@
 import { parentPort } from 'worker_threads';
+import Logger from '@/utils/logger';
 
 export abstract class BaseWorker {
   private running = true;
+  public logger = Logger;
 
   constructor() {
     // 设置消息处理
     parentPort?.on('message', (message) => {
       if (message === 'shutdown') {
-        this.log('info', 'Received shutdown signal');
+        this.logger.info('Received shutdown signal');
         this.shutdown()
           .then(() => process.exit(0))
           .catch((err) => {
-            this.log('error', `Error during shutdown: ${err}`);
+            this.logger.error(`Error during shutdown: ${err}`);
             process.exit(1);
           });
       }
@@ -23,24 +25,16 @@ export abstract class BaseWorker {
 
     // 启动worker
     this.start().catch((err) => {
-      this.log('error', `Fatal error: ${err}`);
+      this.logger.error(`Fatal error: ${err}`);
       process.exit(1);
     });
   }
-
-  protected log(level: 'info' | 'warn' | 'error', msg: string): void {
-    parentPort?.postMessage({ type: 'log', level, msg });
-
-    // 同时输出到控制台（便于调试）
-    console[level](`[${this.constructor.name}] ${msg}`);
-  }
-
   protected isRunning(): boolean {
     return this.running;
   }
 
   private async handleExit(): Promise<void> {
-    this.log('info', 'Process signal received, shutting down...');
+    this.logger.info('Process signal received, shutting down...');
     await this.shutdown();
     process.exit(0);
   }

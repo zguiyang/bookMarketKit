@@ -6,7 +6,6 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
 
-import env from './lib/env';
 import envPlugin from './plugins/env';
 import DBPlugin from './plugins/db';
 import redisPlugin from './plugins/redis';
@@ -24,25 +23,8 @@ import { onSendHookHandler } from './hooks/response-hook';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const envToLogger = {
-  development: {
-    level: 'trace',
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        translateTime: 'HH:MM:ss Z',
-        ignore: 'pid,hostname',
-      },
-    },
-  },
-  production: true,
-  test: false,
-};
-
-const NODE_ENV = env.NODE_ENV;
-
 const app = Fastify({
-  logger: envToLogger[NODE_ENV as keyof typeof envToLogger] ?? true,
+  logger: true,
   ajv: {
     customOptions: {
       coerceTypes: false, // 禁用ajv的类型转换, 使用zod的类型转换
