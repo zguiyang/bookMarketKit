@@ -14,12 +14,14 @@ import {
 import { bookmarkSchemas } from './bookmark.schema';
 import { BookmarkTagService } from './tag/bookmark.tag.service';
 import { BookmarkCategoryService } from './category/bookmark.category.service';
+import { WebsiteMetaService } from '../website/website-meta.service';
 import { BookmarkService } from './bookmark.service';
 
 export default async function bookmarkRoutes(fastify: FastifyInstance) {
   const bookmarkService = new BookmarkService(
     new BookmarkCategoryService(),
     new BookmarkTagService(),
+    new WebsiteMetaService(),
     fastify.services.queueService
   );
   const bookmarkController = new BookmarkController(bookmarkService);

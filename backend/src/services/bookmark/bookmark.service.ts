@@ -25,12 +25,14 @@ import { parseHtmlBookmarks } from '@/lib/bookmark-parser';
 import { QueueService } from '@/services/queue/queue.service';
 import { BookmarkTagService } from './tag/bookmark.tag.service';
 import { BookmarkCategoryService } from './category/bookmark.category.service';
+import { WebsiteMetaService } from '@/services/website/website-meta.service';
 import { BookmarkFetchTask } from '@/interfaces/queue';
 
 export class BookmarkService {
   constructor(
     private readonly categoryService: BookmarkCategoryService,
     private readonly tagService: BookmarkTagService,
+    private readonly websiteMetaService: WebsiteMetaService,
     private readonly queueService: QueueService
   ) {}
 
@@ -63,10 +65,16 @@ export class BookmarkService {
       tags: data.tagIds || [],
     });
 
+    const newMeta = await this.websiteMetaService.create({
+      url: data.url,
+      bookmarkId: bookmark._id.toString(),
+    });
+
     await this.queueService.addTask<BookmarkFetchTask>(
       Queue.bookmark.fetchMeta,
       {
-        id: bookmark._id.toString(),
+        bookmarkId: bookmark._id.toString(),
+        metaId: newMeta._id.toString(),
         url: data.url,
         userId,
       },

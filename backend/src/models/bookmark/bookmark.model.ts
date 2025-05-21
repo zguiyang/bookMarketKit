@@ -1,16 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
 import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin';
 import { commonTransform } from '@/shared/mongoose/common-transform';
-import {
-  BookmarkResponse,
-  BookmarkFavoriteEnum,
-  BookmarkPinnedEnum,
-  BookmarkMetaFetchStatusEnum,
-} from '@bookmark/schemas';
+import { BookmarkResponse, BookmarkFavoriteEnum, BookmarkPinnedEnum } from '@bookmark/schemas';
 import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type';
 
 // Mongoose 文档类型
-export type IBookmarkDocument = CreateDocument<BookmarkResponse, 'user' | 'categories' | 'tags'>;
+export type IBookmarkDocument = CreateDocument<BookmarkResponse, 'user' | 'categories' | 'tags' | 'meta'>;
 
 // Lean 查询结果类型
 export type IBookmarkLean = CreateLeanDocument<BookmarkResponse>;
@@ -33,14 +28,10 @@ const BookmarkSchema = new Schema<IBookmarkDocument>(
       enum: [BookmarkPinnedEnum.YES, BookmarkPinnedEnum.NO],
       default: BookmarkPinnedEnum.NO,
     },
-    metaFetchStatus: {
-      type: String,
-      enum: [
-        BookmarkMetaFetchStatusEnum.PENDING,
-        BookmarkMetaFetchStatusEnum.SUCCESS,
-        BookmarkMetaFetchStatusEnum.FAILED,
-      ],
-      default: BookmarkMetaFetchStatusEnum.PENDING,
+    meta: {
+      type: Schema.Types.ObjectId,
+      ref: 'WebsiteMeta',
+      default: null,
     },
     screenshotUrl: { type: String },
     lastVisitedAt: { type: Date },

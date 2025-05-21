@@ -258,37 +258,19 @@ importers:
       metascraper:
         specifier: ^5.46.15
         version: 5.46.15
-      metascraper-audio:
-        specifier: ^5.46.15
-        version: 5.46.15
-      metascraper-author:
-        specifier: ^5.46.15
-        version: 5.46.15
-      metascraper-date:
-        specifier: ^5.46.15
-        version: 5.46.15
       metascraper-description:
         specifier: ^5.46.15
         version: 5.46.15
       metascraper-image:
         specifier: ^5.46.15
         version: 5.46.15
-      metascraper-lang:
-        specifier: ^5.46.15
-        version: 5.46.15
       metascraper-logo-favicon:
-        specifier: ^5.46.15
-        version: 5.46.15
-      metascraper-publisher:
         specifier: ^5.46.15
         version: 5.46.15
       metascraper-title:
         specifier: ^5.46.15
         version: 5.46.15
       metascraper-url:
-        specifier: ^5.46.15
-        version: 5.46.15
-      metascraper-video:
         specifier: ^5.46.15
         version: 5.46.15
       mime-types:
@@ -3556,18 +3538,6 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  metascraper-audio@5.46.15:
-    resolution: {integrity: sha512-6s1C2FwTAE5jdUnhVf4u5N3NtR3Ql2irh4tTM8dpjEai3G8wRAc1GEttVf0iO/dw18Mbu2CTq/DPP7P9CpuxKw==}
-    engines: {node: '>= 16'}
-
-  metascraper-author@5.46.15:
-    resolution: {integrity: sha512-mHTsAOJ8uWpapOpvb7m9RbzLvButUWJysijXqgRFwSzofMD3dvoOZwQTEeRTgj+MqS/CP5AgR9/6O+IaN1tWNA==}
-    engines: {node: '>= 16'}
-
-  metascraper-date@5.46.15:
-    resolution: {integrity: sha512-t824QYqdddAidCMECfUwu965EkOH1vOqnIB9JupIHcdvGhCTONmAfDbnJNOckulUZyLepL0hP7UfdQ9Q5UjNPQ==}
-    engines: {node: '>= 16'}
-
   metascraper-description@5.46.15:
     resolution: {integrity: sha512-t8x3nJapZPJYCwboPF5yYoRf9BKjUIzUN7LD8F64MQSXkhcXjjfgNYmV+T9PwgI2jdnTnL6Ht/8tQBF+wGVUjw==}
     engines: {node: '>= 16'}
@@ -3576,16 +3546,8 @@ packages:
     resolution: {integrity: sha512-2XYUNYH3JfcnYO7/uDLMLx7XUVZ3IqwWa34HL2Pjtvd4OHOBhr4pueMFt5V1Dh+jD4OKuRMqsACEkqY2g+sCJw==}
     engines: {node: '>= 16'}
 
-  metascraper-lang@5.46.15:
-    resolution: {integrity: sha512-MDi9XtSRZbublJPL1F1LRcWUZdK8vYVdLY/BemiYbwtcl9jPewa8H9A2UrGjyoztSonA+UPGpHNTvXKxunttGQ==}
-    engines: {node: '>= 16'}
-
   metascraper-logo-favicon@5.46.15:
     resolution: {integrity: sha512-YWw8jwDS8plu2K7dIO6A8itxBMRTFaygBtAs3eYqqot+pl/PtXtDR4mTt1B6dpmbH0xI8g42wkcjhPCEn+6YEw==}
-    engines: {node: '>= 16'}
-
-  metascraper-publisher@5.46.15:
-    resolution: {integrity: sha512-i54kpQlky30cODacpJ1igmnDXqjQdQrNf54IPsym/igfQhq7VNeGvwJBj0ZYkK16g5gIOC7nmLlcAhaNQoEaKA==}
     engines: {node: '>= 16'}
 
   metascraper-title@5.46.15:
@@ -3594,10 +3556,6 @@ packages:
 
   metascraper-url@5.46.15:
     resolution: {integrity: sha512-N2APfSNf+1S16akYoAF/u4hJ8HGG0j0nH31UkLXmQZ3+EX/e8Zekrs9iZVnczSN5e0dRtNPe8t8oB6i0LpBs7w==}
-    engines: {node: '>= 16'}
-
-  metascraper-video@5.46.15:
-    resolution: {integrity: sha512-NTO+dSKUUOIqeyqhEpZ7jC1+w56tf4U2okoj9IqiSP6uGSe21UzJ+2IYK6jUjepfu+RoXGViBVaxO6NbmiM4nQ==}
     engines: {node: '>= 16'}
 
   metascraper@5.46.15:
@@ -8363,35 +8321,6 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  metascraper-audio@5.46.15:
-    dependencies:
-      '@metascraper/helpers': 5.46.15
-      lodash: 4.17.21
-      p-reflect: 2.1.0
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
-
-  metascraper-author@5.46.15:
-    dependencies:
-      '@metascraper/helpers': 5.46.15
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
-
-  metascraper-date@5.46.15:
-    dependencies:
-      '@metascraper/helpers': 5.46.15
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
-
   metascraper-description@5.46.15:
     dependencies:
       '@metascraper/helpers': 5.46.15
@@ -8402,15 +8331,6 @@ snapshots:
       - utf-8-validate
 
   metascraper-image@5.46.15:
-    dependencies:
-      '@metascraper/helpers': 5.46.15
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
-
-  metascraper-lang@5.46.15:
     dependencies:
       '@metascraper/helpers': 5.46.15
     transitivePeerDependencies:
@@ -8431,15 +8351,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  metascraper-publisher@5.46.15:
-    dependencies:
-      '@metascraper/helpers': 5.46.15
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
-
   metascraper-title@5.46.15:
     dependencies:
       '@metascraper/helpers': 5.46.15
@@ -8452,17 +8363,6 @@ snapshots:
   metascraper-url@5.46.15:
     dependencies:
       '@metascraper/helpers': 5.46.15
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
-
-  metascraper-video@5.46.15:
-    dependencies:
-      '@metascraper/helpers': 5.46.15
-      lodash: 4.17.21
-      p-reflect: 2.1.0
     transitivePeerDependencies:
       - bufferutil
       - canvas

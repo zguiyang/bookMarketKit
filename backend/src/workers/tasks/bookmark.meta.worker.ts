@@ -1,9 +1,10 @@
-import { BookmarkMetaFetchStatusEnum } from '@bookmark/schemas';
+import { WebsiteMetaFetchEnums } from '@bookmark/schemas';
 import { Queue } from '@/config/constant.config';
 import { BookmarkFetchTask } from '@/interfaces/queue';
 import { BookmarkModel } from '@/models/bookmark/bookmark.model';
+import { WebsiteMetaModel } from '@/models/website-meta.model';
 import { fetchWebsiteMetadata } from '@/lib/meta-scraper';
-import { getMongoConnection } from '@/lib/mongo-connection';
+import { getMongoConnection, closeMongoConnection } from '@/lib/mongo-connection';
 import redisClient from '@/lib/redis-client';
 import { BaseWorker } from '../core/base-worker';
 
@@ -21,9 +22,9 @@ class BookmarkMetaWorker extends BaseWorker {
   protected async startQueueListener() {
     this.logger.info(`[Worker] 开始监听队列: ${TASK_NAME}`);
 
-    while (true) {
+    while (this.isRunning()) {
       try {
-        const result = await redisClient.brpop(TASK_NAME, 3);
+        const result = await redisClient.brpop(TASK_NAME, 2);
 
         if (result) {
           const [_, messageStr] = result;
@@ -39,37 +40,62 @@ class BookmarkMetaWorker extends BaseWorker {
       } catch (error) {
         this.logger.error(`[Worker] Redis 队列监听错误:`, error);
 
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        // await new Promise((resolve) => setTimeout(resolve, 3000));
       }
     }
   }
 
   protected async processTask(task: BookmarkFetchTask): Promise<void> {
     // TODO: 需实现错误补偿任务
-    const { userId, id, url } = task;
-    const bookmark = await BookmarkModel.findOne({ user: userId, _id: id });
-    if (bookmark) {
-      const meta = await fetchWebsiteMetadata(url).catch((err) => {
+    const { userId, bookmarkId, metaId, url } = task;
+    const bookmark = await BookmarkModel.findOne({ user: userId, _id: bookmarkId });
+    const websiteMeta = await WebsiteMetaModel.findOne({ _id: metaId });
+
+    if (bookmark && websiteMeta) {
+      const fetchedMeta = await fetchWebsiteMetadata(url).catch(async (err) => {
+        websiteMeta.fetchStatus = WebsiteMetaFetchEnums.FAILED;
+        websiteMeta.error = err.message ?? 'website meta Fetching failed';
         this.logger.error(`[Worker] 获取元数据错误: ${err}`);
+        return await websiteMeta.save();
       });
-      if (meta) {
-        bookmark.title = meta.title;
-        bookmark.description = meta.description;
-        bookmark.icon = meta.logo;
-        bookmark.metaFetchStatus = BookmarkMetaFetchStatusEnum.SUCCESS;
+      if (fetchedMeta) {
+        websiteMeta.fetchStatus = WebsiteMetaFetchEnums.SUCCESS;
+        bookmark.title = fetchedMeta.title ?? '';
+        bookmark.description = fetchedMeta.description ?? '';
+        bookmark.icon = fetchedMeta.logo ?? '';
+
+        websiteMeta.title = fetchedMeta.title ?? '';
+        websiteMeta.description = fetchedMeta.description ?? '';
+        websiteMeta.logo = fetchedMeta.logo ?? '';
+        websiteMeta.audio = fetchedMeta.audio ?? '';
+        websiteMeta.video = fetchedMeta.video ?? '';
+        websiteMeta.lang = fetchedMeta.lang ?? '';
+        websiteMeta.author = fetchedMeta.author ?? '';
+        websiteMeta.publisher = fetchedMeta.publisher ?? '';
+        websiteMeta.date = fetchedMeta.date ?? '';
+        websiteMeta.url = fetchedMeta.url ?? '';
+        websiteMeta.fetchTime = fetchedMeta.fetchTime;
+        websiteMeta.parseTime = fetchedMeta.parseTime;
+        if (fetchedMeta.error) {
+          websiteMeta.error = fetchedMeta.error ?? '';
+          websiteMeta.fetchStatus = WebsiteMetaFetchEnums.FAILED;
+        }
       } else {
-        bookmark.metaFetchStatus = BookmarkMetaFetchStatusEnum.FAILED;
+        websiteMeta.fetchStatus = WebsiteMetaFetchEnums.FAILED;
       }
+      await websiteMeta.save();
       await bookmark.save();
-      this.logger.info(`[Worker] 更新书签元数据成功: ${id}`);
+
+      this.logger.info(`[Worker] 更新书签元数据成功: ${bookmarkId}`);
     } else {
-      this.logger.error(`[Worker] 书签不存在: ${id}`);
+      this.logger.error(`[Worker] 书签或书签元数据记录不存在: ${bookmarkId}`);
     }
   }
 
   protected async onShutdown(): Promise<void> {
     this.logger.info('Shutting down bookmark fetch worker');
     await redisClient.quit();
+    await closeMongoConnection();
   }
 }
 

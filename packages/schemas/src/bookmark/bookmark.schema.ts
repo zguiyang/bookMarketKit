@@ -28,28 +28,18 @@ export const BookmarkPinnedEnum = {
   NO: 'UN_PINNED',
 } as const;
 
-export const BookmarkMetaFetchStatusEnum = {
-  PENDING: 'PENDING',
-  SUCCESS: 'SUCCESS',
-  FAILED: 'FAILED',
-} as const;
-
 // 书签基础Schema
 export const bookmarkResponseSchema = z.object({
   _id: z.string(),
   user: z.string(),
   url: z.string(),
+  meta: z.string().nullable(),
   icon: z.string().optional().nullable(),
   title: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   visitCount: z.number(),
   isFavorite: z.enum([BookmarkFavoriteEnum.YES, BookmarkFavoriteEnum.NO]),
   isPinned: z.enum([BookmarkPinnedEnum.YES, BookmarkPinnedEnum.NO]),
-  metaFetchStatus: z.enum([
-    BookmarkMetaFetchStatusEnum.PENDING,
-    BookmarkMetaFetchStatusEnum.SUCCESS,
-    BookmarkMetaFetchStatusEnum.FAILED,
-  ]),
   screenshotUrl: z.string().optional(),
   lastVisitedAt: z.string().optional(),
   categories: z.array(categoryResponseSchema),
@@ -84,13 +74,6 @@ export const createBookmarkBodySchema = z
 export const updateBookmarkBodySchema = z
   .object({
     id: z.string().min(1, { message: '书签ID不能为空' }),
-    metaFetchStatus: z
-      .enum([
-        BookmarkMetaFetchStatusEnum.PENDING,
-        BookmarkMetaFetchStatusEnum.SUCCESS,
-        BookmarkMetaFetchStatusEnum.FAILED,
-      ])
-      .optional(),
   })
   .merge(createBookmarkBodySchema)
   .strict();

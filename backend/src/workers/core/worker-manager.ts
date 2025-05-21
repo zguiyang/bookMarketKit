@@ -76,7 +76,7 @@ export class WorkerManager {
 
   /**
    * 根据文件路径生成worker名称
-   * 例如: tasks/bookmark/bookmark.meta.worker.ts -> bookmark.meta
+   * 例如: tasks/bookmark/bookmark.website.worker.ts -> bookmark.website
    */
   private generateWorkerName(relativePath: string): string {
     // 移除文件扩展名
@@ -86,7 +86,7 @@ export class WorkerManager {
     const nameWithoutWorkerSuffix = nameWithoutExt.replace(/\.worker$/, '');
 
     // 将路径分隔符替换为点，创建命名空间
-    // 例如: tasks/bookmark/bookmark.meta -> tasks.bookmark.bookmark.meta
+    // 例如: tasks/bookmark/bookmark.website -> tasks.bookmark.bookmark.website
     return nameWithoutWorkerSuffix.replace(/[\\/]/g, '.');
   }
 

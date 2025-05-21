@@ -5,42 +5,13 @@ import metascraperDescription from 'metascraper-description';
 import metascraperImage from 'metascraper-image';
 import metascraperLogo from 'metascraper-logo-favicon';
 import metascraperUrl from 'metascraper-url';
-import metascraperAuthor from 'metascraper-author';
-import metascraperDate from 'metascraper-date';
-import metascraperLang from 'metascraper-lang';
-import metascraperPublisher from 'metascraper-publisher';
-import metascraperAudio from 'metascraper-audio';
-import metascraperVideo from 'metascraper-video';
+
+import { WebsiteMetaModelSchema } from '@bookmark/schemas';
 import { normalizeUrlSafe, isValidUrl, UrlNormalizeOptions } from '@/utils/url';
 
 import Logger from '@/utils/logger';
 
-/**
- * 网页元数据接口
- */
-export interface WebsiteMetadata {
-  // 基础元数据
-  title?: string;
-  description?: string;
-  image?: string;
-  logo?: string;
-  url?: string;
-
-  // 扩展元数据
-  author?: string;
-  date?: string;
-  lang?: string;
-  publisher?: string;
-  audio?: string;
-  video?: string;
-
-  // 性能指标
-  fetchTime?: number; // 获取HTML的时间(ms)
-  parseTime?: number; // 解析元数据的时间(ms)
-
-  // 错误信息
-  error?: string; // 如果发生错误，这里会有错误信息
-}
+type WebsiteMetadata = Omit<WebsiteMetaModelSchema, 'bookmark' | 'fetchStatus'>;
 
 /**
  * 抓取选项接口
@@ -67,12 +38,6 @@ const rulesMap = {
   image: metascraperImage(),
   logo: metascraperLogo(),
   url: metascraperUrl(),
-  author: metascraperAuthor(),
-  date: metascraperDate(),
-  lang: metascraperLang(),
-  publisher: metascraperPublisher(),
-  audio: metascraperAudio(),
-  video: metascraperVideo(),
 };
 
 // 默认规则
@@ -87,7 +52,7 @@ const defaultRules = ['title', 'description', 'image', 'logo', 'url'];
 export async function fetchWebsiteMetadata(url: string, options: ScraperOptions = {}): Promise<WebsiteMetadata> {
   // 默认选项
   const {
-    timeout = 10000,
+    timeout = 3000,
     userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
     retries = 2,
     headers = {},
@@ -102,7 +67,9 @@ export async function fetchWebsiteMetadata(url: string, options: ScraperOptions 
   } = options;
 
   // 初始化结果对象
-  const result: WebsiteMetadata = {};
+  const result: WebsiteMetadata = {
+    url,
+  };
 
   try {
     // 验证URL不为空
@@ -179,23 +146,7 @@ export async function fetchWebsiteMetadata(url: string, options: ScraperOptions 
 
     return result;
   } catch (error: any) {
-    // 处理错误
-    let errorMessage = 'Unknown error occurred';
-
-    if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
-      errorMessage = `Request timed out after ${timeout}ms`;
-    } else if (error.code === 'ENOTFOUND') {
-      errorMessage = `Domain not found: ${url}`;
-    } else if (error.message) {
-      errorMessage = error.message;
-    }
-
-    Logger.error(`Error fetching metadata for ${url}:`, errorMessage);
-
-    return {
-      ...result,
-      error: errorMessage,
-    };
+    throw new Error(`Error fetching metadata for ${error}`);
   }
 }
 
