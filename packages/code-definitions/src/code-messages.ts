@@ -84,6 +84,10 @@ export const bookmarkCodeMessages = {
     code: CodeEnums.BOOKMARK_CREATE_ERROR,
     message: '创建书签失败',
   },
+  createErrorWithUrl: {
+    code: CodeEnums.BOOKMARK_CREATE_ERROR,
+    message: '创建书签失败，书签地址不合法',
+  },
   updateError: {
     code: CodeEnums.BOOKMARK_UPDATE_ERROR,
     message: '更新书签失败',

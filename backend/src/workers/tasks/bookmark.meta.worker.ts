@@ -2,7 +2,7 @@ import { BookmarkMetaFetchStatusEnum } from '@bookmark/schemas';
 import { Queue } from '@/config/constant.config';
 import { BookmarkFetchTask } from '@/interfaces/queue';
 import { BookmarkModel } from '@/models/bookmark/bookmark.model';
-import { fetchWebsiteMetadata } from '@/utils/meta-scraper';
+import { fetchWebsiteMetadata } from '@/lib/meta-scraper';
 import { getMongoConnection } from '@/lib/mongo-connection';
 import redisClient from '@/lib/redis-client';
 import { BaseWorker } from '../core/base-worker';
@@ -58,9 +58,6 @@ class BookmarkMetaWorker extends BaseWorker {
         bookmark.icon = meta.logo;
         bookmark.metaFetchStatus = BookmarkMetaFetchStatusEnum.SUCCESS;
       } else {
-        bookmark.title = '';
-        bookmark.description = '';
-        bookmark.icon = '';
         bookmark.metaFetchStatus = BookmarkMetaFetchStatusEnum.FAILED;
       }
       await bookmark.save();

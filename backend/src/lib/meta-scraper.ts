@@ -11,9 +11,9 @@ import metascraperLang from 'metascraper-lang';
 import metascraperPublisher from 'metascraper-publisher';
 import metascraperAudio from 'metascraper-audio';
 import metascraperVideo from 'metascraper-video';
-
-// 导入我们的URL工具
 import { normalizeUrlSafe, isValidUrl, UrlNormalizeOptions } from '@/utils/url';
+
+import Logger from '@/utils/logger';
 
 /**
  * 网页元数据接口
@@ -190,7 +190,7 @@ export async function fetchWebsiteMetadata(url: string, options: ScraperOptions 
       errorMessage = error.message;
     }
 
-    console.error(`Error fetching metadata for ${url}:`, errorMessage);
+    Logger.error(`Error fetching metadata for ${url}:`, errorMessage);
 
     return {
       ...result,
@@ -280,7 +280,7 @@ export async function getWebsiteLogo(url: string): Promise<string | null> {
 
     return metadata.logo || null;
   } catch (error) {
-    console.error(`Failed to get logo for ${url}:`, error);
+    Logger.error(`Failed to get logo for ${url}:`, error);
     return null;
   }
 }

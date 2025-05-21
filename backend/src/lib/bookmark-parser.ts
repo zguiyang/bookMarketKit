@@ -1,6 +1,7 @@
 import * as fs from 'fs/promises';
 import * as cheerio from 'cheerio';
 import { getFileUrl } from '@/utils/file';
+import Logger from '@/utils/logger';
 
 // 简化的数据结构
 interface SimpleBookmark {
@@ -96,7 +97,7 @@ export async function parseHtmlBookmarks(relativePath: string): Promise<{
 
     return { bookmarks, categories };
   } catch (error: any) {
-    console.error('解析书签文件失败:', error);
+    Logger.error('解析书签文件失败:', error);
     throw new Error(`解析书签文件失败: ${error.message}`);
   }
 }

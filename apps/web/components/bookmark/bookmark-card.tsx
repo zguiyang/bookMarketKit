@@ -119,9 +119,9 @@ export function BookmarkCard({ bookmark, onUpdateBookmark }: BookmarkCardProps) 
               <h3
                 onClick={handleViewBookmark}
                 className="text-base font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors cursor-pointer"
-                title={bookmark.title}
+                title={bookmark.title ?? bookmark.url}
               >
-                {bookmark.title}
+                {bookmark.title ?? bookmark.url}
               </h3>
             </div>
 
@@ -190,7 +190,7 @@ export function BookmarkCard({ bookmark, onUpdateBookmark }: BookmarkCardProps) 
           {/* 描述部分 */}
           {bookmark.description && (
             <div className="mb-3">
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all duration-200">
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2 transition-all duration-200">
                 {bookmark.description}
               </p>
               <div className="h-4 relative">

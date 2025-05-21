@@ -20,7 +20,8 @@ import { BookmarkModel, IBookmarkDocument, IBookmarkLean } from '@/models/bookma
 import { BusinessError } from '@/lib/business-error';
 import { bookmarkCodeMessages } from '@bookmark/code-definitions';
 import { getPaginateOptions } from '@/utils/query-params';
-import { parseHtmlBookmarks } from '@/utils/bookmark-parser';
+import { isValidUrl } from '@/utils/url';
+import { parseHtmlBookmarks } from '@/lib/bookmark-parser';
 import { QueueService } from '@/services/queue/queue.service';
 import { BookmarkTagService } from './tag/bookmark.tag.service';
 import { BookmarkCategoryService } from './category/bookmark.category.service';
@@ -49,6 +50,10 @@ export class BookmarkService {
     });
     if (exists) {
       throw new BusinessError(bookmarkCodeMessages.existed);
+    }
+
+    if (!isValidUrl(data.url)) {
+      throw new BusinessError(bookmarkCodeMessages.createErrorWithUrl);
     }
 
     const bookmark = await BookmarkModel.create({

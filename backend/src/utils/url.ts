@@ -61,20 +61,18 @@ export function normalizeUrlSafe(url: string, options: UrlNormalizeOptions = {})
       else if (Array.isArray(options.removeQueryParameters)) {
         removeQueryParams = [...options.removeQueryParameters];
       }
-      // 默认使用库的默认值 [/^utm_\w+/i]
     }
 
-    // 使用 normalize-url 库规范化 URL
     return normalizeUrl(url, {
       defaultProtocol: options.defaultProtocol || 'https',
       forceHttps: options.forceHttps || false,
       stripHash: options.stripHash || false,
       stripWWW: options.stripWWW || false,
-      removeQueryParameters: removeQueryParams,
+      removeQueryParameters: removeQueryParams as any,
       removeTrailingSlash: options.removeTrailingSlash || false,
       // 其他有用的默认选项
       normalizeProtocol: true,
-      removeDirectoryIndex: true,
+      removeDirectoryIndex: true as any,
       sortQueryParameters: true,
     });
   } catch (error) {
