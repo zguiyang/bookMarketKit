@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRequest } from 'alova/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -10,19 +9,12 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { AuthApi } from '@/api/auth';
 import { client } from '@/lib/auth/client';
 
 import { RegisterFormValues, registerSchema } from './validation';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { send: getValidationCode } = useRequest(AuthApi.getValidationCode, {
-    immediate: false,
-  });
-  const { send: postSubmitFormData } = useRequest(AuthApi.register, {
-    immediate: false,
-  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSendingCode, setIsSendingCode] = useState(false);
@@ -36,7 +28,7 @@ export default function RegisterPage() {
       password: '',
       username: '',
     },
-    mode: 'onChange', // 启用实时验证
+    mode: 'onChange',
   });
 
   // 获取邮箱字段的验证状态
@@ -48,7 +40,8 @@ export default function RegisterPage() {
     await client.signUp.email(
       {
         email: data.email,
-        name: data.username,
+        username: data.username,
+        name: data.nickname ?? data.username,
         password: data.password,
         image: '',
       },
@@ -59,36 +52,6 @@ export default function RegisterPage() {
       }
     );
     setIsLoading(false);
-  }
-
-  async function handleSendVerificationCode() {
-    const email = form.getValues('email');
-    if (!email || !form.trigger('email')) {
-      console.error('邮箱地址不能为空');
-      return;
-    }
-
-    setIsSendingCode(true);
-    try {
-      const { success } = await getValidationCode(email);
-      if (success) {
-        // 开始倒计时
-        setCountdown(60);
-        const timer = setInterval(() => {
-          setCountdown((prev) => {
-            if (prev <= 1) {
-              clearInterval(timer);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsSendingCode(false);
-    }
   }
 
   // 判断验证码按钮是否可用
@@ -154,7 +117,6 @@ export default function RegisterPage() {
                         ? 'opacity-50 cursor-not-allowed'
                         : 'hover:bg-primary hover:text-primary-foreground'
                     }`}
-                    onClick={handleSendVerificationCode}
                     disabled={isVerifyButtonDisabled}
                   >
                     {getVerifyButtonText()}
@@ -200,6 +162,21 @@ export default function RegisterPage() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>用户名称</FormLabel>
+                <FormControl>
+                  <Input placeholder="请输入您的用户名称" className="h-11" {...field} disabled={isLoading} />
+                </FormControl>
+                <FormDescription className="text-xs">设置一个唯一的用户名称，便于查询</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* 用户昵称字段 */}
+          <FormField
+            control={form.control}
+            name="nickname"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>用户昵称</FormLabel>
                 <FormControl>
                   <Input placeholder="请输入您的用户名称" className="h-11" {...field} disabled={isLoading} />
                 </FormControl>
