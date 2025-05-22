@@ -15,6 +15,7 @@ import {
   bookmarkPageListQuerySchema,
   bookmarkCollectionResponseSchema,
   bookmarkImportBodySchema,
+  bookmarkImportResponseSchema,
 } from '@bookmark/schemas';
 
 export const bookmarkSchemas: {
@@ -106,6 +107,6 @@ export const bookmarkSchemas: {
     summary: '导入书签',
     description: '导入书签',
     body: bookmarkImportBodySchema,
-    response: { 200: z.any({}) },
+    response: { 200: bookmarkImportResponseSchema },
   },
 };

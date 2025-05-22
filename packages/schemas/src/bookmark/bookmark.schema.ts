@@ -8,25 +8,25 @@ import { categoryResponseSchema } from './bookmark.category.schema.js';
 import { tagResponseSchema } from './bookmark.tag.schema.js';
 
 // 书签排序字段枚举
-export const BookmarkOrderByEnum = {
-  CREATED_AT: 'createdAt',
-  UPDATED_AT: 'updatedAt',
-  LAST_VISITED_AT: 'lastVisitedAt',
-  VISIT_COUNT: 'visitCount',
-  TITLE: 'title',
-} as const;
+export enum BookmarkOrderByEnum {
+  CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
+  LAST_VISITED_AT = 'lastVisitedAt',
+  VISIT_COUNT = 'visitCount',
+  TITLE = 'title',
+}
 
 // enums for bookmark YES
-export const BookmarkFavoriteEnum = {
-  YES: 'FAVORITE',
-  NO: 'UN_FAVORITE',
-} as const;
+export enum BookmarkFavoriteEnum {
+  YES = 'FAVORITE',
+  NO = 'UN_FAVORITE',
+}
 
 // enums for bookmark YES
-export const BookmarkPinnedEnum = {
-  YES: 'PINNED',
-  NO: 'UN_PINNED',
-} as const;
+export enum BookmarkPinnedEnum {
+  YES = 'PINNED',
+  NO = 'UN_PINNED',
+}
 
 // 书签基础Schema
 export const bookmarkResponseSchema = z.object({
@@ -124,6 +124,14 @@ export const bookmarkImportBodySchema = z.object({
   filePath: z.string(),
 });
 
+export const bookmarkImportResponseSchema = z.object({
+  totalCategories: z.number(),
+  totalBookmarks: z.number(),
+  importedCategories: z.number(),
+  importedBookmarks: z.number(),
+  errors: z.array(z.string()),
+});
+
 // 类型导出
 export type BookmarkResponse = z.infer<typeof bookmarkResponseSchema>;
 export type BookmarkListResponse = z.infer<typeof bookmarkListResponseSchema>;
@@ -141,3 +149,5 @@ export type BookmarkPageListQuery = z.infer<typeof bookmarkPageListQuerySchema>;
 export type BookmarkOrderBy = keyof typeof BookmarkOrderByEnum;
 
 export type BookmarkImportBody = z.infer<typeof bookmarkImportBodySchema>;
+
+export type BookmarkImportResponse = z.infer<typeof bookmarkImportResponseSchema>;

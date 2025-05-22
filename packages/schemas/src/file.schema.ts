@@ -1,22 +1,21 @@
 import { z } from 'zod';
 
-export const UploadStatusEnums = {
-  PENDING: 'pending',
-  PROCESSING: 'processing',
-  SUCCESS: 'success',
-  FAILED: 'failed',
-} as const;
+export enum UploadStatusEnums {
+  PENDING = 'pending',
+  PROCESSING = 'processing',
+  SUCCESS = 'success',
+  FAILED = 'failed',
+}
 
-export const UploadBizTypeEnums = {
-  BOOKMARK: 'UPLOAD_BOOKMARK',
-  AVATAR: 'UPLOAD_AVATAR',
-} as const;
+export enum UploadBizTypeEnums {
+  BOOKMARK = 'UPLOAD_BOOKMARK',
+  AVATAR = 'UPLOAD_AVATAR',
+}
 
-export const FileTypeEnums = {
-  BOOKMARK: 'BOOKMARK',
-  AVATAR: 'AVATAR',
-  TEMP: 'TEMP',
-} as const;
+export enum StorageTypeEnums {
+  TEMP = 'TEMP',
+  PERMANENT = 'PERMANENT',
+}
 
 export const fileResponseSchema = z.object({
   _id: z.string(),
@@ -26,7 +25,7 @@ export const fileResponseSchema = z.object({
   path: z.string(),
   size: z.number(),
   mimeType: z.string(),
-  fileType: z.enum([FileTypeEnums.BOOKMARK, FileTypeEnums.AVATAR, FileTypeEnums.TEMP]),
+  storageType: z.enum([StorageTypeEnums.TEMP, StorageTypeEnums.PERMANENT]),
   updateStatus: z.enum([
     UploadStatusEnums.PENDING,
     UploadStatusEnums.PROCESSING,

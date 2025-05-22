@@ -14,6 +14,7 @@ import {
   BookmarkPinnedEnum,
   BookmarkSearchResponse,
   BookmarkImportBody,
+  BookmarkImportResponse,
 } from '@bookmark/schemas';
 import { QueueConfig } from '@/config/constant.config';
 import { BookmarkModel, IBookmarkDocument, IBookmarkLean } from '@/models/bookmark';
@@ -282,7 +283,7 @@ export class BookmarkService {
     };
   }
 
-  async import(userId: string, data: BookmarkImportBody) {
+  async import(userId: string, data: BookmarkImportBody): Promise<BookmarkImportResponse> {
     const { bookmarks, categories } = await parseHtmlBookmarks(data.filePath);
 
     // 导入结果统计

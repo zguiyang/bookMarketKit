@@ -11,6 +11,8 @@ import {
   CreateBookmarkBody,
   UpdateBookmarkBody,
   BookmarkResponse,
+  BookmarkImportBody,
+  BookmarkImportResponse,
 } from '@bookmark/schemas';
 
 class Bookmark {
@@ -54,6 +56,9 @@ class Bookmark {
     return request.Patch<ApiResponse>('/bookmark/visit', {
       id,
     });
+  }
+  import(data: BookmarkImportBody) {
+    return request.Post<ApiResponse<BookmarkImportResponse>>('/bookmark/import', data);
   }
 }
 

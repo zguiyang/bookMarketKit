@@ -3,6 +3,7 @@
 import { ReactNode, useState } from 'react';
 import { useRequest } from 'alova/client';
 import { BookmarkForm, FormValues } from '@/components/bookmark/bookmark-form';
+import { BookmarkImportDialog } from '@/components/bookmark/bookmark-import-dialog';
 import { BookmarkApi } from '@/api/bookmark';
 
 import { Sidebar } from './sidebar';
@@ -17,6 +18,7 @@ export function BookmarkLayout({ children }: BookmarkLayoutProps) {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const [showAddBookmarkForm, setShowAddBookmarkForm] = useState(false);
+  const [showImportBookmarkDialog, setShowImportBookmarkDialog] = useState(false);
   const { send: postCreateBookmark } = useRequest(BookmarkApi.create, {
     immediate: false,
   });
@@ -39,11 +41,15 @@ export function BookmarkLayout({ children }: BookmarkLayoutProps) {
     }
   };
 
+  const handleImportBookmark = () => {
+    setShowImportBookmarkDialog(true);
+  };
+
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       <Sidebar />
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        <Header onAddBookmark={handleAddBookmark} />
+        <Header onAddBookmark={handleAddBookmark} onImportBookmark={handleImportBookmark} />
         <Content key={refreshKey}>{children}</Content>
         <BookmarkForm
           mode="create"
@@ -51,6 +57,7 @@ export function BookmarkLayout({ children }: BookmarkLayoutProps) {
           onOpenChange={setShowAddBookmarkForm}
           onSubmit={handleSubmitBookmark}
         />
+        <BookmarkImportDialog open={showImportBookmarkDialog} onOpenChange={setShowImportBookmarkDialog} />
       </main>
     </div>
   );

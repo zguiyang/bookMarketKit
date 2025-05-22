@@ -7,9 +7,10 @@ import { CommandMenu } from './command-menu';
 
 interface HeaderProps {
   onAddBookmark: () => void;
+  onImportBookmark: () => void;
 }
 
-export function Header({ onAddBookmark }: HeaderProps) {
+export function Header({ onAddBookmark, onImportBookmark }: HeaderProps) {
   return (
     <div className="border-b border-border bg-background">
       <div className="flex h-16 items-center px-4 md:px-8">
@@ -42,7 +43,7 @@ export function Header({ onAddBookmark }: HeaderProps) {
             <CommandMenu />
           </div>
           <div className={'flex space-x-2 items-center'}>
-            <Button onClick={onAddBookmark} variant={'outline'}>
+            <Button onClick={onImportBookmark} variant={'outline'}>
               <Plus className="w-5 h-5" />
               <span>导入</span>
             </Button>
