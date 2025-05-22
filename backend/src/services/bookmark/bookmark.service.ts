@@ -15,25 +15,24 @@ import {
   BookmarkSearchResponse,
   BookmarkImportBody,
 } from '@bookmark/schemas';
-import { Queue } from '@/config/constant.config';
+import { QueueConfig } from '@/config/constant.config';
 import { BookmarkModel, IBookmarkDocument, IBookmarkLean } from '@/models/bookmark';
 import { BusinessError } from '@/lib/business-error';
 import { bookmarkCodeMessages } from '@bookmark/code-definitions';
 import { getPaginateOptions } from '@/utils/query-params';
 import { isValidUrl } from '@/utils/url';
 import { parseHtmlBookmarks } from '@/lib/bookmark-parser';
-import { QueueService } from '@/services/queue/queue.service';
+import QueueLib from '@/lib/queue';
 import { BookmarkTagService } from './tag/bookmark.tag.service';
 import { BookmarkCategoryService } from './category/bookmark.category.service';
 import { WebsiteMetaService } from '@/services/website/website-meta.service';
-import { BookmarkFetchTask } from '@/interfaces/queue';
+import { BookmarkFetchTask } from '@/interfaces/queue.interface';
 
 export class BookmarkService {
   constructor(
     private readonly categoryService: BookmarkCategoryService,
     private readonly tagService: BookmarkTagService,
-    private readonly websiteMetaService: WebsiteMetaService,
-    private readonly queueService: QueueService
+    private readonly websiteMetaService: WebsiteMetaService
   ) {}
 
   async create(userId: string, data: CreateBookmarkBody): Promise<BookmarkResponse> {
@@ -70,8 +69,8 @@ export class BookmarkService {
       bookmarkId: bookmark._id.toString(),
     });
 
-    await this.queueService.addTask<BookmarkFetchTask>(
-      Queue.bookmark.fetchMeta,
+    await QueueLib.addTask<BookmarkFetchTask>(
+      QueueConfig.bookmark.fetchMeta,
       {
         bookmarkId: bookmark._id.toString(),
         metaId: newMeta._id.toString(),

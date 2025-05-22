@@ -1,18 +1,19 @@
 import { SuccessResult, ErrorResult } from 'open-graph-scraper/types';
 import { WebsiteMetaFetchEnums } from '@bookmark/schemas';
-import { Queue } from '@/config/constant.config';
-import { BookmarkFetchTask } from '@/interfaces/queue';
+import { QueueConfig } from '@/config/constant.config';
+import { BookmarkFetchTask } from '@/interfaces/queue.interface';
 import { BookmarkModel } from '@/models/bookmark/bookmark.model';
 import { WebsiteMetaModel } from '@/models/website-meta.model';
 import { fetchWebsiteMetadata } from '@/lib/meta-scraper';
 import { getMongoConnection, closeMongoConnection } from '@/lib/mongo-connection';
+import { normalizeUrlSafe } from '@/utils/url';
+import QueueLib from '@/lib/queue';
 import redisClient from '@/lib/redis-client';
 import { BaseWorker } from '../core/base-worker';
-import { normalizeUrlSafe } from '@/utils/url';
 
-const META_CACHE_PREFIX = Queue.cache.META_CACHE_PREFIX;
+const META_CACHE_PREFIX = QueueConfig.cache.META_CACHE_PREFIX;
 const CACHE_TTL = 60 * 60 * 24; // 24小时缓存
-const TASK_NAME = `${Queue.queueName}:${Queue.bookmark.fetchMeta}`;
+const TASK_NAME = QueueConfig.bookmark.fetchMeta;
 
 class BookmarkMetaWorker extends BaseWorker {
   protected async start(): Promise<void> {
@@ -28,22 +29,10 @@ class BookmarkMetaWorker extends BaseWorker {
     this.logger.info(`[Worker] 开始监听队列: ${TASK_NAME}`);
 
     while (this.isRunning()) {
-      try {
-        const result = await redisClient.brpop(TASK_NAME, 2);
+      const task = await QueueLib.getTaskBlocking<BookmarkFetchTask>(TASK_NAME, 2);
 
-        if (result) {
-          const [_, messageStr] = result;
-
-          try {
-            const task: BookmarkFetchTask = JSON.parse(messageStr);
-            await this.processTask(task);
-          } catch (parseError) {
-            this.logger.error(`[Worker] 解析消息错误:`, parseError);
-          }
-        }
-      } catch (error) {
-        this.logger.error(`[Worker] Redis 队列监听错误:`, error);
-        // await new Promise((resolve) => setTimeout(resolve, 3000));
+      if (task) {
+        await this.processTask(task);
       }
     }
   }

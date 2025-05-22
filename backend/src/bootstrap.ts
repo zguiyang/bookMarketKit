@@ -12,7 +12,6 @@ import redisPlugin from './plugins/redis';
 import swaggerPlugin from './plugins/swagger';
 import authPlugin from './plugins/auth';
 import multipartPlugin from './plugins/multipart';
-import servicesPlugin from './plugins/services';
 import workerPlugin from './plugins/worker';
 
 import errorHandler from './middlewares/error-handler';
@@ -76,7 +75,6 @@ async function bootstrap() {
   await app.register(DBPlugin);
   await app.register(redisPlugin);
   await app.register(authPlugin);
-  await app.register(servicesPlugin);
   await app.register(swaggerPlugin);
   await app.register(multipartPlugin);
   await app.register(workerPlugin);

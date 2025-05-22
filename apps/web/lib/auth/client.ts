@@ -1,7 +1,9 @@
-import { createAuthClient } from 'better-auth/react';
 import { cache } from 'react';
+import { createAuthClient } from 'better-auth/react';
+import { usernameClient } from 'better-auth/client/plugins';
 
 export const client = createAuthClient({
+  plugins: [usernameClient()],
   baseURL: process.env.NEXT_PUBLIC_WEB_URL,
 });
 

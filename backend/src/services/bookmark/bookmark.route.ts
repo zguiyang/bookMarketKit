@@ -21,8 +21,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
   const bookmarkService = new BookmarkService(
     new BookmarkCategoryService(),
     new BookmarkTagService(),
-    new WebsiteMetaService(),
-    fastify.services.queueService
+    new WebsiteMetaService()
   );
   const bookmarkController = new BookmarkController(bookmarkService);
 

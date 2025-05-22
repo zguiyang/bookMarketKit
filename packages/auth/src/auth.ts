@@ -2,6 +2,7 @@ import { MongoClient } from 'mongodb';
 import type { BetterAuthOptions } from 'better-auth';
 import { betterAuth } from 'better-auth';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
+import { username } from 'better-auth/plugins';
 
 import env from './env';
 
@@ -9,6 +10,11 @@ const client = new MongoClient(env.DATABASE_URI);
 const db = client.db();
 
 const config = {
+  plugins: [
+    username({
+      maxUsernameLength: 50,
+    }),
+  ],
   database: mongodbAdapter(db),
   secret: env.AUTH_SECRET,
   emailAndPassword: {
@@ -25,6 +31,9 @@ const config = {
   },
   account: {
     modelName: 'accounts',
+  },
+  verification: {
+    modelName: 'verifications',
   },
   session: {
     modelName: 'sessions',

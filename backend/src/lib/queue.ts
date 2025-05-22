@@ -1,11 +1,11 @@
-import { FastifyInstance, FastifyBaseLogger } from 'fastify';
-import { Redis } from 'ioredis';
-import { Queue } from '@/config/constant.config';
+import { QueueConfig } from '@/config/constant.config';
+import Logger from '@/utils/logger';
+import redisClient from '@/lib/redis-client';
 
-export class QueueService {
-  private readonly queuePrefix: string = Queue.queueName;
-  private readonly redis: Redis;
-  private readonly logger: FastifyBaseLogger;
+export class QueueLib {
+  private readonly queuePrefix: string = QueueConfig.queuePrefix;
+  private readonly redis = redisClient;
+  private readonly logger = Logger;
   private listeners: Map<string, { stop: () => void }> = new Map();
   private listenerStatus: Map<
     string,
@@ -18,10 +18,7 @@ export class QueueService {
     }
   > = new Map();
 
-  constructor(private readonly fastify: FastifyInstance) {
-    this.redis = fastify.redis;
-    this.logger = fastify.log;
-  }
+  constructor() {}
 
   /**
    * 获取队列名称
@@ -342,3 +339,5 @@ export class QueueService {
     }
   }
 }
+
+export default new QueueLib();

@@ -1,5 +1,5 @@
-export const Queue = {
-  queueName: 'queue_tasks',
+export const QueueConfig = {
+  queuePrefix: 'queue_tasks',
   bookmark: {
     fetchMeta: 'bookmark_fetchMeta',
   },
