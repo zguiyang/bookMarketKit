@@ -1,14 +1,14 @@
 import { FastifyInstance } from 'fastify';
 import { MultipartFile } from '@fastify/multipart';
 import * as path from 'path';
-import { UploadResponse, UploadAddBody, UploadStatusEnum } from '@bookmark/schemas';
+import { FileResponse, UploadFileBody, UploadStatusEnum } from '@bookmark/schemas';
 import { uploadCodeMessages } from '@bookmark/code-definitions';
 import { BusinessError } from '@/lib/business-error';
-import { UploadModel } from '@/models/upload.model';
+import { FileModel } from '@/models/file.model';
 import * as fileUtil from '@/utils/file';
 import * as uploadCfg from '@/config/upload.config';
 
-export class UploadService {
+export class FileService {
   constructor(private readonly fastify: FastifyInstance) {
     this._ensureUploadDirs();
   }
@@ -37,12 +37,12 @@ export class UploadService {
   async uploadFile(
     userId: string,
     file: MultipartFile,
-    data: UploadAddBody,
+    data: UploadFileBody,
     options: {
       allowedTypes?: string[];
       maxSize?: number;
     } = {}
-  ): Promise<UploadResponse> {
+  ): Promise<FileResponse> {
     const { bizType } = data;
     const { allowedTypes = uploadCfg.UPLOAD_CONFIG.allowedTypes, maxSize = uploadCfg.UPLOAD_CONFIG.maxFileSize } =
       options;
@@ -61,7 +61,7 @@ export class UploadService {
     const fileInfo = await fileUtil.saveUploadedFile(file, userId);
 
     // 保存文件记录到数据库
-    const uploadRecord = await UploadModel.create({
+    const uploadRecord = await FileModel.create({
       user: userId,
       originalName: fileInfo.originalName,
       bizType,
@@ -72,7 +72,7 @@ export class UploadService {
       status: UploadStatusEnum.SUCCESS,
     });
 
-    return uploadRecord.toJSON<UploadResponse>();
+    return uploadRecord.toJSON<FileResponse>();
   }
 
   /**
@@ -81,7 +81,7 @@ export class UploadService {
    * @returns 是否删除成功
    */
   async deleteFile(filePath: string): Promise<boolean> {
-    const uploadItem = await UploadModel.findOne({ path: filePath });
+    const uploadItem = await FileModel.findOne({ path: filePath });
     if (!uploadItem) {
       throw new BusinessError(uploadCodeMessages.fileNotFound);
     }
@@ -90,7 +90,7 @@ export class UploadService {
     await fileUtil.removeFile(fullPath);
 
     // 从数据库中删除记录
-    const deleted = await UploadModel.deleteOne({ _id: uploadItem._id });
+    const deleted = await FileModel.deleteOne({ _id: uploadItem._id });
 
     return deleted.deletedCount > 0;
   }

@@ -1,14 +1,14 @@
 import { FastifyRequest } from 'fastify';
-import { UploadAddBody, UploadResponse } from '@bookmark/schemas';
+import { UploadFileBody, FileResponse } from '@bookmark/schemas';
 import { uploadCodeMessages } from '@bookmark/code-definitions';
 import { BusinessError } from '@/lib/business-error';
 
-import { UploadService } from './upload.service';
+import { FileService } from './file.service';
 
-export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
+export class FileController {
+  constructor(private readonly uploadService: FileService) {}
 
-  async uploadFile(req: FastifyRequest<{ Params: UploadAddBody }>): Promise<UploadResponse> {
+  async uploadFile(req: FastifyRequest<{ Params: UploadFileBody }>): Promise<FileResponse> {
     const userId = req.currentUser.id;
     const file = await req.file();
 

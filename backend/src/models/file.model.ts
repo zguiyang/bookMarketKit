@@ -1,14 +1,14 @@
 import mongoose, { Schema } from 'mongoose';
-import { UploadResponse, UploadStatusEnum, UploadBizTypeEnum } from '@bookmark/schemas';
+import { FileResponse, UploadStatusEnum, UploadBizTypeEnum } from '@bookmark/schemas';
 import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin';
 import { commonTransform } from '@/shared/mongoose/common-transform';
 import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type';
 
-export type IUploadDocument = CreateDocument<UploadResponse, 'user'>;
+export type IFileDocument = CreateDocument<FileResponse, 'user'>;
 
-export type IUploadLean = CreateLeanDocument<UploadResponse>;
+export type IFIleDocumentLean = CreateLeanDocument<FileResponse>;
 
-const UploadSchema = new Schema<IUploadDocument>(
+const FileSchema = new Schema<IFileDocument>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -55,7 +55,7 @@ const UploadSchema = new Schema<IUploadDocument>(
   }
 );
 
-UploadSchema.index({ user: 1, filename: 1, status: 1 });
-UploadSchema.plugin(leanTransformPlugin);
+FileSchema.index({ user: 1, filename: 1, status: 1 });
+FileSchema.plugin(leanTransformPlugin);
 
-export const UploadModel = mongoose.model<IUploadDocument>('upload', UploadSchema);
+export const FileModel = mongoose.model<IFileDocument>('File', FileSchema);

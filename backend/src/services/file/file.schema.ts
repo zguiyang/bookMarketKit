@@ -1,6 +1,6 @@
-import { uploadParamsSchema, uploadResponseSchema } from '@bookmark/schemas';
+import { uploadParamsSchema, fileResponseSchema } from '@bookmark/schemas';
 
-export const uploadSchemas = {
+export const fileSchemas = {
   add: {
     tags: ['Upload'],
     summary: '文件上传',
@@ -8,7 +8,7 @@ export const uploadSchemas = {
     consumes: ['multipart/form-data'],
     params: uploadParamsSchema,
     response: {
-      201: uploadResponseSchema,
+      201: fileResponseSchema,
     },
   },
 };
