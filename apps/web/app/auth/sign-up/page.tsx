@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { AuthApi } from '@/api/auth';
-import { authClient } from '@/lib/auth-client';
+import { client } from '@/lib/auth/client';
 
 import { RegisterFormValues, registerSchema } from './validation';
 
@@ -45,7 +45,7 @@ export default function RegisterPage() {
 
   async function onSubmit(data: RegisterFormValues) {
     setIsLoading(true);
-    await authClient.signUp.email(
+    await client.signUp.email(
       {
         email: data.email,
         name: data.username,

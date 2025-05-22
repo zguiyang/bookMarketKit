@@ -10,14 +10,12 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-import { authClient } from '@/lib/auth-client';
-import { useAuthStore } from '@/store/auth.store';
+import { client } from '@/lib/auth/client';
 
 import { LoginFormValues, loginSchema } from './validation';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { authToken } = useAuthStore();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,7 +30,7 @@ export default function LoginPage() {
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true);
     try {
-      await authClient.signIn.email(
+      await client.signIn.email(
         {
           email: data.email,
           password: data.password,
@@ -50,8 +48,15 @@ export default function LoginPage() {
     }
   }
 
-  if (authToken) {
-    return router.replace('bookmarks');
+  async function handleGithubLogin() {
+    try {
+      await client.signIn.social({
+        provider: 'github',
+        callbackURL: `${process.env.NEXT_PUBLIC_WEB_URL}/bookmarks`,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -107,6 +112,11 @@ export default function LoginPage() {
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-white px-2 text-muted-foreground">或者</span>
           </div>
+        </div>
+        <div className={'mt-2 flex flex-col space-y-2'}>
+          <Button variant="secondary" className="h-11 w-full" onClick={handleGithubLogin}>
+            Github登录
+          </Button>
         </div>
 
         <p className="text-center text-sm text-muted-foreground">

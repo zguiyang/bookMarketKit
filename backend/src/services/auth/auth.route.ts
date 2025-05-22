@@ -1,25 +1,16 @@
 import type { FastifyInstance } from 'fastify';
-// import { toNodeHandler } from 'better-auth/node';
-import { AuthController } from './auth.controller';
+import { toNodeHandler } from 'better-auth/node';
 
 export default async function authRoutes(fastify: FastifyInstance) {
-  // const authHandler = toNodeHandler(fastify.auth.handler);
-  const authController = new AuthController(fastify);
+  const authHandler = toNodeHandler(fastify.auth.handler);
 
-  // fastify.addContentTypeParser('application/json', (_request, _payload, done) => {
-  //   done(null, null);
-  // });
-
-  // fastify.route({
-  //   method: ['POST', 'GET'],
-  //   url: '/*',
-  //   handler: async (req, reply) => await authHandler(req.raw, reply.raw),
-  // });
+  fastify.addContentTypeParser('application/json', (_request, _payload, done) => {
+    done(null, null);
+  });
 
   fastify.route({
+    method: ['POST', 'GET'],
     url: '/*',
-    method: ['GET', 'POST'],
-    schema: {}, // better auth routes not to use this
-    handler: (req, reply) => authController.bearerAuth(req, reply),
+    handler: async (req, reply) => await authHandler(req.raw, reply.raw),
   });
 }

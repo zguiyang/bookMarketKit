@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 3091",
+    "dev": "next dev --turbopack -p 13090",
     "build": "next build",
-    "start": "next start -p 3091",
+    "start": "next start -p 13090",
     "lint": "next lint"
   },
   "dependencies": {
     "@alova/adapter-axios": "^2.0.13",
+    "@better-fetch/fetch": "^1.1.18",
     "@bookmark/auth": "workspace:^",
     "@bookmark/code-definitions": "workspace:^",
     "@bookmark/schemas": "workspace:^",

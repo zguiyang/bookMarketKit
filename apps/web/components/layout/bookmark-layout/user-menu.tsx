@@ -14,28 +14,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { SessionUser } from '@/lib/auth-client';
-import { authClient } from '@/lib/auth-client';
+import type { SessionUser } from '@bookmark/auth';
+import { client } from '@/lib/auth/client';
+import { getCurrentUser } from '@/lib/auth/client';
 
 export function UserMenu() {
   const { setTheme, resolvedTheme } = useTheme();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [userInfo, setUserInfo] = useState<Partial<SessionUser>>({});
+  const [userInfo, setUserInfo] = useState<SessionUser>();
+
   useEffect(() => {
-    getUserInfo();
     setMounted(true);
+    getCurrentUser().then((res) => {
+      setUserInfo(res);
+    });
   }, []);
 
-  const getUserInfo = async () => {
-    const { data } = await authClient.getSession();
-    if (data) {
-      setUserInfo(data.user);
-    }
-  };
-
   const handleLogout = async () => {
-    const res = await authClient.signOut();
+    const res = await client.signOut();
     if (res.data?.success) {
       router.replace('/auth/sign-in');
     }
@@ -68,11 +65,11 @@ export function UserMenu() {
       <DropdownMenuTrigger asChild>
         <button className="flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors w-full">
           <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-sm font-medium">{userInfo.name?.slice(0, 1)}</span>
+            <span className="text-white text-sm font-medium">{userInfo?.name?.slice(0, 1)}</span>
           </div>
           <div className="flex-1 text-left min-w-0 overflow-hidden">
-            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{userInfo.name}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{userInfo.email}</p>
+            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{userInfo?.name}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{userInfo?.email}</p>
           </div>
           <ChevronDown className="h-4 w-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
         </button>
@@ -80,8 +77,8 @@ export function UserMenu() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{userInfo.name ?? userInfo.name}</p>
-            <p className="text-xs leading-none text-muted-foreground">{userInfo.email}</p>
+            <p className="text-sm font-medium leading-none">{userInfo?.name ?? userInfo?.email}</p>
+            <p className="text-xs leading-none text-muted-foreground">{userInfo?.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

@@ -1,13 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { useAuthStore } from '@/store/auth.store';
+import { getCurrentUser } from '@/lib/auth/client';
 import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
 
 export default function HeaderLogin() {
-  const { authToken } = useAuthStore();
+  const [isLogin, setIsLogin] = useState(false);
 
-  if (!authToken) {
+  useEffect(() => {
+    getCurrentUser().then((res) => {
+      setIsLogin(!!res);
+    });
+  }, []);
+
+  if (!isLogin) {
     return (
       <>
         <Link href="/auth/sign-in">
@@ -18,7 +25,7 @@ export default function HeaderLogin() {
             登录
           </Button>
         </Link>
-        <Link href="/auth/register">
+        <Link href="/auth/sign-up">
           <Button className="h-9 px-3 text-sm sm:h-10 sm:px-6 sm:text-base rounded-lg bg-gradient-to-r from-primary via-blue-500 to-pink-500 text-white font-bold shadow-md transition-all duration-200 hover:scale-105 cursor-pointer">
             注册
           </Button>
