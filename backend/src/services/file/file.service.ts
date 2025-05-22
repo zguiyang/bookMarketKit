@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { MultipartFile } from '@fastify/multipart';
 import * as path from 'path';
-import { FileResponse, UploadFileBody, UploadStatusEnum } from '@bookmark/schemas';
+import { FileResponse, UploadFileBody, UploadStatusEnums, FileTypeEnums } from '@bookmark/schemas';
 import { uploadCodeMessages } from '@bookmark/code-definitions';
 import { BusinessError } from '@/lib/business-error';
 import { FileModel } from '@/models/file.model';
@@ -69,7 +69,8 @@ export class FileService {
       path: fileInfo.relativePath,
       size: fileInfo.size,
       mimeType: fileInfo.mimeType,
-      status: UploadStatusEnum.SUCCESS,
+      fileType: FileTypeEnums.TEMP, // TODO: 暂时写死为临时文件
+      updateStatus: UploadStatusEnums.SUCCESS,
     });
 
     return uploadRecord.toJSON<FileResponse>();

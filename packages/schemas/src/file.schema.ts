@@ -1,15 +1,21 @@
 import { z } from 'zod';
 
-export const UploadStatusEnum = {
+export const UploadStatusEnums = {
   PENDING: 'pending',
   PROCESSING: 'processing',
   SUCCESS: 'success',
   FAILED: 'failed',
 } as const;
 
-export const UploadBizTypeEnum = {
+export const UploadBizTypeEnums = {
+  BOOKMARK: 'UPLOAD_BOOKMARK',
+  AVATAR: 'UPLOAD_AVATAR',
+} as const;
+
+export const FileTypeEnums = {
   BOOKMARK: 'BOOKMARK',
   AVATAR: 'AVATAR',
+  TEMP: 'TEMP',
 } as const;
 
 export const fileResponseSchema = z.object({
@@ -20,19 +26,20 @@ export const fileResponseSchema = z.object({
   path: z.string(),
   size: z.number(),
   mimeType: z.string(),
-  status: z.enum([
-    UploadStatusEnum.PENDING,
-    UploadStatusEnum.PROCESSING,
-    UploadStatusEnum.SUCCESS,
-    UploadStatusEnum.FAILED,
+  fileType: z.enum([FileTypeEnums.BOOKMARK, FileTypeEnums.AVATAR, FileTypeEnums.TEMP]),
+  updateStatus: z.enum([
+    UploadStatusEnums.PENDING,
+    UploadStatusEnums.PROCESSING,
+    UploadStatusEnums.SUCCESS,
+    UploadStatusEnums.FAILED,
   ]),
-  bizType: z.enum([UploadBizTypeEnum.BOOKMARK, UploadBizTypeEnum.AVATAR]),
+  bizType: z.enum([UploadBizTypeEnums.BOOKMARK, UploadBizTypeEnums.AVATAR]),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
 
 export const uploadParamsSchema = z.object({
-  bizType: z.enum([UploadBizTypeEnum.BOOKMARK, UploadBizTypeEnum.AVATAR]),
+  bizType: z.enum([UploadBizTypeEnums.BOOKMARK, UploadBizTypeEnums.AVATAR]),
 });
 
 export type FileResponse = z.infer<typeof fileResponseSchema>;

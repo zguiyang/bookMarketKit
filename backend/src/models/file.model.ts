@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { FileResponse, UploadStatusEnum, UploadBizTypeEnum } from '@bookmark/schemas';
+import { FileResponse, UploadStatusEnums, UploadBizTypeEnums, FileTypeEnums } from '@bookmark/schemas';
 import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin';
 import { commonTransform } from '@/shared/mongoose/common-transform';
 import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type';
@@ -38,12 +38,22 @@ const FileSchema = new Schema<IFileDocument>(
     bizType: {
       type: String,
       required: true,
-      enum: [UploadBizTypeEnum.AVATAR, UploadBizTypeEnum.BOOKMARK],
+      enum: [UploadBizTypeEnums.AVATAR, UploadBizTypeEnums.BOOKMARK],
     },
-    status: {
+    fileType: {
       type: String,
-      enum: [UploadStatusEnum.FAILED, UploadStatusEnum.PENDING, UploadStatusEnum.PROCESSING, UploadStatusEnum.SUCCESS],
-      default: UploadStatusEnum.PENDING,
+      required: true,
+      enum: [FileTypeEnums.AVATAR, FileTypeEnums.BOOKMARK, FileTypeEnums.TEMP],
+    },
+    updateStatus: {
+      type: String,
+      enum: [
+        UploadStatusEnums.FAILED,
+        UploadStatusEnums.PENDING,
+        UploadStatusEnums.PROCESSING,
+        UploadStatusEnums.SUCCESS,
+      ],
+      default: UploadStatusEnums.PENDING,
     },
   },
   {
