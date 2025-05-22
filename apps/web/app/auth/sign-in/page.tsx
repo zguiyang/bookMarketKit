@@ -6,8 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
+import { Loader2 } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { OAuthButton } from '@/components/oauth-button';
 import { Input } from '@/components/ui/input';
 
 import { client } from '@/lib/auth/client';
@@ -16,6 +19,9 @@ import { LoginFormValues, loginSchema } from './validation';
 
 export default function LoginPage() {
   const router = useRouter();
+  // TODO: 临时处理, 后期优化
+  const isEnableGithubLogin = process.env.NEXT_PUBLIC_GITHUB_LOGIN === '1';
+  const isEnableGoogleLogin = process.env.NEXT_PUBLIC_GOOGLE_LOGIN === '1';
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -45,17 +51,6 @@ export default function LoginPage() {
       console.error(error);
     } finally {
       setIsLoading(false);
-    }
-  }
-
-  async function handleGithubLogin() {
-    try {
-      await client.signIn.social({
-        provider: 'github',
-        callbackURL: `${process.env.NEXT_PUBLIC_WEB_URL}/bookmarks`,
-      });
-    } catch (error) {
-      console.error(error);
     }
   }
 
@@ -99,7 +94,14 @@ export default function LoginPage() {
             className="h-11 w-full bg-gradient-to-r from-primary to-primary/80"
             disabled={isLoading}
           >
-            {isLoading ? '登录中...' : '登录'}
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                登录中...
+              </>
+            ) : (
+              <>登录</>
+            )}
           </Button>
         </form>
       </Form>
@@ -113,13 +115,12 @@ export default function LoginPage() {
             <span className="bg-white px-2 text-muted-foreground">或者</span>
           </div>
         </div>
-        <div className={'mt-2 flex flex-col space-y-2'}>
-          <Button variant="secondary" className="h-11 w-full" onClick={handleGithubLogin}>
-            Github登录
-          </Button>
+        <div className={'mt-2 flex flex-col space-y-4'}>
+          {isEnableGithubLogin && <OAuthButton provider={'github'} />}
+          {isEnableGoogleLogin && <OAuthButton provider={'google'} />}
         </div>
 
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="mt-4 text-center text-sm text-muted-foreground">
           还没有账号？{' '}
           <Link href="/auth/sign-up" className="font-medium text-primary hover:text-primary/80">
             立即注册

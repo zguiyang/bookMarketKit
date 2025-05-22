@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
@@ -17,24 +18,17 @@ export default function RegisterPage() {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isSendingCode, setIsSendingCode] = useState(false);
-  const [countdown, setCountdown] = useState(0);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       email: '',
-      emailCode: '',
+      nickname: '',
       password: '',
       username: '',
     },
     mode: 'onChange',
   });
-
-  // 获取邮箱字段的验证状态
-  const emailValue = form.watch('email');
-  const emailError = form.formState.errors.email;
-
   async function onSubmit(data: RegisterFormValues) {
     setIsLoading(true);
     await client.signUp.email(
@@ -53,18 +47,6 @@ export default function RegisterPage() {
     );
     setIsLoading(false);
   }
-
-  // 判断验证码按钮是否可用
-  const isVerifyButtonDisabled = !emailValue || !!emailError || countdown > 0 || isSendingCode || isLoading;
-
-  // 获取验证码按钮的文本
-  const getVerifyButtonText = () => {
-    if (countdown > 0) return `${countdown}秒后重试`;
-    if (isSendingCode) return '发送中...';
-    if (!emailValue) return '请输入邮箱';
-    if (emailError) return '邮箱格式错误';
-    return '获取验证码';
-  };
 
   return (
     <div className="grid gap-6">
@@ -93,35 +75,6 @@ export default function RegisterPage() {
                   />
                 </FormControl>
                 <FormDescription className="text-xs">我们将向此邮箱发送验证码</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* 邮箱验证码字段 */}
-          <FormField
-            control={form.control}
-            name="emailCode"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>邮箱验证码</FormLabel>
-                <div className="flex space-x-2">
-                  <FormControl>
-                    <Input placeholder="请输入验证码" className="h-11" maxLength={6} {...field} disabled={isLoading} />
-                  </FormControl>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className={`h-11 cursor-pointer w-32 shrink-0 transition-colors ${
-                      isVerifyButtonDisabled
-                        ? 'opacity-50 cursor-not-allowed'
-                        : 'hover:bg-primary hover:text-primary-foreground'
-                    }`}
-                    disabled={isVerifyButtonDisabled}
-                  >
-                    {getVerifyButtonText()}
-                  </Button>
-                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -180,14 +133,21 @@ export default function RegisterPage() {
                 <FormControl>
                   <Input placeholder="请输入您的用户名称" className="h-11" {...field} disabled={isLoading} />
                 </FormControl>
-                <FormDescription className="text-xs">设置一个唯一的用户名称，便于查询</FormDescription>
+                <FormDescription className="text-xs">你希望别人怎么称呼你？</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
 
           <Button type="submit" className="h-11 w-full" disabled={isLoading}>
-            {isLoading ? '注册中...' : '注册'}
+            {isLoading ? (
+              <>
+                <Loader2 className="animate-spin" />
+                注册中...
+              </>
+            ) : (
+              <>注册</>
+            )}
           </Button>
         </form>
       </Form>
