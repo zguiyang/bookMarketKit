@@ -11,7 +11,7 @@ import { omit } from 'lodash-es';
 import { BusinessError } from '@/lib/business-error';
 import { bookmarkCategoryCodeMessages } from '@bookmark/code-definitions';
 
-export class BookmarkCategoryService {
+export class CategoryService {
   constructor() {}
 
   async create(userId: string, data: CreateCategoryBody): Promise<CategoryResponse> {

@@ -6,7 +6,7 @@ import { omit } from 'lodash-es';
 import { BusinessError } from '@/lib/business-error';
 import { bookmarkTagCodeMessages } from '@bookmark/code-definitions';
 
-export class BookmarkTagService {
+export class TagService {
   constructor() {}
 
   async create(userId: string, data: CreateTagBody): Promise<TagResponse> {

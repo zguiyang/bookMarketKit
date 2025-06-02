@@ -1,9 +1,9 @@
 import { FastifyRequest } from 'fastify';
 import { CreateTagBody, UpdateTagBody, TagIdParam } from '@bookmark/schemas';
-import { BookmarkTagService } from './bookmark.tag.service';
+import { TagService } from './tag.service';
 
-export class BookmarkTagController {
-  constructor(private readonly tagService: BookmarkTagService) {}
+export class TagController {
+  constructor(private readonly tagService: TagService) {}
 
   async create(req: FastifyRequest<{ Body: CreateTagBody }>) {
     const userId = req.currentUser.id;

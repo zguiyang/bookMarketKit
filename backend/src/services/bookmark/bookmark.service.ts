@@ -24,15 +24,15 @@ import { getPaginateOptions } from '@/utils/query-params';
 import { isValidUrl } from '@/utils/url';
 import { parseHtmlBookmarks } from '@/lib/bookmark-parser';
 import QueueLib from '@/lib/queue';
-import { BookmarkTagService } from './tag/bookmark.tag.service';
-import { BookmarkCategoryService } from './category/bookmark.category.service';
+import { TagService } from './tag/tag.service';
+import { CategoryService } from './category/category.service';
 import { WebsiteMetaService } from '@/services/website/website-meta.service';
 import { BookmarkFetchTask } from '@/interfaces/queue.interface';
 
 export class BookmarkService {
   constructor(
-    private readonly categoryService: BookmarkCategoryService,
-    private readonly tagService: BookmarkTagService,
+    private readonly categoryService: CategoryService,
+    private readonly tagService: TagService,
     private readonly websiteMetaService: WebsiteMetaService
   ) {}
 

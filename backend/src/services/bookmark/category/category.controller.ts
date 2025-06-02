@@ -1,9 +1,9 @@
 import { FastifyRequest } from 'fastify';
 import { CreateCategoryBody, UpdateCategoryBody, CategoryIdParam } from '@bookmark/schemas';
-import { BookmarkCategoryService } from './bookmark.category.service';
+import { CategoryService } from './category.service';
 
-export class BookmarkCategoryController {
-  constructor(private readonly categoryService: BookmarkCategoryService) {}
+export class CategoryController {
+  constructor(private readonly categoryService: CategoryService) {}
 
   async create(req: FastifyRequest<{ Body: CreateCategoryBody }>) {
     const userId = req.currentUser.id;

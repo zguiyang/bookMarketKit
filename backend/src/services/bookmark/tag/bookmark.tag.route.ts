@@ -1,12 +1,12 @@
 import type { FastifyInstance } from 'fastify';
-import { BookmarkTagController } from './bookmark.tag.controller';
-import { BookmarkTagService } from './bookmark.tag.service';
+import { TagController } from './tag.controller';
+import { TagService } from './tag.service';
 import { CreateTagBody, UpdateTagBody, TagIdParam } from '@bookmark/schemas';
-import { tagSchemas } from './bookmark.tag.schema';
+import { tagSchemas } from './tag.schema';
 
 export default async function tagRoutes(fastify: FastifyInstance) {
-  const tagService = new BookmarkTagService();
-  const tagController = new BookmarkTagController(tagService);
+  const tagService = new TagService();
+  const tagController = new TagController(tagService);
 
   fastify.post<{ Body: CreateTagBody }>('/create', {
     schema: tagSchemas.create,

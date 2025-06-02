@@ -12,17 +12,13 @@ import {
   BookmarkImportBody,
 } from '@bookmark/schemas';
 import { bookmarkSchemas } from './bookmark.schema';
-import { BookmarkTagService } from './tag/bookmark.tag.service';
-import { BookmarkCategoryService } from './category/bookmark.category.service';
+import { TagService } from './tag/tag.service';
+import { CategoryService } from './category/category.service';
 import { WebsiteMetaService } from '../website/website-meta.service';
 import { BookmarkService } from './bookmark.service';
 
 export default async function bookmarkRoutes(fastify: FastifyInstance) {
-  const bookmarkService = new BookmarkService(
-    new BookmarkCategoryService(),
-    new BookmarkTagService(),
-    new WebsiteMetaService()
-  );
+  const bookmarkService = new BookmarkService(new CategoryService(), new TagService(), new WebsiteMetaService());
   const bookmarkController = new BookmarkController(bookmarkService);
 
   fastify.post<{ Body: CreateBookmarkBody }>('/create', {

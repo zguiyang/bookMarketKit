@@ -1,12 +1,12 @@
 import type { FastifyInstance } from 'fastify';
-import { BookmarkCategoryController } from './bookmark.category.controller';
-import { BookmarkCategoryService } from './bookmark.category.service';
+import { CategoryController } from './category.controller';
+import { CategoryService } from './category.service';
 import { CreateCategoryBody, UpdateCategoryBody, CategoryIdParam } from '@bookmark/schemas';
-import { categorySchemas } from './bookmark.category.schema';
+import { categorySchemas } from './category.schema';
 
 export default async function categoryRoutes(fastify: FastifyInstance) {
-  const categoryService = new BookmarkCategoryService();
-  const categoryController = new BookmarkCategoryController(categoryService);
+  const categoryService = new CategoryService();
+  const categoryController = new CategoryController(categoryService);
 
   fastify.post<{ Body: CreateCategoryBody }>('/create', {
     schema: categorySchemas.create,
