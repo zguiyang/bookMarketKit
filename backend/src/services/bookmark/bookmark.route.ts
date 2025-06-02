@@ -1,5 +1,4 @@
 import type { FastifyInstance } from 'fastify';
-import { BookmarkController } from './bookmark.controller';
 import {
   CreateBookmarkBody,
   UpdateBookmarkBody,
@@ -19,65 +18,100 @@ import { BookmarkService } from './bookmark.service';
 
 export default async function bookmarkRoutes(fastify: FastifyInstance) {
   const bookmarkService = new BookmarkService(new CategoryService(), new TagService(), new WebsiteMetaService());
-  const bookmarkController = new BookmarkController(bookmarkService);
 
   fastify.post<{ Body: CreateBookmarkBody }>('/create', {
     schema: bookmarkSchemas.create,
-    handler: (req) => bookmarkController.create(req),
+    handler: (req) => {
+      const { currentUser, body } = req;
+      return bookmarkService.create(currentUser.id, body);
+    },
   });
 
   fastify.put<{ Body: UpdateBookmarkBody }>('/update', {
     schema: bookmarkSchemas.update,
-    handler: (req) => bookmarkController.update(req),
+    handler: (req) => {
+      const { currentUser, body } = req;
+      return bookmarkService.update(currentUser.id, body);
+    },
   });
 
   fastify.delete<{ Params: BookmarkIdParam }>('/delete/:id', {
     schema: bookmarkSchemas.delete,
-    handler: (req) => bookmarkController.delete(req),
+    handler: (req) => {
+      const { currentUser, params } = req;
+      return bookmarkService.delete(currentUser.id, params.id);
+    },
   });
 
   fastify.patch<{ Body: SetFavoriteBody }>('/favorite', {
     schema: bookmarkSchemas.favorite,
-    handler: (req) => bookmarkController.favorite(req),
+    handler: (req) => {
+      const { currentUser, body } = req;
+      return bookmarkService.favorite(currentUser.id, body);
+    },
   });
 
   fastify.patch<{ Body: SetPinnedBody }>('/pinned', {
     schema: bookmarkSchemas.pinned,
-    handler: (req) => bookmarkController.pinned(req),
+    handler: (req) => {
+      const { currentUser, body } = req;
+      return bookmarkService.pinned(currentUser.id, body);
+    },
   });
 
   fastify.get('/all', {
     schema: bookmarkSchemas.all,
-    handler: (req) => bookmarkController.all(req),
+    handler: (req) => {
+      const { currentUser } = req;
+      return bookmarkService.findAll(currentUser.id);
+    },
   });
 
   fastify.get<{ Params: BookmarkIdParam }>('/detail/:id', {
     schema: bookmarkSchemas.detail,
-    handler: (req) => bookmarkController.detail(req),
+    handler: (req) => {
+      const { currentUser, params } = req;
+      return bookmarkService.findOne(currentUser.id, params.id);
+    },
   });
 
   fastify.get<{ Querystring: BookmarkPageListQuery }>('/pageList', {
     schema: bookmarkSchemas.pageList,
-    handler: (req) => bookmarkController.pageList(req),
+    handler: (req) => {
+      const { currentUser, query } = req;
+      return bookmarkService.pageList(currentUser.id, query);
+    },
   });
 
   fastify.get('/collection', {
     schema: bookmarkSchemas.collection,
-    handler: (req) => bookmarkController.collection(req),
+    handler: (req) => {
+      const { currentUser } = req;
+      return bookmarkService.findCollection(currentUser.id);
+    },
   });
 
   fastify.patch<{ Body: UpdateLastVisitTimeBody }>('/visit', {
     schema: bookmarkSchemas.visit,
-    handler: (req) => bookmarkController.visit(req),
+    handler: (req) => {
+      const { currentUser, body } = req;
+      return bookmarkService.updateLastVisitTime(currentUser.id, body.id);
+    },
   });
 
   fastify.get<{ Querystring: BookmarkSearchQuery }>('/search', {
     schema: bookmarkSchemas.search,
-    handler: (req) => bookmarkController.search(req),
+    handler: (req) => {
+      const { currentUser, query } = req;
+      return bookmarkService.search(currentUser.id, query.keyword);
+    },
   });
 
   fastify.post<{ Body: BookmarkImportBody }>('/import', {
     schema: bookmarkSchemas.import,
-    handler: (req) => bookmarkController.import(req),
+    handler: (req) => {
+      const { currentUser, body } = req;
+      return bookmarkService.import(currentUser.id, body);
+    },
   });
 }
