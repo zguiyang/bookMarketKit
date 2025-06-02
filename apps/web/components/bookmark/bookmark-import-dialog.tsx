@@ -316,7 +316,7 @@ const BookmarkImportDialog: React.FC<BookmarkImportDialogProps> = ({
                 <li>导入操作不会影响您当前的使用体验</li>
                 <li>网站图标和描述信息将在后台逐步完成</li>
                 <li>
-                  您可以在<font>”设置“</font>中查看导入历史记录
+                  您可以在<span>”设置“</span>中查看导入历史记录
                 </li>
               </ul>
             </div>
