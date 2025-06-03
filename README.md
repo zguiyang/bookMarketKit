@@ -46,7 +46,7 @@ Book Market Kit is a full-stack solution for web bookmark collection, smart cate
 - [x] Smart bookmark management
 - [x] Tag system
 - [x] Responsive UI
-- [ ] Batch import/export bookmarks
+- [x] Batch import/export bookmarks
 - [ ] AI-powered categorization
 - [ ] Content summarization
 
