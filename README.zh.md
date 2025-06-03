@@ -24,8 +24,8 @@ Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要�
 
 ## 技术架构
 
-- **前端**：Next.js、React、TypeScript、Tailwind CSS、Shadcn UI、Zustand、SWR、Zod
-- **后端**：NestJS、TypeScript、PostgreSQL、MongoDB、Drizzle ORM、Redis、Zod
+- **前端**：Next.js 15、React 19、TypeScript、Tailwind CSS、Zustand、Zod
+- **后端**：Fastify 5、TypeScript、MongoDB（mongoose）、Redis、Zod
 
 ---
 

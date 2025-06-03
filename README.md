@@ -24,8 +24,8 @@ Book Market Kit is a full-stack solution for web bookmark collection, smart cate
 
 ## Tech Stack
 
-- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, Shadcn UI, Zustand, SWR, Zod
-- **Backend**: NestJS, TypeScript, PostgreSQL, MongoDB, Drizzle ORM, Redis, Zod
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS, Zustand, Zod
+- **Backend**: Fastify 5, TypeScript, MongoDB (mongoose), Redis, Zod
 
 ---
 
