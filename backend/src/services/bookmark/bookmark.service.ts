@@ -368,4 +368,133 @@ export class BookmarkService {
 
     return result;
   }
+
+  async _generateHtmlBookmarks(bookmarks: IBookmarkLean[]) {
+    // 创建 HTML 文档头部 - 符合 Netscape 书签文件格式
+    let html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
+<!-- This is an automatically generated file.
+     It will be read and overwritten.
+     DO NOT EDIT! -->
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Bookmarks</TITLE>
+<H1>Bookmarks</H1>
+<DL><p>
+`;
+
+    // 按照分类组织书签
+    const categoryMap: {
+      [key: string]: IBookmarkLean[];
+    } = {};
+    const noFolderBookmarks: IBookmarkLean[] = [];
+
+    /**
+     * 转义 HTML 特殊字符，防止 HTML 注入
+     * @param {string} text - 需要转义的文本
+     * @returns {string} - 转义后的文本
+     */
+    function escapeHtml(text: string) {
+      if (!text) return '';
+
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // 将书签按分类分组
+    bookmarks.forEach((bookmark) => {
+      if (bookmark.categories && bookmark.categories.length > 0) {
+        // 使用第一个分类作为文件夹（如果有多个分类）
+        const category = bookmark.categories[0].name;
+        if (!categoryMap[category]) {
+          categoryMap[category] = [];
+        }
+        categoryMap[category].push(bookmark);
+      } else {
+        // 没有分类的书签单独处理
+        noFolderBookmarks.push(bookmark);
+      }
+    });
+
+    // 先添加没有分类的书签
+    if (noFolderBookmarks.length > 0) {
+      html += `    <DT><H3 ADD_DATE="${Math.floor(Date.now() / 1000)}" LAST_MODIFIED="${Math.floor(Date.now() / 1000)}">未分类</H3>\n`;
+      html += `    <DL><p>\n`;
+
+      noFolderBookmarks.forEach((bookmark) => {
+        // 解析创建时间字符串为时间戳
+        const createdAt = bookmark.createdAt
+          ? new Date(bookmark.createdAt).getTime() / 1000
+          : Math.floor(Date.now() / 1000);
+
+        // 转义特殊字符，防止 HTML 注入
+        const safeTitle = escapeHtml(bookmark.title || 'Untitled');
+        const safeUrl = escapeHtml(bookmark.url);
+
+        html += `        <DT><A HREF="${safeUrl}" ADD_DATE="${Math.floor(createdAt)}">${safeTitle}</A>\n`;
+
+        // 如果有描述，添加描述
+        if (bookmark.description) {
+          html += `        <DD>${escapeHtml(bookmark.description)}\n`;
+        }
+      });
+
+      html += `    </DL><p>\n`;
+    }
+
+    // 为每个分类生成 HTML
+    Object.keys(categoryMap).forEach((category) => {
+      const folderDate = Math.floor(Date.now() / 1000);
+      const safeCategoryName = escapeHtml(category);
+
+      // 添加分类文件夹
+      html += `    <DT><H3 ADD_DATE="${folderDate}" LAST_MODIFIED="${folderDate}">${safeCategoryName}</H3>\n`;
+      html += `    <DL><p>\n`;
+
+      // 添加该分类中的书签
+      categoryMap[category].forEach((bookmark) => {
+        // 解析创建时间字符串为时间戳
+        const createdAt = bookmark.createdAt
+          ? new Date(bookmark.createdAt).getTime() / 1000
+          : Math.floor(Date.now() / 1000);
+
+        // 转义特殊字符
+        const safeTitle = escapeHtml(bookmark.title || 'Untitled');
+        const safeUrl = escapeHtml(bookmark.url);
+
+        html += `        <DT><A HREF="${safeUrl}" ADD_DATE="${Math.floor(createdAt)}"`;
+
+        // 添加图标（如果有）
+        if (bookmark.icon && !bookmark.icon.startsWith('data:')) {
+          html += ` ICON="${escapeHtml(bookmark.icon)}"`;
+        }
+
+        html += `>${safeTitle}</A>\n`;
+
+        // 如果有描述，添加描述
+        if (bookmark.description) {
+          html += `        <DD>${escapeHtml(bookmark.description)}\n`;
+        }
+      });
+
+      // 关闭分类文件夹标签
+      html += `    </DL><p>\n`;
+    });
+
+    // 关闭 HTML 文档
+    html += `</DL><p>`;
+
+    return html;
+  }
+  async export(userId: string) {
+    const bookmarks = await BookmarkModel.find({ user: userId })
+      .populate(['categories', 'tags'])
+      .lean<IBookmarkLean[]>();
+
+    const exportHtml = await this._generateHtmlBookmarks(bookmarks);
+
+    return exportHtml;
+  }
 }

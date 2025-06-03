@@ -60,6 +60,16 @@ class Bookmark {
   import(data: BookmarkImportBody) {
     return request.Post<ApiResponse<BookmarkImportResponse>>('/bookmark/import', data);
   }
+  export() {
+    return request.Get<
+      ApiResponse<{
+        file: Blob;
+        name: string;
+      }>
+    >('/bookmark/export', {
+      responseType: 'blob',
+    });
+  }
 }
 
 export const BookmarkApi = new Bookmark();

@@ -3,7 +3,7 @@ import reactHook from 'alova/react';
 import { axiosRequestAdapter } from '@alova/adapter-axios';
 import type { AxiosResponse, AxiosError } from 'axios';
 import type { ApiResponse } from '@bookmark/schemas';
-import { CodeEnums } from '@bookmark/code-definitions';
+import { CodeEnums, commonCodeMessages } from '@bookmark/code-definitions';
 
 import { toast } from 'sonner';
 
@@ -19,6 +19,20 @@ const alovaInstance = createAlova({
   },
   responded: {
     onSuccess(response: AxiosResponse) {
+      const responseType = response.headers['x-response-type'];
+      console.log('responseType', responseType);
+      if (responseType === 'file-stream') {
+        return {
+          code: CodeEnums.COMMON_SUCCESSFUL,
+          data: {
+            file: response.data,
+            name: response.headers['content-disposition']?.split('filename=')[1]?.replace(/"/g, ''),
+          },
+          success: true,
+          message: commonCodeMessages.success.message,
+        };
+      }
+
       const responseData = response.data as ApiResponse;
 
       if (!responseData.success) {

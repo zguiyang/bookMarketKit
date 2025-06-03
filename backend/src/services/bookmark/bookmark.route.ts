@@ -114,4 +114,22 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
       return bookmarkService.import(currentUser.id, body);
     },
   });
+
+  fastify.get('/export', {
+    schema: bookmarkSchemas.export,
+    handler: async (req, reply) => {
+      try {
+        const { currentUser } = req;
+        const result = await bookmarkService.export(currentUser.id);
+
+        reply.header('Content-Type', 'application/octet-stream');
+        reply.header('Content-Disposition', 'attachment; filename="bookmarks.html"');
+        reply.header('X-Response-Type', 'file-stream');
+        return Buffer.from(result, 'utf-8');
+      } catch (error) {
+        req.log.error(error);
+        return reply.code(500).send({ error: '导出书签时出错' });
+      }
+    },
+  });
 }

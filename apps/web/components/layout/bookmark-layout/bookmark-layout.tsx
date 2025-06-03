@@ -4,7 +4,8 @@ import { ReactNode, useState } from 'react';
 import { useRequest } from 'alova/client';
 import { BookmarkForm, FormValues } from '@/components/bookmark/bookmark-form';
 import { BookmarkImportDialog } from '@/components/bookmark/bookmark-import-dialog';
-import { BookmarkApi } from '@/api/bookmark';
+import { BookmarkApi } from '@/api';
+import { downloadFile } from '@/lib/utils';
 
 import { Sidebar } from './sidebar';
 import { Header } from './header';
@@ -45,11 +46,22 @@ export function BookmarkLayout({ children }: BookmarkLayoutProps) {
     setShowImportBookmarkDialog(true);
   };
 
+  const handleExportBookmark = async () => {
+    const result = await BookmarkApi.export();
+    if (result.success) {
+      downloadFile(result.data.file, result.data.name);
+    }
+  };
+
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       <Sidebar />
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        <Header onAddBookmark={handleAddBookmark} onImportBookmark={handleImportBookmark} />
+        <Header
+          onAddBookmark={handleAddBookmark}
+          onImportBookmark={handleImportBookmark}
+          onExportBookmark={handleExportBookmark}
+        />
         <Content key={refreshKey}>{children}</Content>
         <BookmarkForm
           mode="create"

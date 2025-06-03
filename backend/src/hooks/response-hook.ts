@@ -29,6 +29,11 @@ export async function onSendHookHandler(request: FastifyRequest, reply: FastifyR
     return payload;
   }
 
+  const responseType = reply.getHeader('X-Response-Type');
+  if (responseType === 'file-stream') {
+    return payload;
+  }
+
   if (request.url.startsWith('/auth')) {
     // TODO: 需要优化数据处理
     return payload;

@@ -109,4 +109,10 @@ export const bookmarkSchemas: {
     body: bookmarkImportBodySchema,
     response: { 200: bookmarkImportResponseSchema },
   },
+  export: {
+    tags: ['Bookmark'],
+    summary: '导出书签',
+    description: '导出书签',
+    response: { 200: z.any() },
+  },
 };
