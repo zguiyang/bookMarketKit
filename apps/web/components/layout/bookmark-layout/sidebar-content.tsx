@@ -20,7 +20,6 @@ import { TagFormDialog } from '@/components/tag/tag-form-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useBookmarkData } from '@/hooks/bookmark-data';
 import { cn } from '@/lib/utils';
-
 // 视图选择组件
 function ViewSection() {
   const router = useRouter();

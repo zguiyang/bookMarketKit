@@ -8,9 +8,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { tagColors } from '@/config/tag-colors';
 import { TagResponse, createTagBodySchema, updateTagBodySchema } from '@bookmark/schemas';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ColorPicker } from '@/components/color-picker';
+import { cn } from '@/lib/utils';
 
 const formSchema = createTagBodySchema.or(updateTagBodySchema);
 
@@ -37,6 +37,7 @@ export function TagFormDialog({ mode, tag, open, onOpenChange, onSubmitForm }: T
     if (tag && mode === 'edit') {
       form.reset({
         name: tag.name,
+        color: tag.color,
       });
     } else {
       form.reset({
@@ -77,43 +78,22 @@ export function TagFormDialog({ mode, tag, open, onOpenChange, onSubmitForm }: T
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>颜色</FormLabel>
-                  <Select
-                    onValueChange={(value: string) => field.onChange(parseInt(value))}
-                    value={field.value?.toString()}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="选择标签颜色">
-                          {field.value !== undefined && (
-                            <div className="flex items-center">
-                              <div className={`w-4 h-4 rounded-full mr-2 bg-[${field.value}]`} />
-                            </div>
-                          )}
-                        </SelectValue>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="max-h-[300px]">
-                      <div className="grid grid-cols-2 gap-2 p-2">
-                        {tagColors.map((color, index) => (
-                          <SelectItem
-                            key={index}
-                            value={index.toString()}
-                            className="p-2 hover:bg-accent hover:text-accent-foreground rounded-md"
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center">
-                                <div className={`w-6 h-6 rounded-full mr-3 ${color.bg} ${color.text}`} />
-                                <span className="text-sm">颜色 {index + 1}</span>
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {color.bg.split(' ')[0].replace('bg-', '')}
-                              </div>
-                            </div>
-                          </SelectItem>
-                        ))}
+                  <FormControl>
+                    <ColorPicker value={field.value} onChange={field.onChange}>
+                      <div
+                        style={
+                          {
+                            '--tag-color': field.value,
+                          } as React.CSSProperties
+                        }
+                        className="w-full px-2 py-1 rounded-md border bg-[var(--tag-color)]"
+                      >
+                        <span className={cn('text-sm', field.value ? 'text-white' : 'text-gray-500')}>
+                          {field.value ? field.value : '选择颜色'}
+                        </span>
                       </div>
-                    </SelectContent>
-                  </Select>
+                    </ColorPicker>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
