@@ -1,63 +1,63 @@
 import normalizeUrl from 'normalize-url';
 
 /**
- * URL 规范化选项接口
+ * URL normalization options interface
  */
 export interface UrlNormalizeOptions {
-  /** 默认协议，当URL没有指定协议时使用 (默认: 'https') */
+  /** Default protocol to use when URL has no protocol (default: 'https') */
   defaultProtocol?: 'http' | 'https';
 
-  /** 强制使用HTTPS (默认: false) */
+  /** Force HTTPS (default: false) */
   forceHttps?: boolean;
 
-  /** 移除URL中的哈希部分 (默认: false) */
+  /** Remove hash from URL (default: false) */
   stripHash?: boolean;
 
-  /** 移除www前缀 (默认: false) */
+  /** Remove www prefix (default: false) */
   stripWWW?: boolean;
 
   /**
-   * 移除查询参数
-   * - true: 移除所有查询参数
-   * - false: 不移除任何查询参数
-   * - 字符串数组: 移除指定的查询参数
-   * - 正则表达式数组: 移除匹配的查询参数
-   * (默认: [/^utm_\w+/i])
+   * Remove query parameters
+   * - true: remove all query parameters
+   * - false: do not remove any query parameters
+   * - Array of strings: remove specified query parameters
+   * - Array of regular expressions: remove matching query parameters
+   * (default: [/^utm_\w+/i])
    */
   removeQueryParameters?: boolean | readonly (string | RegExp)[];
 
-  /** 移除尾部斜杠 (默认: false) */
+  /** Remove trailing slash (default: false) */
   removeTrailingSlash?: boolean;
 }
 
 /**
- * 规范化 URL
+ * Normalize URL
  *
- * 基于 normalize-url 库封装，提供更友好的错误处理和默认选项
+ * Wrapped based on the normalize-url library, providing more friendly error handling and default options
  *
- * @param url 输入的 URL 或域名
- * @param options 规范化选项
- * @returns 规范化后的 URL
+ * @param url Input URL or domain name
+ * @param options Normalization options
+ * @returns Normalized URL
  */
 export function normalizeUrlSafe(url: string, options: UrlNormalizeOptions = {}): string {
-  // 处理空URL
+  // Handle empty URL
   if (!url || typeof url !== 'string' || url.trim() === '') {
     throw new Error('URL cannot be empty');
   }
 
-  // 移除前后空白
+  // Remove leading/trailing whitespace
   url = url.trim();
 
   try {
-    // 处理 removeQueryParameters 参数
+    // Handle removeQueryParameters parameter
     let removeQueryParams = undefined;
 
     if (options.removeQueryParameters !== undefined) {
-      // 如果是布尔值，直接使用
+      // If it's a boolean, use it directly
       if (typeof options.removeQueryParameters === 'boolean') {
         removeQueryParams = options.removeQueryParameters;
       }
-      // 如果是数组，确保它是只读的
+      // If it's an array, ensure it's readonly
       else if (Array.isArray(options.removeQueryParameters)) {
         removeQueryParams = [...options.removeQueryParameters];
       }
@@ -70,7 +70,7 @@ export function normalizeUrlSafe(url: string, options: UrlNormalizeOptions = {})
       stripWWW: options.stripWWW || false,
       removeQueryParameters: removeQueryParams as any,
       removeTrailingSlash: options.removeTrailingSlash || false,
-      // 其他有用的默认选项
+      // Other useful default options
       normalizeProtocol: true,
       removeDirectoryIndex: true as any,
       sortQueryParameters: true,
@@ -78,12 +78,12 @@ export function normalizeUrlSafe(url: string, options: UrlNormalizeOptions = {})
   } catch (error) {
     console.error(`Error normalizing URL "${url}":`, error);
 
-    // 尝试基本修复
+    // Try basic fixes
     try {
-      // 如果URL不包含协议，添加默认协议
+      // If URL doesn't include a protocol, add the default protocol
       if (!url.includes('://')) {
         const protocol = options.defaultProtocol || 'https';
-        // 处理可能以 // 开头的URL
+        // Handle URLs that may start with //
         if (url.startsWith('//')) {
           url = `${protocol}:${url}`;
         } else {
@@ -91,14 +91,14 @@ export function normalizeUrlSafe(url: string, options: UrlNormalizeOptions = {})
         }
       }
 
-      // 如果强制使用HTTPS，替换http://为https://
+      // If forcing HTTPS, replace http:// with https://
       if (options.forceHttps && url.startsWith('http://')) {
         url = url.replace('http://', 'https://');
       }
 
       return url;
     } catch (fallbackError) {
-      // 如果基本修复也失败，返回原始URL
+      // If basic fixes also fail, return the original URL
       console.error(`Fallback URL normalization failed for "${url}":`, fallbackError);
       return url;
     }
@@ -106,15 +106,15 @@ export function normalizeUrlSafe(url: string, options: UrlNormalizeOptions = {})
 }
 
 /**
- * 检查URL是否有效
- * @param url 要检查的URL
- * @returns 是否为有效URL
+ * Check if the URL is valid
+ * @param url The URL to check
+ * @returns Whether the URL is valid
  */
 export function isValidUrl(url: string): boolean {
   if (!url || typeof url !== 'string') return false;
 
   try {
-    // 尝试使用URL构造函数解析
+    // Try to parse using the URL constructor
     new URL(normalizeUrlSafe(url));
     return true;
   } catch {

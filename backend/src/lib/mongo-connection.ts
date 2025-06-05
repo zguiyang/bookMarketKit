@@ -2,13 +2,13 @@ import mongoose from 'mongoose';
 import type { FastifyBaseLogger } from 'fastify';
 import env from './env';
 
-// 连接状态
+// Connection status
 let isConnected = false;
 
 /**
- * 创建并获取 MongoDB 连接
- * @param options 可选的连接配置
- * @returns Mongoose 连接实例
+ * Creates and retrieves a MongoDB connection.
+ * @param options Optional connection configuration.
+ * @returns Mongoose connection instance.
  */
 async function getMongoConnection(options?: {
   uri?: string;
@@ -23,13 +23,13 @@ async function getMongoConnection(options?: {
     throw error;
   }
 
-  // 如果已经连接，直接返回现有连接
+  // If already connected, return the existing connection directly.
   if (isConnected && mongoose.connection.readyState === 1) {
-    logger?.debug('已存在 MongoDB 连接，复用现有连接');
+    logger?.debug('MongoDB connection already exists, reusing existing connection.');
     return mongoose.connection;
   }
 
-  // 设置连接事件监听
+  // Set up connection event listeners.
   mongoose.connection.on('connected', () => {
     isConnected = true;
     logger?.debug('MongoDB connected!');
@@ -44,7 +44,7 @@ async function getMongoConnection(options?: {
     logger?.error('MongoDB error:', err);
   });
 
-  // 连接到 MongoDB
+  // Connect to MongoDB
   logger?.info(`Connecting MongoDB to ${uri}...`);
   await mongoose.connect(uri, connectionOptions);
 
@@ -52,8 +52,8 @@ async function getMongoConnection(options?: {
 }
 
 /**
- * 关闭 MongoDB 连接
- * @param logger 可选的日志记录器
+ * Closes the MongoDB connection.
+ * @param logger Optional logger.
  */
 async function closeMongoConnection(logger?: FastifyBaseLogger) {
   if (mongoose.connection.readyState !== 0) {

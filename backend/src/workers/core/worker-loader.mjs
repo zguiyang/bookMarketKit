@@ -8,10 +8,10 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// 获取 tsx 路径
+// Get tsx path
 const tsxPath = resolve(process.cwd(), 'node_modules/.bin/tsx');
 
-// 启动 worker 进程
+// Start worker process
 const child = spawn(tsxPath, [workerData.workerFile], {
   env: {
     ...process.env,
@@ -20,17 +20,17 @@ const child = spawn(tsxPath, [workerData.workerFile], {
   stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
 });
 
-// 处理子进程消息并转发到主线程
+// Handle child process messages and forward to the main thread
 child.on('message', (message) => {
   process.send?.(message);
 });
 
-// 处理子进程退出
+// Handle child process exit
 child.on('exit', (code) => {
   process.exit(code || 0);
 });
 
-// 处理主线程消息并转发到子进程
+// Handle main thread messages and forward to the child process
 process.on('message', (message) => {
   child.send(message);
 });

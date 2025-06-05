@@ -6,7 +6,7 @@ import { tagSchemas } from './tag.schema';
 export default async function tagRoutes(fastify: FastifyInstance) {
   const tagService = new TagService();
 
-  // 创建标签
+  // Create tag
   fastify.post<{ Body: CreateTagBody }>('/create', {
     schema: tagSchemas.create,
     handler: async (req) => {
@@ -15,7 +15,7 @@ export default async function tagRoutes(fastify: FastifyInstance) {
     },
   });
 
-  // 更新标签
+  // Update tag
   fastify.put<{ Body: UpdateTagBody }>('/update', {
     schema: tagSchemas.update,
     handler: async (req) => {
@@ -24,7 +24,7 @@ export default async function tagRoutes(fastify: FastifyInstance) {
     },
   });
 
-  // 删除标签
+  // Delete tag
   fastify.delete<{ Params: TagIdParam }>('/delete/:id', {
     schema: tagSchemas.delete,
     handler: async (req) => {
@@ -34,7 +34,7 @@ export default async function tagRoutes(fastify: FastifyInstance) {
     },
   });
 
-  // 获取所有标签
+  // Get all tags
   fastify.get('/all', {
     schema: tagSchemas.all,
     handler: async (req) => {
@@ -43,7 +43,7 @@ export default async function tagRoutes(fastify: FastifyInstance) {
     },
   });
 
-  // 获取标签详情
+  // Get tag details
   fastify.get<{ Params: TagIdParam }>('/detail/:id', {
     schema: tagSchemas.detail,
     handler: async (req) => {

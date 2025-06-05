@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcryptjs';
 
 /**
- * 加密密码
- * @param password 明文密码
+ * Encrypt password
+ * @param password Plaintext password
  * **/
 export async function hashPassword(password: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
@@ -10,9 +10,9 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 /**
- * 验证密码是否正确
- * @param password 明文密码
- * @param hashedPassword 加密后的密码
+ * Verify if the password is correct
+ * @param password Plaintext password
+ * @param hashedPassword Encrypted password
  * **/
 export function comparePassword(password: string, hashedPassword: string): Promise<boolean> {
   return bcrypt.compare(password, hashedPassword);

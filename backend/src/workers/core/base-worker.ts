@@ -6,7 +6,7 @@ export abstract class BaseWorker {
   public logger = Logger;
 
   constructor() {
-    // 设置消息处理
+    // Set up message handling
     parentPort?.on('message', (message) => {
       if (message === 'shutdown') {
         this.logger.info('Received shutdown signal');
@@ -19,11 +19,11 @@ export abstract class BaseWorker {
       }
     });
 
-    // 设置进程信号处理
+    // Set up process signal handling
     process.on('SIGINT', this.handleExit.bind(this));
     process.on('SIGTERM', this.handleExit.bind(this));
 
-    // 启动worker
+    // Start the worker
     this.start().catch((err) => {
       this.logger.error(`Fatal error: ${err}`);
       process.exit(1);
@@ -44,7 +44,7 @@ export abstract class BaseWorker {
     await this.onShutdown();
   }
 
-  // 子类需要实现的方法
+  // Methods to be implemented by subclasses
   protected abstract start(): Promise<void>;
   protected abstract onShutdown(): Promise<void>;
 }

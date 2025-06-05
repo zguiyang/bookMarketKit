@@ -12,16 +12,16 @@ function isApiResponse(obj: any): obj is Partial<ApiResponse> {
 }
 
 /**
- * Fastify onSend Hook 回调
+ * Fastify onSend Hook callback
  * must be async function!!!
  *
- * 在响应即将发送给客户端时运行。
- * 适用于需要处理各种 payload 类型（包括 string, null）并进行最终修改的场景。
+ * Executes when the response is about to be sent to the client.
+ * Suitable for scenarios where various payload types (including string, null) need to be processed and modified before final delivery.
  */
 export async function onSendHookHandler(request: FastifyRequest, reply: FastifyReply, payload: any): Promise<any> {
   const url = request.raw.url;
   if (url && url.startsWith('/docs')) {
-    // 如果是 Swagger UI 的请求，直接返回原始 payload，不做任何修改
+    // If it's a Swagger UI request, return the original payload without modification
     return payload;
   }
 
@@ -35,7 +35,7 @@ export async function onSendHookHandler(request: FastifyRequest, reply: FastifyR
   }
 
   if (request.url.startsWith('/auth')) {
-    // TODO: 需要优化数据处理
+    // TODO: Data processing needs optimization
     return payload;
   }
 

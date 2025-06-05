@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio';
 import { getFileUrl } from '@/utils/file';
 import Logger from '@/utils/logger';
 
-// 简化的数据结构
+// Simplified data structures
 interface SimpleBookmark {
   title: string;
   url: string;
@@ -17,9 +17,9 @@ interface SimpleCategory {
 }
 
 /**
- * 解析HTML书签文件
- * @param relativePath 文件相对路径
- * @returns 解析后的书签和分类
+ * Parse HTML bookmark file
+ * @param relativePath Relative file path
+ * @returns Parsed bookmarks and categories
  */
 export async function parseHtmlBookmarks(relativePath: string): Promise<{
   bookmarks: SimpleBookmark[];
@@ -28,76 +28,76 @@ export async function parseHtmlBookmarks(relativePath: string): Promise<{
   const fullPath = getFileUrl(relativePath);
 
   try {
-    // 读取文件内容
+    // Read file content
     const fileContent = await fs.readFile(fullPath, 'utf-8');
 
-    // 使用cheerio加载HTML内容
+    // Load HTML content using cheerio
     const $ = cheerio.load(fileContent);
 
     const bookmarks: SimpleBookmark[] = [];
     const categories: SimpleCategory[] = [];
 
-    // 跟踪当前路径，用于构建分类路径
+    // Track current path for building category hierarchy
     const categoryStack: string[] = [];
 
-    // 递归解析函数
+    // Recursive parsing function
     function parseFolder(element: ReturnType<typeof $>, parentName?: string) {
-      // 当前分类
+      // Current category
       let currentCategory: SimpleCategory | null = null;
 
-      // 遍历DT元素
+      // Traverse DT elements
       element.children('dt').each((_: any, dt: any) => {
         const dtEl = $(dt);
         const h3 = dtEl.children('h3').first();
         const a = dtEl.children('a').first();
 
-        // 如果有H3元素，说明这是一个分类
+        // If H3 element exists, this is a category
         if (h3.length > 0) {
           const categoryName = h3.text().trim();
 
-          // 创建分类对象
+          // Create category object
           currentCategory = {
             name: categoryName,
             parent: parentName || null,
             children: [],
           };
 
-          // 添加到分类列表
+          // Add to categories list
           categories.push(currentCategory);
 
-          // 更新分类路径
+          // Update category path
           categoryStack.push(categoryName);
 
-          // 查找下一个DL元素（子分类和书签）
+          // Find next DL element (subcategories and bookmarks)
           const nextDL = dtEl.children('dl').first();
           if (nextDL.length > 0) {
             parseFolder(nextDL, categoryName);
           }
 
-          // 回溯，移除当前分类
+          // Backtrack, remove current category
           categoryStack.pop();
         }
-        // 如果有A元素，说明这是一个书签
+        // If A element exists, this is a bookmark
         else if (a.length > 0) {
           const bookmark: SimpleBookmark = {
             title: a.text().trim(),
             url: a.attr('href') || '',
-            categoryPath: [...categoryStack], // 复制当前分类路径
+            categoryPath: [...categoryStack], // Copy current category path
           };
 
-          // 添加到书签列表
+          // Add to bookmarks list
           bookmarks.push(bookmark);
         }
       });
     }
 
-    // 查找所有的DL元素（书签文件的主要结构）
+    // Find all DL elements (main structure of bookmark file)
     const rootDL = $('dl').first();
     parseFolder(rootDL);
 
     return { bookmarks, categories };
   } catch (error: any) {
-    Logger.error('解析书签文件失败:', error);
-    throw new Error(`解析书签文件失败: ${error.message}`);
+    Logger.error('Failed to parse bookmark file:', error);
+    throw new Error(`Failed to parse bookmark file: ${error.message}`);
   }
 }

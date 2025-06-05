@@ -4,10 +4,10 @@ import { commonTransform } from '@/shared/mongoose/common-transform';
 import { BookmarkResponse, BookmarkFavoriteEnum, BookmarkPinnedEnum } from '@bookmark/schemas';
 import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type';
 
-// Mongoose 文档类型
+// Mongoose document type
 export type IBookmarkDocument = CreateDocument<BookmarkResponse, 'user' | 'categories' | 'tags' | 'meta'>;
 
-// Lean 查询结果类型
+// Lean query result type
 export type IBookmarkLean = CreateLeanDocument<BookmarkResponse>;
 
 const BookmarkSchema = new Schema<IBookmarkDocument>(

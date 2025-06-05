@@ -79,7 +79,7 @@ async function bootstrap() {
   await app.register(multipartPlugin);
   await app.register(workerPlugin);
 
-  // 自动加载 services 目录下的路由
+  // autoload services
   await app.register(autoload, {
     dir: join(__dirname, 'services'),
     matchFilter: (path) => {

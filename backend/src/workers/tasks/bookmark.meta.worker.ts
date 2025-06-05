@@ -12,7 +12,7 @@ import redisClient from '@/lib/redis-client';
 import { BaseWorker } from '../core/base-worker';
 
 const META_CACHE_PREFIX = QueueConfig.cache.META_CACHE_PREFIX;
-const CACHE_TTL = 60 * 60 * 24; // 24小时缓存
+const CACHE_TTL = 60 * 60 * 24; // Cache for 24 hours
 const TASK_NAME = QueueConfig.bookmark.fetchMeta;
 
 class BookmarkMetaWorker extends BaseWorker {
@@ -23,10 +23,10 @@ class BookmarkMetaWorker extends BaseWorker {
   }
 
   /**
-   * 开始监听队列
+   * Start listening to the queue
    */
   protected async startQueueListener() {
-    this.logger.info(`[Worker] 开始监听队列: ${TASK_NAME}`);
+    this.logger.info(`[Worker] Starting to listen to the queue: ${TASK_NAME}`);
 
     while (this.isRunning()) {
       const task = await QueueLib.getTaskBlocking<BookmarkFetchTask>(TASK_NAME, 2);
@@ -38,18 +38,18 @@ class BookmarkMetaWorker extends BaseWorker {
   }
 
   /**
-   * 获取缓存键
-   * @param url 网址
+   * Get cache key
+   * @param url Website URL
    */
   private getCacheKey(url: string): string {
-    // 规范化 URL 以确保相同的 URL 有相同的缓存键
+    // Normalize URL to ensure the same URL has the same cache key
     const normalizedUrl = normalizeUrlSafe(url);
     return `${META_CACHE_PREFIX}${normalizedUrl}`;
   }
 
   /**
-   * 检查 URL 元数据是否已缓存
-   * @param url 网址
+   * Check if URL metadata is cached
+   * @param url Website URL
    */
   private async checkMetaCache(url: string): Promise<boolean> {
     try {
@@ -57,18 +57,18 @@ class BookmarkMetaWorker extends BaseWorker {
       const exists = await redisClient.exists(cacheKey);
       return exists === 1;
     } catch (error) {
-      this.logger.error(`[Worker] Redis 缓存检查错误:`, error);
+      this.logger.error(`[Worker] Redis cache check error:`, error);
       return false;
     }
   }
 
   /**
-   * 从数据库获取已缓存的元数据
-   * @param url 网址
+   * Get cached metadata from the database
+   * @param url Website URL
    */
   private async getMetaFromDatabase(url: string): Promise<any | null> {
     try {
-      // 查找最近成功抓取的元数据
+      // Find the most recently successfully fetched metadata
       const meta = await WebsiteMetaModel.findOne({
         url: normalizeUrlSafe(url),
         fetchStatus: WebsiteMetaFetchEnums.SUCCESS,
@@ -78,31 +78,31 @@ class BookmarkMetaWorker extends BaseWorker {
 
       return meta;
     } catch (error) {
-      this.logger.error(`[Worker] 从数据库获取元数据错误:`, error);
+      this.logger.error(`[Worker] Error getting metadata from database:`, error);
       return null;
     }
   }
 
   /**
-   * 将 URL 添加到缓存
-   * @param url 网址
+   * Add URL to cache
+   * @param url Website URL
    */
   private async addUrlToCache(url: string): Promise<void> {
     try {
       const cacheKey = this.getCacheKey(url);
       await redisClient.set(cacheKey, '1', 'EX', CACHE_TTL);
-      this.logger.debug(`[Worker] URL 已添加到缓存: ${url}`);
+      this.logger.debug(`[Worker] URL added to cache: ${url}`);
     } catch (error) {
-      this.logger.error(`[Worker] Redis 缓存添加错误:`, error);
+      this.logger.error(`[Worker] Redis cache add error:`, error);
     }
   }
 
   /**
-   * 更新书签和元数据记录
-   * @param bookmark 书签模型实例
-   * @param websiteMeta 网站元数据模型实例
-   * @param metaData 元数据信息
-   * @param fetchStatus 抓取状态
+   * Update bookmark and metadata records
+   * @param bookmark Bookmark model instance
+   * @param websiteMeta Website metadata model instance
+   * @param metaData Metadata information
+   * @param fetchStatus Fetch status
    */
   private async updateRecords(
     bookmark: any,
@@ -116,7 +116,7 @@ class BookmarkMetaWorker extends BaseWorker {
       bookmark.description = metaData.result.ogDescription ?? null;
       bookmark.icon = metaData.result?.favicon;
 
-      // 更新元数据信息
+      // Update metadata information
       websiteMeta.url = bookmark.url;
       websiteMeta.ogsResult = metaData.result ? JSON.stringify(metaData.result) : '';
       websiteMeta.ogsResponse = '';
@@ -129,7 +129,7 @@ class BookmarkMetaWorker extends BaseWorker {
       websiteMeta.error = 'bookmark meta fetch failed!';
     }
 
-    // 保存更新
+    // Save updates
     await Promise.all([websiteMeta.save(), bookmark.save()]);
   }
 
@@ -139,74 +139,74 @@ class BookmarkMetaWorker extends BaseWorker {
     const websiteMeta = await WebsiteMetaModel.findOne({ _id: metaId });
 
     if (!bookmark || !websiteMeta) {
-      this.logger.error(`[Worker] 书签或书签元数据记录不存在: ${bookmarkId}`);
+      this.logger.error(`[Worker] Bookmark or bookmark metadata record does not exist: ${bookmarkId}`);
       return;
     }
 
     try {
-      // 检查 URL 是否已缓存
+      // Check if URL is cached
       const isCached = await this.checkMetaCache(url);
 
       if (isCached) {
-        // URL 已缓存，从数据库获取元数据
-        this.logger.info(`[Worker] URL 已缓存，从数据库获取: ${url}`);
+        // URL is cached, get metadata from database
+        this.logger.info(`[Worker] URL is cached, getting from database: ${url}`);
         const cachedMeta = await this.getMetaFromDatabase(url);
 
         if (cachedMeta) {
-          // 使用缓存的元数据更新记录
+          // Update records using cached metadata
           await this.updateRecords(bookmark, websiteMeta, cachedMeta, WebsiteMetaFetchEnums.SUCCESS);
-          this.logger.info(`[Worker] 使用缓存更新书签元数据成功: ${bookmarkId}`);
+          this.logger.info(`[Worker] Successfully updated bookmark metadata using cache: ${bookmarkId}`);
           return;
         }
       }
 
-      // 缓存未命中或没有可用的缓存数据，执行实时抓取
-      this.logger.info(`[Worker] 缓存未命中，执行实时抓取: ${url}`);
+      // Cache miss or no available cached data, perform real-time fetch
+      this.logger.info(`[Worker] Cache miss, performing real-time fetch: ${url}`);
       const fetchedMeta = await fetchWebsiteMetadata(url);
 
-      this.logger.info(`[Worker] 抓取结果：${(fetchedMeta.error, fetchedMeta.response)}`);
+      this.logger.info(`[Worker] Fetch result: ${(fetchedMeta.error, fetchedMeta.response)}`);
       if (fetchedMeta.error) {
         websiteMeta.fetchStatus = WebsiteMetaFetchEnums.FAILED;
         await websiteMeta.save();
       } else {
         await this.updateRecords(bookmark, websiteMeta, fetchedMeta, WebsiteMetaFetchEnums.SUCCESS);
-        this.logger.info(`[Worker] 更新书签元数据成功: ${bookmarkId}`);
+        this.logger.info(`[Worker] Successfully updated bookmark metadata: ${bookmarkId}`);
         await this.addUrlToCache(url);
       }
     } catch (err: any) {
       websiteMeta.fetchStatus = WebsiteMetaFetchEnums.FAILED;
       websiteMeta.error = err.message ?? 'website meta Fetching failed';
-      this.logger.error(`[Worker] 获取元数据错误: ${err.message}`);
+      this.logger.error(`[Worker] Error fetching metadata: ${err.message}`);
       await websiteMeta.save();
     }
   }
 
   /**
-   * 清除特定 URL 的缓存
-   * @param url 网址
+   * Clear cache for a specific URL
+   * @param url Website URL
    */
   public async clearUrlCache(url: string): Promise<void> {
     try {
       const cacheKey = this.getCacheKey(url);
       await redisClient.del(cacheKey);
-      this.logger.info(`[Worker] 已清除 URL 缓存: ${url}`);
+      this.logger.info(`[Worker] Cleared URL cache: ${url}`);
     } catch (error) {
-      this.logger.error(`[Worker] 清除缓存错误:`, error);
+      this.logger.error(`[Worker] Error clearing cache:`, error);
     }
   }
 
   /**
-   * 清除所有元数据缓存
+   * Clear all metadata cache
    */
   public async clearAllCache(): Promise<void> {
     try {
       const keys = await redisClient.keys(`${META_CACHE_PREFIX}*`);
       if (keys.length > 0) {
         await redisClient.del(...keys);
-        this.logger.info(`[Worker] 已清除所有元数据缓存 (${keys.length} 条)`);
+        this.logger.info(`[Worker] Cleared all metadata cache (${keys.length} items)`);
       }
     } catch (error) {
-      this.logger.error(`[Worker] 清除所有缓存错误:`, error);
+      this.logger.error(`[Worker] Error clearing all cache:`, error);
     }
   }
 

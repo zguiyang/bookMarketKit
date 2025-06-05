@@ -14,25 +14,25 @@ export class FileService {
   }
 
   /**
-   * 确保上传目录结构存在
+   * Ensures that the upload directory structure exists.
    */
   private async _ensureUploadDirs() {
     try {
-      // 确保静态文件根目录存在
+      // Ensure the static file root directory exists.
       await fileUtil.ensureDir(uploadCfg.STATIC_ROOT_DIR);
 
-      // 确保临时文件目录存在
+      // Ensure the temporary file directory exists.
       await fileUtil.ensureDir(uploadCfg.TEMP_DIR);
 
-      this.fastify.log.info(`上传目录结构: ${uploadCfg.STATIC_ROOT_DIR}`);
+      this.fastify.log.info(`Upload directory structure: ${uploadCfg.STATIC_ROOT_DIR}`);
     } catch (error: any) {
-      this.fastify.log.error(`无法创建上传目录结构: ${error.message}`);
-      throw new Error(`无法创建上传目录结构: ${error.message}`);
+      this.fastify.log.error(`Failed to create upload directory structure: ${error.message}`);
+      throw new Error(`Failed to create upload directory structure: ${error.message}`);
     }
   }
 
   /**
-   * 上传单个文件
+   * Uploads a single file.
    */
   async uploadFile(
     userId: string,
@@ -47,20 +47,20 @@ export class FileService {
     const { allowedTypes = uploadCfg.UPLOAD_CONFIG.allowedTypes, maxSize = uploadCfg.UPLOAD_CONFIG.maxFileSize } =
       options;
 
-    // 验证文件类型
+    // Validate file type.
     if (allowedTypes && !fileUtil.validateFileType(file, allowedTypes)) {
       throw new BusinessError(uploadCodeMessages.fileTypeError);
     }
 
-    // 验证文件大小
+    // Validate file size.
     if (maxSize && file.file.bytesRead > maxSize) {
       throw new BusinessError(uploadCodeMessages.fileTooLarge);
     }
 
-    // 保存文件
+    // Save the file.
     const fileInfo = await fileUtil.saveUploadedFile(file, userId);
 
-    // 保存文件记录到数据库
+    // Save file record to the database.
     const uploadRecord = await FileModel.create({
       user: userId,
       originalName: fileInfo.originalName,
@@ -69,7 +69,7 @@ export class FileService {
       path: fileInfo.relativePath,
       size: fileInfo.size,
       mimeType: fileInfo.mimeType,
-      storageType: StorageTypeEnums.TEMP, // TODO: 暂时写死为临时文件
+      storageType: StorageTypeEnums.TEMP, // TODO: Temporarily hardcoded as a temporary file.
       updateStatus: UploadStatusEnums.SUCCESS,
     });
 
@@ -77,9 +77,9 @@ export class FileService {
   }
 
   /**
-   * 删除文件
-   * @param filePath 文件路径
-   * @returns 是否删除成功
+   * Deletes a file.
+   * @param filePath The file path.
+   * @returns Whether the deletion was successful.
    */
   async deleteFile(filePath: string): Promise<boolean> {
     const uploadItem = await FileModel.findOne({ path: filePath });
@@ -90,7 +90,7 @@ export class FileService {
     const fullPath = path.join(uploadCfg.STATIC_ROOT_DIR, uploadItem.path);
     await fileUtil.removeFile(fullPath);
 
-    // 从数据库中删除记录
+    // Delete the record from the database.
     const deleted = await FileModel.deleteOne({ _id: uploadItem._id });
 
     return deleted.deletedCount > 0;

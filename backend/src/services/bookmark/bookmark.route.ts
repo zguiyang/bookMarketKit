@@ -128,7 +128,7 @@ export default async function bookmarkRoutes(fastify: FastifyInstance) {
         return Buffer.from(result, 'utf-8');
       } catch (error) {
         req.log.error(error);
-        return reply.code(500).send({ error: '导出书签时出错' });
+        return reply.code(500).send({ error: 'Error exporting bookmarks' });
       }
     },
   });

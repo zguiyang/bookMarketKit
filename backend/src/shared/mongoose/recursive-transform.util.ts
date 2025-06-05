@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 /**
- * 通用字段格式化函数，支持 ObjectId、Date 类型
+ * General field formatting function, supports ObjectId and Date types.
  */
 export function formatFieldValue(value: any): any {
   if (value instanceof Types.ObjectId) return value.toString();
@@ -14,7 +14,7 @@ export function formatFieldValue(value: any): any {
 }
 
 /**
- * 递归转换对象/数组的所有字段，统一格式化 ObjectId、Date（返回新对象/数组）
+ * Recursively transforms all fields of an object/array, uniformly formatting ObjectId and Date (returns a new object/array).
  */
 export function recursiveTransform<T>(data: T): T | T[] {
   if (isNull(data) || isUndefined(data)) {
@@ -36,7 +36,7 @@ export function recursiveTransform<T>(data: T): T | T[] {
 }
 
 /**
- * 原地递归转换对象/数组的所有字段，统一格式化 ObjectId、Date（直接修改原对象/数组）
+ * Recursively transforms all fields of an object/array in place, uniformly formatting ObjectId and Date (modifies the original object/array directly).
  */
 export function recursiveTransformInPlace(data: any): any {
   if (isNull(data) || isUndefined(data)) {

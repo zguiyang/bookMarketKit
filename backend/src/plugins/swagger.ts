@@ -5,12 +5,12 @@ import fastifySwaggerUi from '@fastify/swagger-ui';
 import { jsonSchemaTransform } from 'fastify-type-provider-zod';
 
 export default fp(async (fastify: FastifyInstance) => {
-  // 注册 Swagger 插件
+  // Register Swagger plugin
   await fastify.register(fastifySwagger as any, {
     openapi: {
       info: {
-        title: 'API 文档',
-        description: 'Bookmark API 文档',
+        title: 'API Documentation',
+        description: 'Bookmark API Documentation',
         version: '0.0.1',
       },
       servers: [],
@@ -18,7 +18,7 @@ export default fp(async (fastify: FastifyInstance) => {
     transform: jsonSchemaTransform,
   });
 
-  // 注册 Swagger UI 插件
+  // Register Swagger UI plugin
   fastify
     .register(fastifySwaggerUi, {
       routePrefix: '/docs',

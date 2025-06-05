@@ -1,7 +1,7 @@
 /**
- * 业务异常类
- * 用于模块中主动抛出业务错误
- * 兼容字符串或对象参数，支持 code/message/status
+ * Business exception class.
+ * Used to actively throw business errors in modules.
+ * Compatible with string or object parameters, supports code/message/status.
  */
 
 export type BusinessErrorCode = {

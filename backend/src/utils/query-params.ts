@@ -2,9 +2,9 @@ import { PaginatedRequest, PaginationDirectionEnum } from '@bookmark/schemas';
 import { SortOrder } from 'mongoose';
 
 /**
- * 过滤对象中的无效值（null、undefined、空字符串）
- * @param params 需要过滤的对象
- * @returns 过滤后的对象（只包含有效值）
+ * Filter invalid values (null, undefined, empty string) from an object
+ * @param params The object to filter
+ * @returns The filtered object (only contains valid values)
  */
 export function filterNullOrUndefined<T extends Record<string, any>>(params: T): Partial<T> {
   if (!params || typeof params !== 'object') {
@@ -20,9 +20,9 @@ export function filterNullOrUndefined<T extends Record<string, any>>(params: T):
 }
 
 /**
- * 提取分页与排序参数
- * @param query 分页请求参数
- * @returns 分页与排序相关参数
+ * Extract pagination and sorting parameters
+ * @param query Pagination request parameters
+ * @returns Pagination and sorting related parameters
  */
 export function getPaginateOptions(query: PaginatedRequest) {
   const { page, pageSize, orderBy, direction } = query;

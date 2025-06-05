@@ -21,13 +21,13 @@ export class WorkerManager {
   constructor(fastify: FastifyInstance, workerDir: string) {
     this.logger = fastify.log;
     this.workerDir = workerDir;
-    // 设置 worker-loader.mjs 的路径
+    // Set the path for worker-loader.mjs
     this.workerLoaderPath = path.resolve(__dirname, 'worker-loader.mjs');
   }
 
   async startAll(): Promise<void> {
     try {
-      // 递归获取所有worker文件
+      // Recursively get all worker files
       const workerFiles = await this.findWorkerFiles(this.workerDir);
 
       if (workerFiles.length === 0) {
@@ -35,9 +35,9 @@ export class WorkerManager {
         return;
       }
 
-      // 启动每个worker
+      // Start each worker
       for (const filePath of workerFiles) {
-        // 从完整路径中提取worker名称，保留目录结构作为命名空间
+        // Extract worker name from the full path, preserving directory structure as namespace
         const relativePath = path.relative(this.workerDir, filePath);
         const workerName = this.generateWorkerName(relativePath);
         await this.startWorker(workerName, filePath);
@@ -51,7 +51,7 @@ export class WorkerManager {
   }
 
   /**
-   * 递归查找目录中的所有worker文件
+   * Recursively find all worker files in a directory
    */
   private async findWorkerFiles(dir: string): Promise<string[]> {
     const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -62,11 +62,11 @@ export class WorkerManager {
       const fullPath = path.join(dir, entry.name);
 
       if (entry.isDirectory()) {
-        // 递归处理子目录
+        // Recursively process subdirectories
         const subDirFiles = await this.findWorkerFiles(fullPath);
         files.push(...subDirFiles);
       } else if (entry.isFile() && (entry.name.endsWith('.worker.js') || entry.name.endsWith('.worker.ts'))) {
-        // 添加worker文件
+        // Add worker file
         files.push(fullPath);
       }
     }
@@ -75,24 +75,24 @@ export class WorkerManager {
   }
 
   /**
-   * 根据文件路径生成worker名称
-   * 例如: tasks/bookmark/bookmark.website.worker.ts -> bookmark.website
+   * Generate worker name based on file path
+   * Example: tasks/bookmark/bookmark.website.worker.ts -> tasks.bookmark.bookmark.website
    */
   private generateWorkerName(relativePath: string): string {
-    // 移除文件扩展名
+    // Remove file extension
     const nameWithoutExt = relativePath.replace(/\.(js|ts)$/, '');
 
-    // 移除.worker后缀
+    // Remove .worker suffix
     const nameWithoutWorkerSuffix = nameWithoutExt.replace(/\.worker$/, '');
 
-    // 将路径分隔符替换为点，创建命名空间
-    // 例如: tasks/bookmark/bookmark.website -> tasks.bookmark.bookmark.website
+    // Replace path separators with dots to create a namespace
+    // Example: tasks/bookmark/bookmark.website -> tasks.bookmark.bookmark.website
     return nameWithoutWorkerSuffix.replace(/[\\/]/g, '.');
   }
 
   async startWorker(name: string, filePath: string): Promise<void> {
     try {
-      // 检查worker是否已经在运行
+      // Check if the worker is already running
       if (this.workers.has(name)) {
         this.logger.warn(`Worker ${name} is already running`);
         return;
@@ -104,7 +104,7 @@ export class WorkerManager {
       let worker: Worker;
 
       if (isTypeScriptFile) {
-        // 使用 worker-loader.mjs 启动 TypeScript worker
+        // Use worker-loader.mjs to start TypeScript worker
         worker = new Worker(this.workerLoaderPath, {
           workerData: {
             workerFile: filePath,
@@ -112,18 +112,18 @@ export class WorkerManager {
           },
         });
       } else {
-        // 直接启动 JavaScript worker
+        // Directly start JavaScript worker
         worker = new Worker(filePath);
       }
 
-      // 存储worker信息
+      // Store worker information
       this.workers.set(name, { name, worker, filePath });
 
-      // 设置事件监听器
+      // Set event listeners
       worker.on('error', (err) => {
         this.logger.error(`Worker ${name} error: ${err}`);
         this.workers.delete(name);
-        // 自动重启
+        // Auto-restart
         setTimeout(() => this.startWorker(name, filePath), 5000);
       });
 
@@ -131,7 +131,7 @@ export class WorkerManager {
         if (code !== 0) {
           this.logger.warn(`Worker ${name} exited with code ${code}`);
           this.workers.delete(name);
-          // 自动重启
+          // Auto-restart
           setTimeout(() => this.startWorker(name, filePath), 5000);
         } else {
           this.logger.info(`Worker ${name} exited gracefully`);
@@ -159,21 +159,21 @@ export class WorkerManager {
       return new Promise<void>((resolve) => {
         this.logger.info(`Stopping worker: ${name}`);
 
-        // 设置超时，防止worker无响应
+        // Set a timeout to prevent the worker from not responding
         const timeout = setTimeout(() => {
           this.logger.warn(`Worker ${name} did not respond to shutdown signal, terminating...`);
           worker.terminate();
           resolve();
         }, 5000);
 
-        // 监听正常退出
+        // Listen for normal exit
         worker.once('exit', () => {
           clearTimeout(timeout);
           this.logger.info(`Worker ${name} stopped successfully`);
           resolve();
         });
 
-        // 发送关闭信号
+        // Send shutdown signal
         worker.postMessage('shutdown');
       });
     });
@@ -184,14 +184,14 @@ export class WorkerManager {
   }
 
   /**
-   * 获取所有运行中的worker信息
+   * Get information for all running workers
    */
   getWorkers(): Map<string, WorkerInfo> {
     return new Map(this.workers);
   }
 
   /**
-   * 获取特定worker
+   * Get a specific worker
    */
   getWorker(name: string): WorkerInfo | undefined {
     return this.workers.get(name);

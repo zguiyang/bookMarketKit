@@ -4,7 +4,7 @@ import { recursiveTransformInPlace } from './recursive-transform.util';
 /**
  * Mongoose Plugin: leanTransformPlugin
  *
- * 应用于 .lean() 查询结果，递归转换 ObjectId、Date 类型
+ * Applied to .lean() query results, recursively transforms ObjectId and Date types.
  */
 function leanTransformPlugin(schema: Schema) {
   const queryHooks: Array<string> = [

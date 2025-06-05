@@ -162,7 +162,7 @@ export class BookmarkService {
 
     const filter: any = { user: userId };
 
-    // 构建查询条件
+    // Build query conditions
     if (isPinned !== undefined) {
       filter.isPinned = isPinned;
     }
@@ -181,9 +181,9 @@ export class BookmarkService {
 
     const { page, pageSize, skip, sort } = getPaginateOptions(query);
 
-    // 查询总数
+    // Query total count
     const total = await BookmarkModel.countDocuments(filter);
-    // 查询分页内容
+    // Query paginated content
     const bookmarks = await BookmarkModel.find(filter)
       .populate(['categories', 'tags'])
       .sort(sort)
@@ -204,21 +204,21 @@ export class BookmarkService {
 
   async findCollection(userId: string): Promise<BookmarkCollectionResponse> {
     const [pinnedBookmarks, recentBookmarks, recentAddedBookmarks] = await Promise.all([
-      // 置顶书签
+      // Pinned bookmarks
       BookmarkModel.find({ user: userId, isPinned: BookmarkPinnedEnum.YES })
         .populate(['categories', 'tags'])
         .sort({ updatedAt: -1 })
         .limit(10)
         .lean<IBookmarkLean[]>(),
 
-      // 最近访问的书签
+      // Recently visited bookmarks
       BookmarkModel.find({ user: userId, lastVisitedAt: { $exists: true } })
         .populate(['categories', 'tags'])
         .sort({ lastVisitedAt: -1 })
         .limit(10)
         .lean<IBookmarkLean[]>(),
 
-      // 最近添加的书签
+      // Recently added bookmarks
       BookmarkModel.find({ user: userId })
         .populate(['categories', 'tags'])
         .sort({ createdAt: -1 })
@@ -281,7 +281,7 @@ export class BookmarkService {
   async import(userId: string, data: BookmarkImportBody): Promise<BookmarkImportResponse> {
     const { bookmarks, categories } = await parseHtmlBookmarks(data.filePath);
 
-    // 导入结果统计
+    // Import result statistics
     const result = {
       totalCategories: categories.length,
       totalBookmarks: bookmarks.length,
@@ -298,7 +298,7 @@ export class BookmarkService {
       return 0;
     });
 
-    // 创建分类
+    // Create categories
     for (const category of sortedCategories) {
       const exists = await this.categoryService.findByFields(userId, {
         name: category.name,
@@ -323,7 +323,7 @@ export class BookmarkService {
 
         result.importedCategories++;
       } catch (error: any) {
-        result.errors.push(`导入分类 "${category.name}" 失败: ${error.message}`);
+        result.errors.push(`Failed to import category "${category.name}": ${error.message}`);
       }
     }
 
@@ -357,7 +357,7 @@ export class BookmarkService {
 
         result.importedBookmarks++;
       } catch (error: any) {
-        result.errors.push(`导入书签 "${bookmark.title}, ${bookmark.url}" 失败: ${error.message}`);
+        result.errors.push(`Failed to import bookmark "${bookmark.title}, ${bookmark.url}": ${error.message}`);
       }
     }
 
@@ -365,7 +365,7 @@ export class BookmarkService {
   }
 
   async _generateHtmlBookmarks(bookmarks: IBookmarkLean[]) {
-    // 创建 HTML 文档头部 - 符合 Netscape 书签文件格式
+    // Create HTML document header - Netscape Bookmark File Format compliant
     let html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!-- This is an automatically generated file.
      It will be read and overwritten.
@@ -376,16 +376,16 @@ export class BookmarkService {
 <DL><p>
 `;
 
-    // 按照分类组织书签
+    // Organize bookmarks by category
     const categoryMap: {
       [key: string]: IBookmarkLean[];
     } = {};
     const noFolderBookmarks: IBookmarkLean[] = [];
 
     /**
-     * 转义 HTML 特殊字符，防止 HTML 注入
-     * @param {string} text - 需要转义的文本
-     * @returns {string} - 转义后的文本
+     * Escape HTML special characters to prevent HTML injection
+     * @param {string} text - Text to escape
+     * @returns {string} - Escaped text
      */
     function escapeHtml(text: string) {
       if (!text) return '';
@@ -398,39 +398,39 @@ export class BookmarkService {
         .replace(/'/g, '&#039;');
     }
 
-    // 将书签按分类分组
+    // Group bookmarks by category
     bookmarks.forEach((bookmark) => {
       if (bookmark.categories && bookmark.categories.length > 0) {
-        // 使用第一个分类作为文件夹（如果有多个分类）
+        // Use the first category as a folder (if there are multiple categories)
         const category = bookmark.categories[0].name;
         if (!categoryMap[category]) {
           categoryMap[category] = [];
         }
         categoryMap[category].push(bookmark);
       } else {
-        // 没有分类的书签单独处理
+        // Handle bookmarks without categories separately
         noFolderBookmarks.push(bookmark);
       }
     });
 
-    // 先添加没有分类的书签
+    // Add bookmarks without categories first
     if (noFolderBookmarks.length > 0) {
-      html += `    <DT><H3 ADD_DATE="${Math.floor(Date.now() / 1000)}" LAST_MODIFIED="${Math.floor(Date.now() / 1000)}">未分类</H3>\n`;
+      html += `    <DT><H3 ADD_DATE="${Math.floor(Date.now() / 1000)}" LAST_MODIFIED="${Math.floor(Date.now() / 1000)}">Uncategorized</H3>\n`;
       html += `    <DL><p>\n`;
 
       noFolderBookmarks.forEach((bookmark) => {
-        // 解析创建时间字符串为时间戳
+        // Parse creation time string to timestamp
         const createdAt = bookmark.createdAt
           ? new Date(bookmark.createdAt).getTime() / 1000
           : Math.floor(Date.now() / 1000);
 
-        // 转义特殊字符，防止 HTML 注入
+        // Escape special characters to prevent HTML injection
         const safeTitle = escapeHtml(bookmark.title || 'Untitled');
         const safeUrl = escapeHtml(bookmark.url);
 
         html += `        <DT><A HREF="${safeUrl}" ADD_DATE="${Math.floor(createdAt)}">${safeTitle}</A>\n`;
 
-        // 如果有描述，添加描述
+        // If there is a description, add description
         if (bookmark.description) {
           html += `        <DD>${escapeHtml(bookmark.description)}\n`;
         }
@@ -439,46 +439,46 @@ export class BookmarkService {
       html += `    </DL><p>\n`;
     }
 
-    // 为每个分类生成 HTML
+    // Generate HTML for each category
     Object.keys(categoryMap).forEach((category) => {
       const folderDate = Math.floor(Date.now() / 1000);
       const safeCategoryName = escapeHtml(category);
 
-      // 添加分类文件夹
+      // Add category folder
       html += `    <DT><H3 ADD_DATE="${folderDate}" LAST_MODIFIED="${folderDate}">${safeCategoryName}</H3>\n`;
       html += `    <DL><p>\n`;
 
-      // 添加该分类中的书签
+      // Add bookmarks in this category
       categoryMap[category].forEach((bookmark) => {
-        // 解析创建时间字符串为时间戳
+        // Parse creation time string to timestamp
         const createdAt = bookmark.createdAt
           ? new Date(bookmark.createdAt).getTime() / 1000
           : Math.floor(Date.now() / 1000);
 
-        // 转义特殊字符
+        // Escape special characters
         const safeTitle = escapeHtml(bookmark.title || 'Untitled');
         const safeUrl = escapeHtml(bookmark.url);
 
         html += `        <DT><A HREF="${safeUrl}" ADD_DATE="${Math.floor(createdAt)}"`;
 
-        // 添加图标（如果有）
+        // Add icon (if any)
         if (bookmark.icon && !bookmark.icon.startsWith('data:')) {
           html += ` ICON="${escapeHtml(bookmark.icon)}"`;
         }
 
         html += `>${safeTitle}</A>\n`;
 
-        // 如果有描述，添加描述
+        // If there is a description, add description
         if (bookmark.description) {
           html += `        <DD>${escapeHtml(bookmark.description)}\n`;
         }
       });
 
-      // 关闭分类文件夹标签
+      // Close category folder tag
       html += `    </DL><p>\n`;
     });
 
-    // 关闭 HTML 文档
+    // Close HTML document
     html += `</DL><p>`;
 
     return html;

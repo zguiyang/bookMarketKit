@@ -1,7 +1,7 @@
 import { Document, Types } from 'mongoose';
 
 /**
- * Mongoose 文档基础接口
+ * Base interface for Mongoose documents.
  */
 export interface IBaseDocument extends Document {
   _id: Types.ObjectId;
@@ -10,7 +10,7 @@ export interface IBaseDocument extends Document {
 }
 
 /**
- * 基础 Lean 文档类型
+ * Base type for Lean documents.
  */
 export interface IBaseLeanDocument {
   _id: string;
@@ -19,10 +19,10 @@ export interface IBaseLeanDocument {
 }
 
 /**
- * 创建 Mongoose 文档类型的工具类型
- * @template T - 响应类型（如 BookmarkResponse）
- * @template K - 需要替换为 ObjectId 的字段
- * @template O - 需要重写的字段类型
+ * Utility type for creating Mongoose document types.
+ * @template T - Response type (e.g., BookmarkResponse)
+ * @template K - Fields to be replaced with ObjectId
+ * @template O - Field types to be overridden
  */
 export type CreateDocument<T, K extends keyof T = never, O extends object = object> = IBaseDocument &
   Omit<T, '_id' | 'createdAt' | 'updatedAt' | K | keyof O> & {
@@ -30,9 +30,9 @@ export type CreateDocument<T, K extends keyof T = never, O extends object = obje
   } & O;
 
 /**
- * 创建 Lean 文档类型的工具类型
- * @template T - 响应类型（如 BookmarkResponse）
- * @template O - 需要重写的字段类型
+ * Utility type for creating Lean document types.
+ * @template T - Response type (e.g., BookmarkResponse)
+ * @template O - Field types to be overridden
  */
 export type CreateLeanDocument<T, O extends object = object> = IBaseLeanDocument &
   Omit<T, '_id' | 'createdAt' | 'updatedAt' | keyof O> &

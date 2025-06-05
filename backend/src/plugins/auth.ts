@@ -12,7 +12,7 @@ export default fp(async (fastify) => {
 
   fastify.addHook('onRequest', async (request: FastifyRequest) => {
     if (request.url.startsWith('/auth') || request.url.startsWith('/docs')) {
-      // 验证路由不需要验证
+      // Authentication routes do not require validation
       return;
     }
     const authSession = await auth.api.getSession({
