@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { SessionUser } from '@bookmark/auth';
 import { client } from '@/lib/auth/client';
 import { getCurrentUser } from '@/lib/auth/client';
@@ -64,9 +65,19 @@ export function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors w-full">
-          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-sm font-medium">{userInfo?.name?.slice(0, 1)}</span>
-          </div>
+          <Avatar>
+            {userInfo?.image ? (
+              <>
+                <AvatarImage src={userInfo?.image}></AvatarImage>
+                <AvatarFallback>{userInfo?.name ?? userInfo?.username}</AvatarFallback>
+              </>
+            ) : (
+              <>
+                <AvatarImage src={''}></AvatarImage>
+                <AvatarFallback>{userInfo?.name ?? userInfo?.username}</AvatarFallback>
+              </>
+            )}
+          </Avatar>
           <div className="flex-1 text-left min-w-0 overflow-hidden">
             <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
               {userInfo?.name ?? userInfo?.username}
