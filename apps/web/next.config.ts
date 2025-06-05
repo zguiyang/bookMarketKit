@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    domains: ['pic1.imgdb.cn', 'images.unsplash.com'],
+  },
   async rewrites() {
     return [
       {

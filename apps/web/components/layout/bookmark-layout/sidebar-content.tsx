@@ -379,7 +379,7 @@ function Logo() {
           </svg>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="text-xl font-bold text-gray-900 dark:text-white">BookMarketKit</span>
+          <span className="text-xl font-bold text-gray-900 dark:text-white">Bookmark</span>
           <span className="text-[10px] font-medium px-1 py-0.5 rounded-sm bg-primary/15 text-primary">BETA</span>
         </div>
       </div>

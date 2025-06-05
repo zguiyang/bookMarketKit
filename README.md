@@ -1,4 +1,4 @@
-# Book Market Kit
+# Bookmark
 
 > 🚀 A modern open-source intelligent bookmark management platform, built with Next.js & NestJS.
 
