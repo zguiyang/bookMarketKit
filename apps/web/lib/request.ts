@@ -20,7 +20,6 @@ const alovaInstance = createAlova({
   responded: {
     onSuccess(response: AxiosResponse) {
       const responseType = response.headers['x-response-type'];
-      console.log('responseType', responseType);
       if (responseType === 'file-stream') {
         return {
           code: CodeEnums.COMMON_SUCCESSFUL,

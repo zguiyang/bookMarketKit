@@ -40,12 +40,7 @@ export class BookmarkService {
     const exists = await BookmarkModel.exists({
       $or: [
         {
-          title: data.title,
-          user: userId,
-        },
-        {
           url: data.url,
-          user: userId,
         },
       ],
       user: userId,
@@ -267,7 +262,7 @@ export class BookmarkService {
     }
     const query: FilterQuery<IBookmarkDocument> = { user: userId };
     const keywordRegex = escapeStringRegexp(keyword.trim());
-    query.$or = [{ title: { $regex: keywordRegex, $options: 'i' } }];
+    query.$or = [{ title: { $regex: keywordRegex, $options: 'i' } }, { url: { $regex: keywordRegex, $options: 'i' } }];
     const bookmarks = await BookmarkModel.find(query)
       .populate(['categories', 'tags'])
       .lean<IBookmarkLean[]>()

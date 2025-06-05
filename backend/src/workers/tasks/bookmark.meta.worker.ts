@@ -112,8 +112,8 @@ class BookmarkMetaWorker extends BaseWorker {
   ): Promise<void> {
     if (metaData.result && metaData.result.success) {
       bookmark.meta = websiteMeta._id;
-      bookmark.title = metaData.result?.ogTitle ?? '';
-      bookmark.description = metaData.result.ogDescription ?? '';
+      bookmark.title = metaData.result?.ogTitle ?? null;
+      bookmark.description = metaData.result.ogDescription ?? null;
       bookmark.icon = metaData.result?.favicon;
 
       // 更新元数据信息
@@ -134,7 +134,6 @@ class BookmarkMetaWorker extends BaseWorker {
   }
 
   protected async processTask(task: BookmarkFetchTask): Promise<void> {
-    // TODO: 需实现错误补偿任务
     const { userId, bookmarkId, metaId, url } = task;
     const bookmark = await BookmarkModel.findOne({ user: userId, _id: bookmarkId });
     const websiteMeta = await WebsiteMetaModel.findOne({ _id: metaId });

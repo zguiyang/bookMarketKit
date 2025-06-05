@@ -62,8 +62,8 @@ export const bookmarkCollectionResponseSchema = z.object({
 // 书签创建和更新Schema
 export const createBookmarkBodySchema = z
   .object({
-    title: z.string().optional(),
     url: z.string().url({ message: '请输入有效的URL' }),
+    title: z.string().optional(),
     description: z.string().optional(),
     icon: z.string().optional(),
     categoryIds: z.array(z.string()).optional(),

@@ -119,9 +119,9 @@ export function BookmarkCard({ bookmark, onUpdateBookmark }: BookmarkCardProps) 
               <h3
                 onClick={handleViewBookmark}
                 className="text-base font-medium text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 truncate transition-colors cursor-pointer"
-                title={bookmark.title ?? bookmark.url}
+                title={bookmark.title || bookmark.url}
               >
-                {bookmark.title ?? bookmark.url}
+                {bookmark.title || bookmark.url}
               </h3>
             </div>
 

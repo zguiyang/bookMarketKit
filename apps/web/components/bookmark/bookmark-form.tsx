@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { Bookmark as BookmarkIcon } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -38,6 +38,8 @@ export function BookmarkForm({ mode, bookmark, open, onOpenChange, onSubmit }: B
     tagIds: [],
   };
 
+  const defaultValuesRef = useRef(defaultValues);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues as FormValues,
@@ -45,20 +47,20 @@ export function BookmarkForm({ mode, bookmark, open, onOpenChange, onSubmit }: B
 
   useEffect(() => {
     if (bookmark && mode === 'edit') {
-      // TODO: 需要支持多分类、多标签
+      // TODO: 未来考虑支持多分类、多标签
       const categoryIds = bookmark.categories?.map((c) => c._id);
       const tagIds = bookmark.tags?.map((t) => t._id);
       form.reset({
-        title: bookmark.title,
+        title: bookmark.title || '',
         url: bookmark.url,
         icon: bookmark.icon || '',
         categoryIds,
         tagIds,
       });
     } else {
-      form.reset(defaultValues as FormValues);
+      form.reset(defaultValuesRef.current as FormValues);
     }
-  }, [bookmark, mode, form, open]);
+  }, [bookmark, mode, form, open, defaultValuesRef]);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -123,7 +125,10 @@ export function BookmarkForm({ mode, bookmark, open, onOpenChange, onSubmit }: B
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>分类</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value ? field.value[0] : ''}>
+                  <Select
+                    onValueChange={(v) => field.onChange([v])}
+                    value={field.value && field.value[0] ? field.value[0] : ''}
+                  >
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="选择分类" />
@@ -148,7 +153,10 @@ export function BookmarkForm({ mode, bookmark, open, onOpenChange, onSubmit }: B
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>标签</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value ? field.value[0] : ''}>
+                  <Select
+                    onValueChange={(v) => field.onChange([v])}
+                    value={field.value && field.value[0] ? field.value[0] : ''}
+                  >
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="选择标签" />

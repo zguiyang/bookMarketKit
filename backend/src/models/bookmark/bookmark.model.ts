@@ -14,8 +14,8 @@ const BookmarkSchema = new Schema<IBookmarkDocument>(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     url: { type: String, required: true },
-    icon: { type: String, required: false, default: '' },
-    title: { type: String, required: false, default: '' },
+    icon: { type: String, required: false, default: null },
+    title: { type: String, required: false, default: null },
     description: { type: String },
     visitCount: { type: Number, default: 0 },
     isFavorite: {
