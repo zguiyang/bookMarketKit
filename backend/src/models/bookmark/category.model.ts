@@ -29,7 +29,4 @@ const BookmarkCategorySchema = new Schema<IBookmarkCategoryDocument>(
 
 BookmarkCategorySchema.plugin(leanTransformPlugin);
 
-export const BookmarkCategoryModel = mongoose.model<IBookmarkCategoryDocument>(
-  'BookmarkCategory',
-  BookmarkCategorySchema
-);
+export const CategoryModel = mongoose.model<IBookmarkCategoryDocument>('BookmarkCategory', BookmarkCategorySchema);

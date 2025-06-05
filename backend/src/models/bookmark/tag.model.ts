@@ -27,4 +27,4 @@ const BookmarkTagSchema = new Schema<IBookmarkTagDocument>(
 
 BookmarkTagSchema.plugin(leanTransformPlugin);
 
-export const BookmarkTagModel = mongoose.model<IBookmarkTagDocument>('BookmarkTag', BookmarkTagSchema);
+export const TagModel = mongoose.model<IBookmarkTagDocument>('BookmarkTag', BookmarkTagSchema);

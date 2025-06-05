@@ -1,7 +1,7 @@
 import type { FilterQuery, UpdateQuery } from 'mongoose';
 import escapeStringRegexp from 'escape-string-regexp';
 import {
-  BookmarkCategoryModel,
+  CategoryModel,
   IBookmarkCategoryDocument,
   IBookmarkCategoryLean,
   IBookmarkTagDocument,
@@ -15,18 +15,18 @@ export class CategoryService {
   constructor() {}
 
   async create(userId: string, data: CreateCategoryBody): Promise<CategoryResponse> {
-    const exists = await BookmarkCategoryModel.exists({ name: data.name, user: userId });
+    const exists = await CategoryModel.exists({ name: data.name, user: userId });
     if (exists) {
       throw new BusinessError(bookmarkCategoryCodeMessages.existed);
     }
-    const category = await BookmarkCategoryModel.create({ ...data, user: userId });
+    const category = await CategoryModel.create({ ...data, user: userId });
     return category.toJSON<CategoryResponse>();
   }
 
   async update(userId: string, data: UpdateCategoryBody): Promise<CategoryResponse> {
     const filter: FilterQuery<IBookmarkCategoryDocument> = { _id: data.id, user: userId };
     const update: UpdateQuery<IBookmarkCategoryDocument> = { $set: omit(data, 'id') };
-    const category = await BookmarkCategoryModel.findOneAndUpdate(filter, update, { new: true });
+    const category = await CategoryModel.findOneAndUpdate(filter, update, { new: true });
     if (!category) {
       throw new BusinessError(bookmarkCategoryCodeMessages.updateError);
     }
@@ -35,20 +35,20 @@ export class CategoryService {
   }
 
   async delete(userId: string, id: string): Promise<{ deletedCount?: number }> {
-    return BookmarkCategoryModel.deleteOne({ _id: id, user: userId });
+    return CategoryModel.deleteOne({ _id: id, user: userId });
   }
 
   async findAll(userId: string): Promise<CategoryResponse[]> {
-    return BookmarkCategoryModel.find({ user: userId }).lean<IBookmarkCategoryLean[]>();
+    return CategoryModel.find({ user: userId }).lean<IBookmarkCategoryLean[]>();
   }
 
   async findOne(userId: string, id: string): Promise<CategoryResponse | null> {
-    const category = await BookmarkCategoryModel.findOne({ _id: id, user: userId }).lean<IBookmarkCategoryLean>();
+    const category = await CategoryModel.findOne({ _id: id, user: userId }).lean<IBookmarkCategoryLean>();
     return category;
   }
 
   async findByFields(userId: string, query: FilterQuery<IBookmarkCategoryDocument>): Promise<CategoryResponse | null> {
-    const category = await BookmarkCategoryModel.findOne(query).lean<IBookmarkCategoryLean>();
+    const category = await CategoryModel.findOne(query).lean<IBookmarkCategoryLean>();
     return category;
   }
   async search(userId: string, keyword?: string): Promise<CategoryResponse[]> {
@@ -58,6 +58,6 @@ export class CategoryService {
     const query: FilterQuery<IBookmarkTagDocument> = { user: userId };
     const keywordRegex = escapeStringRegexp(keyword.trim());
     query.$or = [{ name: { $regex: keywordRegex, $options: 'i' } }];
-    return BookmarkCategoryModel.find(query).lean<IBookmarkCategoryLean[]>().limit(50);
+    return CategoryModel.find(query).lean<IBookmarkCategoryLean[]>().limit(50);
   }
 }
