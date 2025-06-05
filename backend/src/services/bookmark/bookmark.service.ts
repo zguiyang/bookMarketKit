@@ -27,7 +27,7 @@ import QueueLib from '@/lib/queue';
 import { TagService } from './tag/tag.service';
 import { CategoryService } from './category/category.service';
 import { WebsiteMetaService } from '@/services/website/website-meta.service';
-import { BookmarkFetchTask } from '@/interfaces/queue.interface';
+import { BookmarkFetchTask } from '@/types/queue.interface';
 
 export class BookmarkService {
   constructor(

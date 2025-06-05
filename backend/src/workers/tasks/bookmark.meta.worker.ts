@@ -1,7 +1,7 @@
 import { SuccessResult, ErrorResult } from 'open-graph-scraper/types';
 import { WebsiteMetaFetchEnums } from '@bookmark/schemas';
 import { QueueConfig } from '@/config/constant.config';
-import { BookmarkFetchTask } from '@/interfaces/queue.interface';
+import { BookmarkFetchTask } from '@/types/queue.interface';
 import { BookmarkModel } from '@/models/bookmark/bookmark.model';
 import { WebsiteMetaModel } from '@/models/website-meta.model';
 import { fetchWebsiteMetadata } from '@/lib/meta-scraper';
