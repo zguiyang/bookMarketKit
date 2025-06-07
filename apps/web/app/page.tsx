@@ -30,11 +30,6 @@ export default function HomePage() {
                 GitHub
               </Button>
             </Link>
-            <Link href="#demo">
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                Demo
-              </Button>
-            </Link>
           </div>
         </div>
       </header>
