@@ -1,8 +1,8 @@
 import got from 'got';
 import ogs from 'open-graph-scraper';
 import type { ErrorResult, SuccessResult } from 'open-graph-scraper/types';
-import { normalizeUrlSafe, isValidUrl } from '@/utils/url';
-import Logger from '@/utils/logger';
+import { normalizeUrlSafe, isValidUrl } from '@/utils/url.js';
+import Logger from '@/utils/logger.js';
 
 /**
  * 获取网页元数据
@@ -66,7 +66,8 @@ export async function isUrlAccessible(url: string, timeout = 5000): Promise<bool
   try {
     const normalizedUrl = normalizeUrlSafe(url);
 
-    const response = await got.head(normalizedUrl, {
+    const response = await got(normalizedUrl, {
+      method: 'HEAD',
       timeout: { request: timeout },
       followRedirect: true,
       throwHttpErrors: false,

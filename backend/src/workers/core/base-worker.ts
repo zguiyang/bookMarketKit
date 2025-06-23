@@ -1,5 +1,5 @@
 import { parentPort } from 'worker_threads';
-import Logger from '@/utils/logger';
+import Logger from '@/utils/logger.js';
 
 export abstract class BaseWorker {
   private running = true;

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { app, bootstrap } from '@/bootstrap';
+import { app, bootstrap } from '@/bootstrap.js';
 
 describe('Hello Route Tests', () => {
   beforeAll(async () => {

@@ -1,7 +1,7 @@
 import * as fs from 'fs/promises';
 import * as cheerio from 'cheerio';
-import { getFileUrl } from '@/utils/file';
-import Logger from '@/utils/logger';
+import { getFileUrl } from '@/utils/file.js';
+import Logger from '@/utils/logger.js';
 
 // Simplified data structures
 interface SimpleBookmark {

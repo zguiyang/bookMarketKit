@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
 import type { FastifyInstance } from 'fastify';
-import { getMongoConnection, closeMongoConnection } from '@/lib/mongo-connection';
+import { getMongoConnection, closeMongoConnection } from '@/lib/mongo-connection.js';
 
 export default fp(async (fastify: FastifyInstance) => {
   await getMongoConnection({

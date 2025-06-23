@@ -1,5 +1,5 @@
 import { Schema, Query, CallbackWithoutResultAndOptionalError } from 'mongoose';
-import { recursiveTransformInPlace } from './recursive-transform.util';
+import { recursiveTransformInPlace } from './recursive-transform.util.js';
 
 /**
  * Mongoose Plugin: leanTransformPlugin

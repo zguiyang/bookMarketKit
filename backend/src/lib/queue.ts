@@ -1,6 +1,6 @@
-import { QueueConfig } from '@/config/constant.config';
-import Logger from '@/utils/logger';
-import redisClient from '@/lib/redis-client';
+import { QueueConfig } from '@/config/constant.config.js';
+import Logger from '@/utils/logger.js';
+import redisClient from '@/lib/redis-client.js';
 
 export class QueueLib {
   private readonly queuePrefix: string = QueueConfig.queuePrefix;
@@ -332,7 +332,7 @@ export class QueueLib {
       const queueName = this.getQueueName(taskName);
       const tasks = await this.redis.lrange(queueName, start, end);
 
-      return tasks.map((task) => JSON.parse(task) as T);
+      return tasks.map((task: any) => JSON.parse(task) as T);
     } catch (error) {
       this.logger.error(`Error peeking tasks from queue ${taskName}: ${error}`);
       throw error;

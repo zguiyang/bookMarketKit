@@ -1,7 +1,7 @@
 import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import { isNumber } from 'lodash-es';
 import { Error as MongooseError } from 'mongoose';
-import { BusinessError } from '@/lib/business-error';
+import { BusinessError } from '@/lib/business-error.js';
 import { commonCodeMessages, mongooseCodeMessages } from '@bookmark/code-definitions';
 import type { ApiResponse } from '@bookmark/schemas';
 

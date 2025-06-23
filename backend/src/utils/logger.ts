@@ -1,6 +1,6 @@
-import pino from 'pino';
+import { pino } from 'pino';
 import pretty from 'pino-pretty';
-import env from '@/lib/env';
+import env from '@/lib/env.js';
 
 const Logger =
   env.NODE_ENV === 'development'

@@ -1,5 +1,5 @@
-import Redis from 'ioredis';
-import env from './env';
+import { Redis } from 'ioredis';
+import env from './env.js';
 
 const { REDIS_URL, REDIS_DB, REDIS_PASSWORD } = env;
 
@@ -12,7 +12,7 @@ const redisClient = new Redis({
   port,
   password: REDIS_PASSWORD,
   db: REDIS_DB,
-  retryStrategy: (times) => {
+  retryStrategy: (times: number) => {
     return Math.min(times * 50, 2000);
   },
 });

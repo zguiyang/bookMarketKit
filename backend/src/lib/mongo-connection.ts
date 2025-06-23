@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import type { FastifyBaseLogger } from 'fastify';
-import env from './env';
+import env from './env.js';
 
 // Connection status
 let isConnected = false;

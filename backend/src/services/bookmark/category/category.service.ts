@@ -5,10 +5,10 @@ import {
   IBookmarkCategoryDocument,
   IBookmarkCategoryLean,
   IBookmarkTagDocument,
-} from '@/models/bookmark';
+} from '@/models/bookmark/index.js';
 import { CreateCategoryBody, UpdateCategoryBody, CategoryResponse } from '@bookmark/schemas';
 import { omit } from 'lodash-es';
-import { BusinessError } from '@/lib/business-error';
+import { BusinessError } from '@/lib/business-error.js';
 import { bookmarkCategoryCodeMessages } from '@bookmark/code-definitions';
 
 export class CategoryService {

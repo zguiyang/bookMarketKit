@@ -1,5 +1,5 @@
-import { bootstrap, app } from './bootstrap';
-import env from '@/lib/env';
+import { bootstrap, app } from './bootstrap.js';
+import env from '@/lib/env.js';
 
 await bootstrap().catch((err: any) => {
   console.error('Failed to start backend server', err);

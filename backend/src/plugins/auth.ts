@@ -5,7 +5,7 @@ import fp from 'fastify-plugin';
 import { fromNodeHeaders } from 'better-auth/node';
 import { auth } from '@bookmark/auth';
 import { authCodeMessages } from '@bookmark/code-definitions';
-import { BusinessError } from '@/lib/business-error';
+import { BusinessError } from '@/lib/business-error.js';
 
 export default fp(async (fastify) => {
   fastify.decorateRequest<SessionUser | null>('currentUser', null);

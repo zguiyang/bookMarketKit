@@ -1,8 +1,8 @@
 import type { SessionUser } from '@bookmark/auth';
 import type { AuthType } from '@bookmark/auth';
 import type { FastifyInstance as OriginalFastifyInstance } from 'fastify';
-import type { EnvConfig } from '@/lib/env';
-import { WorkerManager } from '@/workers/core/worker-manager';
+import type { EnvConfig } from '@/lib/env.js';
+import { WorkerManager } from '@/workers/core/worker-manager.js';
 
 declare module 'fastify' {
   interface FastifyRequest {

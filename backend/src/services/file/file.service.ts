@@ -3,10 +3,10 @@ import { MultipartFile } from '@fastify/multipart';
 import * as path from 'path';
 import { FileResponse, UploadFileBody, UploadStatusEnums, StorageTypeEnums } from '@bookmark/schemas';
 import { uploadCodeMessages } from '@bookmark/code-definitions';
-import { BusinessError } from '@/lib/business-error';
-import { FileModel } from '@/models/file.model';
-import * as fileUtil from '@/utils/file';
-import * as uploadCfg from '@/config/upload.config';
+import { BusinessError } from '@/lib/business-error.js';
+import { FileModel } from '@/models/file.model.js';
+import * as fileUtil from '@/utils/file.js';
+import * as uploadCfg from '@/config/upload.config.js';
 
 export class FileService {
   constructor(private readonly fastify: FastifyInstance) {

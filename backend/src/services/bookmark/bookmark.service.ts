@@ -16,18 +16,18 @@ import {
   BookmarkImportBody,
   BookmarkImportResponse,
 } from '@bookmark/schemas';
-import { QueueConfig } from '@/config/constant.config';
-import { BookmarkModel, IBookmarkDocument, IBookmarkLean } from '@/models/bookmark';
-import { BusinessError } from '@/lib/business-error';
+import { QueueConfig } from '@/config/constant.config.js';
+import { BookmarkModel, IBookmarkDocument, IBookmarkLean } from '@/models/bookmark/index.js';
+import { BusinessError } from '@/lib/business-error.js';
 import { bookmarkCodeMessages } from '@bookmark/code-definitions';
-import { getPaginateOptions } from '@/utils/query-params';
-import { isValidUrl } from '@/utils/url';
-import { parseHtmlBookmarks } from '@/lib/bookmark-parser';
-import QueueLib from '@/lib/queue';
-import { TagService } from './tag/tag.service';
-import { CategoryService } from './category/category.service';
-import { WebsiteMetaService } from '@/services/website/website-meta.service';
-import { BookmarkFetchTask } from '@/types/queue.interface';
+import { getPaginateOptions } from '@/utils/query-params.js';
+import { isValidUrl } from '@/utils/url.js';
+import { parseHtmlBookmarks } from '@/lib/bookmark-parser.js';
+import QueueLib from '@/lib/queue.js';
+import { TagService } from './tag/tag.service.js';
+import { CategoryService } from './category/category.service.js';
+import { WebsiteMetaService } from '@/services/website/website-meta.service.js';
+import { BookmarkFetchTask } from '@/types/queue.interface.js';
 
 export class BookmarkService {
   constructor(

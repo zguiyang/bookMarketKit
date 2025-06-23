@@ -1,5 +1,5 @@
 import { WebsiteMetaCreateBody, WebsiteMetaUpdateBody, WebsiteMetaResponse } from '@bookmark/schemas';
-import { WebsiteMetaModel } from '@/models/website-meta.model';
+import { WebsiteMetaModel } from '@/models/website-meta.model.js';
 
 export class WebsiteMetaService {
   constructor() {}

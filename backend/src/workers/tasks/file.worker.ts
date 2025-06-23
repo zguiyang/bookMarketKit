@@ -2,12 +2,12 @@ import { CronJob } from 'cron';
 import { FilterQuery } from 'mongoose';
 import path from 'path';
 
-import * as uploadCfg from '@/config/upload.config';
-import { FileModel, IFileDocument } from '@/models/file.model';
+import * as uploadCfg from '@/config/upload.config.js';
+import { FileModel, IFileDocument } from '@/models/file.model.js';
 import { StorageTypeEnums } from '@bookmark/schemas';
-import { getMongoConnection, closeMongoConnection } from '@/lib/mongo-connection';
-import * as fileUtil from '@/utils/file';
-import { BaseWorker } from '../core/base-worker';
+import { getMongoConnection, closeMongoConnection } from '@/lib/mongo-connection.js';
+import * as fileUtil from '@/utils/file.js';
+import { BaseWorker } from '../core/base-worker.js';
 
 class FileWorker extends BaseWorker {
   protected async start(): Promise<void> {

@@ -1,15 +1,15 @@
 import { SuccessResult, ErrorResult } from 'open-graph-scraper/types';
 import { WebsiteMetaFetchEnums } from '@bookmark/schemas';
-import { QueueConfig } from '@/config/constant.config';
-import { BookmarkFetchTask } from '@/types/queue.interface';
-import { BookmarkModel } from '@/models/bookmark/bookmark.model';
-import { WebsiteMetaModel } from '@/models/website-meta.model';
-import { fetchWebsiteMetadata } from '@/lib/meta-scraper';
-import { getMongoConnection, closeMongoConnection } from '@/lib/mongo-connection';
-import { normalizeUrlSafe } from '@/utils/url';
-import QueueLib from '@/lib/queue';
-import redisClient from '@/lib/redis-client';
-import { BaseWorker } from '../core/base-worker';
+import { QueueConfig } from '@/config/constant.config.js';
+import { BookmarkFetchTask } from '@/types/queue.interface.js';
+import { BookmarkModel } from '@/models/bookmark/bookmark.model.js';
+import { WebsiteMetaModel } from '@/models/website-meta.model.js';
+import { fetchWebsiteMetadata } from '@/lib/meta-scraper.js';
+import { getMongoConnection, closeMongoConnection } from '@/lib/mongo-connection.js';
+import { normalizeUrlSafe } from '@/utils/url.js';
+import QueueLib from '@/lib/queue.js';
+import redisClient from '@/lib/redis-client.js';
+import { BaseWorker } from '../core/base-worker.js';
 
 const META_CACHE_PREFIX = QueueConfig.cache.META_CACHE_PREFIX;
 const CACHE_TTL = 60 * 60 * 24; // Cache for 24 hours

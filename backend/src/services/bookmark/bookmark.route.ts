@@ -10,11 +10,11 @@ import {
   BookmarkPageListQuery,
   BookmarkImportBody,
 } from '@bookmark/schemas';
-import { bookmarkSchemas } from './bookmark.schema';
-import { TagService } from './tag/tag.service';
-import { CategoryService } from './category/category.service';
-import { WebsiteMetaService } from '../website/website-meta.service';
-import { BookmarkService } from './bookmark.service';
+import { bookmarkSchemas } from './bookmark.schema.js';
+import { TagService } from './tag/tag.service.js';
+import { CategoryService } from './category/category.service.js';
+import { WebsiteMetaService } from '../website/website-meta.service.js';
+import { BookmarkService } from './bookmark.service.js';
 
 export default async function bookmarkRoutes(fastify: FastifyInstance) {
   const bookmarkService = new BookmarkService(new CategoryService(), new TagService(), new WebsiteMetaService());

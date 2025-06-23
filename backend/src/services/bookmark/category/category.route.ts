@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
-import { CategoryService } from './category.service';
+import { CategoryService } from './category.service.js';
 import { CreateCategoryBody, UpdateCategoryBody, CategoryIdParam } from '@bookmark/schemas';
-import { categorySchemas } from './category.schema';
+import { categorySchemas } from './category.schema.js';
 
 export default async function categoryRoutes(fastify: FastifyInstance) {
   const categoryService = new CategoryService();

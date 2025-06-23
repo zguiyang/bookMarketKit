@@ -1,8 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 import { FileResponse, UploadStatusEnums, UploadBizTypeEnums, StorageTypeEnums } from '@bookmark/schemas';
-import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin';
-import { commonTransform } from '@/shared/mongoose/common-transform';
-import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type';
+import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin.js';
+import { commonTransform } from '@/shared/mongoose/common-transform.js';
+import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type.js';
 
 export type IFileDocument = CreateDocument<FileResponse, 'user'>;
 

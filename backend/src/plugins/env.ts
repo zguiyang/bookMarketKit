@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
 import type { FastifyInstance } from 'fastify';
-import env from '@/lib/env';
+import env from '@/lib/env.js';
 
 export default fp(async (fastify: FastifyInstance) => {
   if (fastify.env) {

@@ -1,5 +1,5 @@
-import { IBaseDocument } from './mongoose-type';
-import { recursiveTransform } from './recursive-transform.util';
+import { IBaseDocument } from './mongoose-type.js';
+import { recursiveTransform } from './recursive-transform.util.js';
 
 /**
  * Common Mongoose document transformation method.

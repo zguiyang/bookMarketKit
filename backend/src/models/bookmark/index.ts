@@ -1,3 +1,3 @@
-export * from './bookmark.model';
-export * from './category.model';
-export * from './tag.model';
+export * from './bookmark.model.js';
+export * from './category.model.js';
+export * from './tag.model.js';

@@ -6,18 +6,18 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
 
-import envPlugin from './plugins/env';
-import DBPlugin from './plugins/db';
-import redisPlugin from './plugins/redis';
-import swaggerPlugin from './plugins/swagger';
-import authPlugin from './plugins/auth';
-import multipartPlugin from './plugins/multipart';
-import workerPlugin from './plugins/worker';
+import envPlugin from './plugins/env.js';
+import DBPlugin from './plugins/db.js';
+import redisPlugin from './plugins/redis.js';
+import swaggerPlugin from './plugins/swagger.js';
+import authPlugin from './plugins/auth.js';
+import multipartPlugin from './plugins/multipart.js';
+import workerPlugin from './plugins/worker.js';
 
-import errorHandler from './middlewares/error-handler';
-import notFoundHandler from './middlewares/not-found-handler';
+import errorHandler from './middlewares/error-handler.js';
+import notFoundHandler from './middlewares/not-found-handler.js';
 
-import { onSendHookHandler } from './hooks/response-hook';
+import { onSendHookHandler } from './hooks/response-hook.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

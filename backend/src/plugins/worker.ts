@@ -1,5 +1,5 @@
 import fp from 'fastify-plugin';
-import { WorkerManager } from '@/workers/core/worker-manager';
+import { WorkerManager } from '@/workers/core/worker-manager.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
