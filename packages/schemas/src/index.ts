@@ -1,6 +1,6 @@
-export * from './bookmark/index.js';
-export * from './response.schema.js';
-export * from './user.schema.js';
+export * from './bookmark/index';
+export * from './response.schema';
+export * from './user.schema';
 
-export * from './file.schema.js';
-export * from './website-meta.schema.js';
+export * from './file.schema';
+export * from './website-meta.schema';

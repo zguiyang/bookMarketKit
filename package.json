@@ -7,7 +7,9 @@
     "web:dev": "pnpm --filter web dev",
     "backend:dev": "pnpm --filter backend dev",
     "format": "prettier --write .",
-    "lint": "pnpm --filter web lint && pnpm --filter backend lint"
+    "lint": "pnpm --filter web lint && pnpm --filter backend lint",
+    "build:packages": "pnpm --filter @bookmark/schemas build && pnpm --filter @bookmark/auth build && pnpm --filter @bookmark/code-definitions build",
+    "dev:packages": "pnpm --filter @bookmark/schemas dev & pnpm --filter @bookmark/auth dev & pnpm --filter @bookmark/code-definitions dev"
   },
   "keywords": [
     "bookmark"
@@ -24,6 +26,7 @@
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "3.5.3",
+    "tsup": "^8.5.0",
     "typescript-eslint": "^8.32.0"
   }
 }
