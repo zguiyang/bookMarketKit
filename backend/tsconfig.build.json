@@ -4,17 +4,25 @@
     "moduleResolution": "Bundler",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "target": "esnext",
     "module": "esnext",
     "outDir": "dist",
-    "types": ["node", "vitest"],
+    "sourceMap": true,
+    "types": ["node"],
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "tests/**/*.ts", "vitest.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": [
+    "tests/**/*", 
+    "**/*.test.ts", 
+    "**/*.spec.ts", 
+    "**/__tests__/**/*", 
+    "src/mocks/**/*", 
+    "vitest.config.ts"
+  ]
 }

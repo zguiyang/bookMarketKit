@@ -34,7 +34,7 @@ const BookmarkSchema = new Schema<IBookmarkDocument>(
       default: null,
     },
     screenshotUrl: { type: String },
-    lastVisitedAt: { type: Date },
+    lastVisitedAt: { type: String },
     categories: [{ type: Schema.Types.ObjectId, ref: 'BookmarkCategory' }],
     tags: [{ type: Schema.Types.ObjectId, ref: 'BookmarkTag' }],
   },
