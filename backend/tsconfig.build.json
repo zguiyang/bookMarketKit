@@ -13,8 +13,7 @@
     "sourceMap": true,
     "types": ["node"],
     "paths": {
-      "@/*": ["src/*"],
-      "@bookmark/*": ["../packages/*"]
+      "@/*": ["src/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
