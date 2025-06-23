@@ -13,16 +13,10 @@
     "sourceMap": true,
     "types": ["node"],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@bookmark/*": ["../packages/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
-  "exclude": [
-    "tests/**/*", 
-    "**/*.test.ts", 
-    "**/*.spec.ts", 
-    "**/__tests__/**/*", 
-    "src/mocks/**/*", 
-    "vitest.config.ts"
-  ]
+  "exclude": ["tests/**/*", "**/*.test.ts", "**/*.spec.ts", "**/__tests__/**/*", "src/mocks/**/*", "vitest.config.ts"]
 }

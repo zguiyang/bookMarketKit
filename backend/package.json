@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx watch ./src/app.ts | pino-pretty -t 'yyyy-mm-dd HH:MM:ss' --ignore 'pid,hostname'",
-    "start": "cross-env NODE_ENV=production tsx src/app.ts",
-    "build": "rm -rf dist && cross-env NODE_ENV=production tsc -p tsconfig.build.json",
+    "start": "cross-env NODE_ENV=production node dist/backend/src/app.js",
+    "build": "rimraf dist && tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test:watch": "cross-env NODE_ENV=development NODE_OPTIONS=\"--import tsx\" vitest -w",
@@ -64,7 +64,9 @@
     "globals": "^16.1.0",
     "pino": "^9.7.0",
     "pino-pretty": "^13.0.0",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.19.4",
     "typescript-eslint": "^8.32.0",
     "vitest": "^3.1.2"
