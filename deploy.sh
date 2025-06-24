@@ -1,20 +1,20 @@
 #!/bin/bash
 
 ###########################################
-# 配置变量 - 所有配置集中在此处定义
+# Configuration Variables - All configurations are defined here
 ###########################################
 
-# 颜色定义
+# Color definitions
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# 数据库配置
+# Database configuration
 DB_NAME="bookmark"
 
-# 文件路径配置
+# File path configuration
 DOCKER_COMPOSE_FILE="docker-compose.yaml"
 DOCKER_COMPOSE_EXAMPLE="docker-compose.example.yaml"
 ENV_FILE=".env"
@@ -22,22 +22,22 @@ BACKEND_ENV_FILE="backend/.env.deploy"
 FRONTEND_ENV_FILE="apps/web/.env.deploy"
 CREDENTIALS_FILE="bookmark-credentials.txt"
 
-# 端口配置
+# Port configuration
 BACKEND_PORT=13091
 FRONTEND_PORT=13090
 
 ###########################################
-# 辅助函数
+# Helper Functions
 ###########################################
 
-# 询问用户是否覆盖已存在的配置文件
+# Ask user whether to overwrite existing configuration files
 ask_overwrite() {
   local file=$1
   local description=$2
   
   if [ -f "$file" ]; then
-    echo -e "${YELLOW}$description 已存在。${NC}"
-    read -p "是否覆盖? (y/n): " choice
+    echo -e "${YELLOW}$description already exists.${NC}"
+    read -p "Overwrite? (y/n): " choice
     case "$choice" in 
       y|Y ) return 0;;
       * ) return 1;;
@@ -47,34 +47,34 @@ ask_overwrite() {
   fi
 }
 
-# 生成随机密码
+# Generate random password
 generate_random_password() {
   local length=$1
   openssl rand -hex $length | tr -dc 'a-zA-Z0-9'
 }
 
-# 检查必要的依赖是否安装
+# Check if necessary dependencies are installed
 check_dependencies() {
-  echo -e "${BLUE}=== Book Market Kit Docker 部署脚本 ===${NC}\n"
+  echo -e "${BLUE}=== Book Market Kit Docker Deployment Script ===${NC}\n"
   
-  # 检查 Docker 是否安装
+  # Check if Docker is installed
   if ! command -v docker &> /dev/null; then
-    echo -e "${RED}错误: Docker 未安装。请先安装 Docker。${NC}"
-    echo "访问 https://docs.docker.com/get-docker/ 获取安装指南。"
+    echo -e "${RED}Error: Docker is not installed. Please install Docker first.${NC}"
+    echo "Visit https://docs.docker.com/get-docker/ for installation guide."
     exit 1
   fi
 
-  # 检查 Docker Compose 是否安装
+  # Check if Docker Compose is installed
   if ! command -v docker-compose &> /dev/null; then
-    echo -e "${RED}错误: Docker Compose 未安装。请先安装 Docker Compose。${NC}"
-    echo "访问 https://docs.docker.com/compose/install/ 获取安装指南。"
+    echo -e "${RED}Error: Docker Compose is not installed. Please install Docker Compose first.${NC}"
+    echo "Visit https://docs.docker.com/compose/install/ for installation guide."
     exit 1
   fi
 
-  echo -e "${GREEN}✓ Docker 环境检查通过${NC}\n"
+  echo -e "${GREEN}✓ Docker environment check passed${NC}\n"
 }
 
-# 创建或更新配置文件
+# Create or update configuration file
 create_or_update_file() {
   local file=$1
   local description=$2
@@ -83,59 +83,59 @@ create_or_update_file() {
   if [ -f "$file" ]; then
     if ask_overwrite "$file" "$description"; then
       echo "$content" > "$file"
-      echo -e "${GREEN}✓ 已更新 $description${NC}"
+      echo -e "${GREEN}✓ Updated $description${NC}"
       return 0
     else
-      echo -e "${YELLOW}保留现有 $description${NC}"
+      echo -e "${YELLOW}Keeping existing $description${NC}"
       return 1
     fi
   else
     echo "$content" > "$file"
-    echo -e "${GREEN}✓ 已创建 $description${NC}"
+    echo -e "${GREEN}✓ Created $description${NC}"
     return 0
   fi
 }
 
-# 运行依赖检查
+# Run dependency check
 check_dependencies
 
-# 创建必要的配置文件
-echo -e "${YELLOW}正在准备配置文件...${NC}"
+# Create necessary configuration files
+echo -e "${YELLOW}Preparing configuration files...${NC}"
 
-# 复制 docker-compose 配置
+# Copy docker-compose configuration
 copy_docker_compose_file() {
   if [ -f "$DOCKER_COMPOSE_FILE" ]; then
-    if ask_overwrite "$DOCKER_COMPOSE_FILE" "Docker Compose 配置文件"; then
+    if ask_overwrite "$DOCKER_COMPOSE_FILE" "Docker Compose configuration file"; then
       cp "$DOCKER_COMPOSE_EXAMPLE" "$DOCKER_COMPOSE_FILE"
-      echo -e "${GREEN}✓ 已更新 $DOCKER_COMPOSE_FILE${NC}"
+      echo -e "${GREEN}✓ Updated $DOCKER_COMPOSE_FILE${NC}"
     else
-      echo -e "${YELLOW}保留现有 $DOCKER_COMPOSE_FILE${NC}"
+      echo -e "${YELLOW}Keeping existing $DOCKER_COMPOSE_FILE${NC}"
     fi
   else
     cp "$DOCKER_COMPOSE_EXAMPLE" "$DOCKER_COMPOSE_FILE"
-    echo -e "${GREEN}✓ 已创建 $DOCKER_COMPOSE_FILE${NC}"
+    echo -e "${GREEN}✓ Created $DOCKER_COMPOSE_FILE${NC}"
   fi
 }
 
-# 复制 docker-compose 配置文件
+# Copy docker-compose configuration file
 copy_docker_compose_file
 
-# 生成或读取凭据
+# Generate or read credentials
 generate_or_read_credentials() {
-  # 默认凭据
+  # Default credentials
   MONGO_USERNAME="root"
   
-  # 如果保留现有文件，从中读取密码以保持一致性
-  if [ -f "$ENV_FILE" ] && ! ask_overwrite "$ENV_FILE" "环境配置文件"; then
-    # 从现有的.env文件中读取密码
+  # If keeping existing file, read passwords from it to maintain consistency
+  if [ -f "$ENV_FILE" ] && ! ask_overwrite "$ENV_FILE" "Environment configuration file"; then
+    # Read passwords from existing .env file
     MONGO_USERNAME=$(grep MONGO_USERNAME "$ENV_FILE" | cut -d= -f2)
     MONGO_PASSWORD=$(grep MONGO_PASSWORD "$ENV_FILE" | cut -d= -f2)
     REDIS_PASSWORD=$(grep REDIS_PASSWORD "$ENV_FILE" | cut -d= -f2)
     AUTH_SECRET=$(grep AUTH_SECRET "$ENV_FILE" | cut -d= -f2)
-    echo -e "${BLUE}已从现有配置文件读取密码信息${NC}"
+    echo -e "${BLUE}Read password information from existing configuration file${NC}"
     return 1
   else
-    # 生成新的随机密码
+    # Generate new random passwords
     MONGO_PASSWORD=$(generate_random_password 12)
     REDIS_PASSWORD=$(generate_random_password 12)
     AUTH_SECRET=$(generate_random_password 24)
@@ -143,19 +143,19 @@ generate_or_read_credentials() {
   fi
 }
 
-# 生成或读取凭据
+# Generate or read credentials
 generate_or_read_credentials
 
-# 创建主环境配置文件
+# Create main environment configuration file
 ENV_CONTENT="MONGO_USERNAME=${MONGO_USERNAME}
 MONGO_PASSWORD=${MONGO_PASSWORD}
 MONGO_DATABASE=${DB_NAME}
 REDIS_PASSWORD=${REDIS_PASSWORD}
 AUTH_SECRET=${AUTH_SECRET}"
 
-create_or_update_file "$ENV_FILE" "环境配置文件" "$ENV_CONTENT"
+create_or_update_file "$ENV_FILE" "Environment configuration file" "$ENV_CONTENT"
 
-# 准备后端环境配置
+# Prepare backend environment configuration
 BACKEND_ENV_CONTENT="PORT=${BACKEND_PORT}
 DATABASE_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/${DB_NAME}?authSource=admin
 REDIS_URL=redis://redis:6379
@@ -164,81 +164,81 @@ REDIS_DB=0
 WEB_URL=http://web:${FRONTEND_PORT}
 AUTH_SECRET=${AUTH_SECRET}
 
-# 如需使用 OAuth 登录，请配置以下环境变量
+# If you need to use OAuth login, configure the following environment variables
 # GITHUB_CLIENT_ID=your_github_client_id
 # GITHUB_CLIENT_SECRET=your_github_client_secret
 # GOOGLE_CLIENT_ID=your_google_client_id
 # GOOGLE_CLIENT_SECRET=your_google_client_secret"
 
-create_or_update_file "$BACKEND_ENV_FILE" "后端环境配置文件" "$BACKEND_ENV_CONTENT"
+create_or_update_file "$BACKEND_ENV_FILE" "Backend environment configuration file" "$BACKEND_ENV_CONTENT"
 
-# 准备前端环境配置
+# Prepare frontend environment configuration
 FRONTEND_ENV_CONTENT="# Frontend Docker Environment Variables
 
-# API URL - 浏览器通过localhost访问后端API
+# API URL - Browser accesses backend API through localhost
 NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT}
 
-# 外部访问使用localhost
+# External access uses localhost
 NEXT_PUBLIC_WEB_URL=http://localhost:${FRONTEND_PORT}"
 
-create_or_update_file "$FRONTEND_ENV_FILE" "前端环境配置文件" "$FRONTEND_ENV_CONTENT"
+create_or_update_file "$FRONTEND_ENV_FILE" "Frontend environment configuration file" "$FRONTEND_ENV_CONTENT"
 
-# 保存凭据到文件
-CREDENTIALS_CONTENT="=== Book Market Kit 凭据信息 ===
+# Save credentials to file
+CREDENTIALS_CONTENT="=== Book Market Kit Credentials Information ===
 
 MongoDB:
-  用户名: ${MONGO_USERNAME}
-  密码: ${MONGO_PASSWORD}
-  数据库: ${DB_NAME}
+  Username: ${MONGO_USERNAME}
+  Password: ${MONGO_PASSWORD}
+  Database: ${DB_NAME}
 
 Redis:
-  密码: ${REDIS_PASSWORD}
+  Password: ${REDIS_PASSWORD}
 
-认证密钥:
+Authentication Key:
   AUTH_SECRET: ${AUTH_SECRET}
 
-请妥善保管此文件！"
+Please keep this file safe!"
 
-create_or_update_file "$CREDENTIALS_FILE" "凭据信息文件" "$CREDENTIALS_CONTENT"
+create_or_update_file "$CREDENTIALS_FILE" "Credentials information file" "$CREDENTIALS_CONTENT"
 
-# 显示部署成功信息
+# Display deployment success information
 show_success_info() {
-  echo -e "\n${GREEN}=== 部署成功! ===${NC}"
-  echo -e "应用访问地址:"
-  echo -e "  前端: http://localhost:${FRONTEND_PORT}"
-  echo -e "  后端: http://localhost:${BACKEND_PORT}"
-  echo -e "\n数据库凭据:"
-  echo -e "  MongoDB 用户名: ${MONGO_USERNAME}"
-  echo -e "  MongoDB 密码: ${MONGO_PASSWORD}"
-  echo -e "  MongoDB 数据库: ${DB_NAME}"
-  echo -e "  Redis 密码: ${REDIS_PASSWORD}"
+  echo -e "\n${GREEN}=== Deployment Successful! ===${NC}"
+  echo -e "Application access addresses:"
+  echo -e "  Frontend: http://localhost:${FRONTEND_PORT}"
+  echo -e "  Backend: http://localhost:${BACKEND_PORT}"
+  echo -e "\nDatabase credentials:"
+  echo -e "  MongoDB username: ${MONGO_USERNAME}"
+  echo -e "  MongoDB password: ${MONGO_PASSWORD}"
+  echo -e "  MongoDB database: ${DB_NAME}"
+  echo -e "  Redis password: ${REDIS_PASSWORD}"
   echo -e "  AUTH_SECRET: ${AUTH_SECRET}"
-  echo -e "\n凭据已保存到 ${CREDENTIALS_FILE} 文件"
-  echo -e "\n常用命令:"
-  echo -e "  查看容器状态: docker-compose ps"
-  echo -e "  查看日志: docker-compose logs"
-  echo -e "  停止服务: docker-compose down"
-  echo -e "  重启服务: docker-compose restart"
+  echo -e "\nCredentials have been saved to ${CREDENTIALS_FILE} file"
+  echo -e "\nCommon commands:"
+  echo -e "  View container status: docker-compose ps"
+  echo -e "  View logs: docker-compose logs"
+  echo -e "  Stop services: docker-compose down"
+  echo -e "  Restart services: docker-compose restart"
 }
 
-# 显示部署失败信息
+# Display deployment failure information
 show_failure_info() {
-  echo -e "\n${RED}部署失败，请检查日志获取详细信息。${NC}"
-  echo -e "使用 'docker-compose logs' 查看详细日志。"
+  echo -e "\n${RED}Deployment failed, please check logs for details.${NC}"
+  echo -e "Use 'docker-compose logs' to view detailed logs."
   exit 1
 }
 
-echo -e "\n${BLUE}=== 开始构建和启动服务 ===${NC}"
-echo -e "${YELLOW}这可能需要几分钟时间，请耐心等待...${NC}"
+echo -e "\n${BLUE}=== Starting to build and launch services ===${NC}"
+echo -e "${YELLOW}This may take a few minutes, please wait patiently...${NC}"
 
-# 导出端口变量，使docker-compose可以使用
+# Export port variables for docker-compose to use
 export FRONTEND_PORT=${FRONTEND_PORT}
 export BACKEND_PORT=${BACKEND_PORT}
 
-# 启动服务
+# Start services
 docker-compose up -d --build
 
-# 检查服务是否成功启动
+# Check if services started successfully
 if [ $? -eq 0 ]; then
   show_success_info
 else

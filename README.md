@@ -99,6 +99,24 @@ For the easiest setup experience, use our Docker one-click deployment:
 - `apps/web/.env.deploy`: Frontend environment variables
 - `backend/.env.deploy`: Backend environment variables
 
+##### Customizable Variables
+
+The following variables can be customized in the deployment script (`deploy.sh`):
+
+| Variable | Default Value | Description |
+|----------|---------------|-------------|
+| `DB_NAME` | `bookmark` | MongoDB database name |
+| `DOCKER_COMPOSE_FILE` | `docker-compose.yaml` | Docker Compose configuration file name |
+| `DOCKER_COMPOSE_EXAMPLE` | `docker-compose.example.yaml` | Template Docker Compose file |
+| `ENV_FILE` | `.env` | Main environment variables file |
+| `BACKEND_ENV_FILE` | `backend/.env.deploy` | Backend environment configuration file |
+| `FRONTEND_ENV_FILE` | `apps/web/.env.deploy` | Frontend environment configuration file |
+| `CREDENTIALS_FILE` | `bookmark-credentials.txt` | File to store generated credentials |
+| `BACKEND_PORT` | `13091` | Backend service port |
+| `FRONTEND_PORT` | `13090` | Frontend service port |
+
+You can modify these variables directly in the `deploy.sh` file before running it, or override the port variables using environment variables as described in the [Customizing Ports](#customizing-ports) section.
+
 ##### Monorepo Architecture and Docker Build
 
 This project uses a Monorepo architecture with a unified Docker build process:
@@ -153,7 +171,7 @@ Application data is stored in Docker volumes:
    pnpm dev
 
    # Frontend only
-   pnpm client:dev
+   pnpm web:dev
 
    # Backend only
    pnpm backend:dev
@@ -194,6 +212,7 @@ docker-compose down -v
 You can customize the ports used by the application:
 
 1. **Using environment variables during deployment**:
+
    ```bash
    # Example: Use custom ports
    FRONTEND_PORT=4000 BACKEND_PORT=9000 ./deploy.sh
