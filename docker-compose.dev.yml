@@ -2,7 +2,7 @@ version: '3.8'
 services:
   mongo:
     image: mongo:6.0
-    container_name: bookmark-mongo
+    container_name: bookmark-dev-mongo
     restart: always
     ports:
       - 27017:27017
@@ -15,7 +15,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: bookmark-redis
+    container_name: bookmark-dev-redis
     restart: always
     ports:
       - '6379:6379'

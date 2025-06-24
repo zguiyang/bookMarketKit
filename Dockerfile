@@ -89,8 +89,8 @@ COPY --from=builder /app/backend/dist ./backend/dist
 COPY --from=builder /app/packages ./packages
 
 # Create upload directory and set permissions
-RUN mkdir -p /app/backend/uploads \
-    && chown -R fastify:nodejs /app/backend/uploads
+RUN mkdir -p /app/backend/uploads /app/backend/static \
+    && chown -R fastify:nodejs /app/backend/uploads /app/backend/static
 
 # 切换到非root用户
 USER fastify

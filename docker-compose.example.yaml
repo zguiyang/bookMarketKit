@@ -1,5 +1,19 @@
 version: '3.8'
 services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: bookmark-nginx
+    restart: always
+    ports:
+      - '${NGINX_PORT:-13092}:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web
+      - backend
+    networks:
+      - bookmark-network
+
   web:
     build:
       context: .
@@ -10,8 +24,9 @@ services:
         FRONTEND_PORT: ${FRONTEND_PORT:-13090}
     container_name: bookmark-web
     restart: always
-    ports:
-      - '13090:13090'
+    # 不再直接暴露端口到宿主机，由nginx代理
+    # ports:
+    #   - '13090:13090'
     env_file:
       - apps/web/.env.production
     depends_on:
@@ -29,15 +44,16 @@ services:
         BACKEND_PORT: ${BACKEND_PORT:-13091}
     container_name: bookmark-backend
     restart: always
-    ports:
-      - '13091:13091'
+    # 不再直接暴露端口到宿主机，由nginx代理
+    # ports:
+    #   - '13091:13091'
     env_file:
       - backend/.env.production
     depends_on:
       - mongo
       - redis
-    volumes:
-      - backend-uploads:/app/backend/uploads
+    # volumes:
+      # - backend-uploads:/app/backend/uploads
     networks:
       - bookmark-network
 
@@ -71,7 +87,6 @@ services:
 volumes:
   mongo-data:
   redis-data:
-  backend-uploads:
 
 networks:
   bookmark-network:

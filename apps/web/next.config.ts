@@ -14,12 +14,16 @@ const nextConfig: NextConfig = {
     domains: ['pic1.imgdb.cn', 'images.unsplash.com'],
   },
   async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
-      },
-    ];
+    // 只在开发环境下应用代理配置，生产环境由 Nginx 处理
+    if (process.env.NODE_ENV === 'development') {
+      return [
+        {
+          source: '/api/:path*',
+          destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
+        },
+      ];
+    }
+    return [];
   },
 };
 

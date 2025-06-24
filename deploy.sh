@@ -25,6 +25,7 @@ CREDENTIALS_FILE="bookmark-credentials.txt"
 # Port configuration
 BACKEND_PORT=13091
 FRONTEND_PORT=13090
+NGINX_PORT=13092
 
 ###########################################
 # Helper Functions
@@ -161,7 +162,8 @@ DATABASE_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/${DB_NAME
 REDIS_URL=redis://redis:6379
 REDIS_PASSWORD=${REDIS_PASSWORD}
 REDIS_DB=0
-WEB_URL=http://web:${FRONTEND_PORT}
+# 通过Nginx代理访问前端
+WEB_URL=http://localhost:${NGINX_PORT}
 AUTH_SECRET=${AUTH_SECRET}
 
 # If you need to use OAuth login, configure the following environment variables
@@ -175,11 +177,11 @@ create_or_update_file "$BACKEND_ENV_FILE" "Backend environment configuration fil
 # Prepare frontend environment configuration
 FRONTEND_ENV_CONTENT="# Frontend Docker Environment Variables
 
-# API URL - Browser accesses backend API through localhost
-NEXT_PUBLIC_API_URL=http://localhost:${BACKEND_PORT}
+# API URL - 通过Nginx代理访问后端API
+NEXT_PUBLIC_API_URL=http://localhost:${NGINX_PORT}
 
-# External access uses localhost
-NEXT_PUBLIC_WEB_URL=http://localhost:${FRONTEND_PORT}"
+# 外部访问使用Nginx代理的地址
+NEXT_PUBLIC_WEB_URL=http://localhost:${NGINX_PORT}"
 
 create_or_update_file "$FRONTEND_ENV_FILE" "Frontend environment configuration file" "$FRONTEND_ENV_CONTENT"
 
@@ -205,8 +207,7 @@ create_or_update_file "$CREDENTIALS_FILE" "Credentials information file" "$CREDE
 show_success_info() {
   echo -e "\n${GREEN}=== Deployment Successful! ===${NC}"
   echo -e "Application access addresses:"
-  echo -e "  Frontend: http://localhost:${FRONTEND_PORT}"
-  echo -e "  Backend: http://localhost:${BACKEND_PORT}"
+  echo -e "  Web Application: http://localhost:${NGINX_PORT}"
   echo -e "\nDatabase credentials:"
   echo -e "  MongoDB username: ${MONGO_USERNAME}"
   echo -e "  MongoDB password: ${MONGO_PASSWORD}"
@@ -234,6 +235,7 @@ echo -e "${YELLOW}This may take a few minutes, please wait patiently...${NC}"
 # Export port variables for docker-compose to use
 export FRONTEND_PORT=${FRONTEND_PORT}
 export BACKEND_PORT=${BACKEND_PORT}
+export NGINX_PORT=${NGINX_PORT}
 
 # Start services
 docker-compose up -d --build

@@ -44,7 +44,13 @@ app.register(cors, {
     const hostname = new URL(origin).hostname;
     const allowedOrigins = ['https://bookmark.9crd.com'];
 
-    if (hostname === 'localhost' || allowedOrigins.includes(origin)) {
+    // 允许所有本地IP地址（localhost、127.0.0.1）
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      cb(null, true);
+      return;
+    }
+
+    if (allowedOrigins.includes(origin)) {
       cb(null, true);
       return;
     }
@@ -83,12 +89,13 @@ async function bootstrap() {
   await app.register(autoload, {
     dir: join(__dirname, 'services'),
     matchFilter: (path) => {
-      return /\.route\.(ts)$/.test(path);
+      return /\.route\.(js|ts)$/.test(path);
     },
     dirNameRoutePrefix: true,
-    logLevel: 'debug',
+    logLevel: 'trace',
     options: {},
   });
+  console.log('loaded routes=>', app.printRoutes());
 }
 
 export { bootstrap, app };
