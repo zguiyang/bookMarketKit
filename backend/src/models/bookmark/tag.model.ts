@@ -1,8 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
-import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin';
-import { commonTransform } from '@/shared/mongoose/common-transform';
+import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin.js';
+import { commonTransform } from '@/shared/mongoose/common-transform.js';
 import { TagResponse } from '@bookmark/schemas';
-import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type';
+import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type.js';
 
 // Mongoose 文档类型
 export type IBookmarkTagDocument = CreateDocument<TagResponse, 'user'>;
