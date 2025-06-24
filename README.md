@@ -59,28 +59,32 @@ Book Market Kit is a full-stack solution for web bookmark collection, smart cate
 For the easiest setup experience, use our Docker one-click deployment:
 
 1. **Prerequisites**
+
    - Docker and Docker Compose installed on your system
    - Git to clone the repository
 
 2. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/bookMarketKit.git
    cd bookMarketKit
    ```
 
 3. **Run the deployment script**
+
    ```bash
    chmod +x deploy.sh
    ./deploy.sh
    ```
 
 4. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
+   - Frontend: http://localhost:13090
+   - Backend API: http://localhost:13091
 
 > The deployment script will automatically generate secure passwords for MongoDB and Redis, and will save these credentials to a file named `bookmark-credentials.txt` for your reference.
 >
 > **IMPORTANT SECURITY NOTE**: The `bookmark-credentials.txt` file contains sensitive information including database credentials and authentication secrets. This file is automatically added to `.gitignore` to prevent accidental commits. You should:
+>
 > - Keep a secure backup of this file
 > - Never commit this file to version control
 > - Restrict access to this file on your server
@@ -92,12 +96,13 @@ For the easiest setup experience, use our Docker one-click deployment:
 
 - `docker-compose.example.yaml`: Template configuration file
 - `Dockerfile`: Unified multi-stage Dockerfile for the entire Monorepo project
-- `apps/web/.env.docker`: Frontend environment variables
-- `backend/.env.docker`: Backend environment variables
+- `apps/web/.env.deploy`: Frontend environment variables
+- `backend/.env.deploy`: Backend environment variables
 
 ##### Monorepo Architecture and Docker Build
 
 This project uses a Monorepo architecture with a unified Docker build process:
+
 - The unified `Dockerfile` handles building shared packages, frontend, and backend in a single build process
 - Multi-stage builds are used to create optimized production images
 - Shared packages in the `packages/` directory are built first and then used by both frontend and backend
@@ -105,6 +110,7 @@ This project uses a Monorepo architecture with a unified Docker build process:
 ##### Data Persistence
 
 Application data is stored in Docker volumes:
+
 - `mongo-data`: MongoDB data
 - `redis-data`: Redis data
 - `backend-uploads`: Uploaded files
@@ -112,15 +118,18 @@ Application data is stored in Docker volumes:
 ##### Production Deployment Considerations
 
 1. **Security**:
+
    - Change all default passwords
    - Consider using Docker Secrets for sensitive information
    - Restrict container network access
 
 2. **Performance**:
+
    - Adjust container resource limits based on server capacity
    - Use production-grade configurations for MongoDB and Redis
 
 3. **Reliability**:
+
    - Set up container health checks
    - Configure automatic restart policies
    - Implement backup strategies
@@ -180,11 +189,26 @@ docker-compose up -d --build
 docker-compose down -v
 ```
 
+### Customizing Ports
+
+You can customize the ports used by the application:
+
+1. **Using environment variables during deployment**:
+   ```bash
+   # Example: Use custom ports
+   FRONTEND_PORT=4000 BACKEND_PORT=9000 ./deploy.sh
+   ```
+
+2. **Manually editing configuration files**:
+   - Edit port values in `deploy.sh`
+   - Update port mappings in `docker-compose.yaml`
+   - Update environment variables in `.env.deploy` files
+
 ### Troubleshooting
 
 - **Container fails to start**: Check logs with `docker-compose logs [service_name]`
-- **Database connection issues**: Verify environment variables in `.env` and `.env.docker` files
-- **Port conflicts**: Change port mappings in `docker-compose.yaml` if ports are already in use
+- **Database connection issues**: Verify environment variables in `.env` and `.env.deploy` files
+- **Port conflicts**: Change port mappings in `docker-compose.yaml` if ports are already in use, or use the environment variables as described above
 
 ---
 

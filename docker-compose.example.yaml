@@ -5,12 +5,15 @@ services:
       context: .
       dockerfile: Dockerfile
       target: web
+      args:
+        # 使用环境变量中的前端端口，默认为13090
+        FRONTEND_PORT: ${FRONTEND_PORT:13090}
     container_name: bookmark-web
     restart: always
     ports:
-      - '3000:3000'
+      - '13090:13090'
     env_file:
-      - apps/web/.env.docker
+      - apps/web/.env.deploy
     depends_on:
       - backend
     networks:
@@ -21,12 +24,15 @@ services:
       context: .
       dockerfile: Dockerfile
       target: backend
+      args:
+        # 使用环境变量中的后端端口，默认为13091
+        BACKEND_PORT: ${BACKEND_PORT:13091}
     container_name: bookmark-backend
     restart: always
     ports:
-      - '8000:8000'
+      - '13091:13091'
     env_file:
-      - backend/.env.docker
+      - backend/.env.deploy
     depends_on:
       - mongo
       - redis

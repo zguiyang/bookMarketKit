@@ -59,28 +59,32 @@ Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要�
 最简单的部署方式是使用我们的 Docker 一键部署脚本：
 
 1. **前提条件**
+
    - 系统已安装 Docker 和 Docker Compose
    - 已安装 Git 用于克隆仓库
 
 2. **克隆仓库**
+
    ```bash
    git clone https://github.com/yourusername/bookMarketKit.git
    cd bookMarketKit
    ```
 
 3. **运行部署脚本**
+
    ```bash
    chmod +x deploy.sh
    ./deploy.sh
    ```
 
 4. **访问应用**
-   - 前端：http://localhost:3000
-   - 后端 API：http://localhost:8000
+   - 前端：http://localhost:13090
+   - 后端 API：http://localhost:13091
 
 > 部署脚本会自动为 MongoDB 和 Redis 生成安全密码，并将这些凭据保存到名为 `bookmark-credentials.txt` 的文件中供您参考。
 >
 > **重要安全提示**：`bookmark-credentials.txt` 文件包含敏感信息，包括数据库凭据和认证密钥。该文件已自动添加到 `.gitignore` 中以防止意外提交。您应该：
+>
 > - 妥善备份此文件
 > - 切勿将此文件提交到版本控制系统
 > - 限制服务器上对此文件的访问权限
@@ -92,12 +96,13 @@ Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要�
 
 - `docker-compose.example.yaml`：模板配置文件
 - `Dockerfile`：统一的多阶段 Dockerfile，用于构建整个 Monorepo 项目
-- `apps/web/.env.docker`：前端环境变量
-- `backend/.env.docker`：后端环境变量
+- `apps/web/.env.deploy`：前端环境变量
+- `backend/.env.deploy`：后端环境变量
 
 ##### Monorepo 架构与 Docker 构建
 
 本项目使用 Monorepo 架构，并采用统一的 Docker 构建流程：
+
 - 统一的 `Dockerfile` 在单个构建过程中处理共享包、前端和后端的构建
 - 使用多阶段构建创建优化的生产镜像
 - 首先构建 `packages/` 目录中的共享包，然后由前端和后端使用
@@ -105,9 +110,25 @@ Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要�
 ##### 数据持久化
 
 应用数据存储在 Docker 卷中：
+
 - `mongo-data`：MongoDB 数据
 - `redis-data`：Redis 数据
 - `backend-uploads`：上传的文件
+
+##### 自定义端口
+
+您可以自定义应用程序使用的端口：
+
+1. **在部署时使用环境变量**：
+   ```bash
+   # 示例：使用自定义端口
+   FRONTEND_PORT=4000 BACKEND_PORT=9000 ./deploy.sh
+   ```
+
+2. **手动编辑配置文件**：
+   - 编辑 `deploy.sh` 中的端口值
+   - 更新 `docker-compose.yaml` 中的端口映射
+   - 更新 `.env.deploy` 文件中的环境变量
 
 ##### Docker 管理命令
 
@@ -130,6 +151,12 @@ docker-compose up -d --build
 # 停止并删除卷（将删除所有数据！）
 docker-compose down -v
 ```
+
+##### 常见问题排查
+
+- **容器无法启动**：使用 `docker-compose logs [service_name]` 检查日志
+- **数据库连接问题**：验证 `.env` 和 `.env.deploy` 文件中的环境变量
+- **端口冲突**：如果端口已被占用，更改 `docker-compose.yaml` 中的端口映射，或按上述方法使用环境变量
 
 ### 方式二：手动开发环境设置
 

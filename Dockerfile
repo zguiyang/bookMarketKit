@@ -58,9 +58,11 @@ USER nextjs
 
 WORKDIR /app/apps/web
 
-EXPOSE 3000
+# 使用ARG接收构建时传入的端口变量，默认值与deploy.sh中保持一致
+ARG FRONTEND_PORT=13090
+EXPOSE ${FRONTEND_PORT}
 
-ENV PORT 3000
+ENV PORT ${FRONTEND_PORT}
 ENV NODE_ENV production
 
 # 启动Next.js应用
@@ -95,9 +97,11 @@ USER fastify
 
 WORKDIR /app/backend
 
-EXPOSE 8000
+# 使用ARG接收构建时传入的端口变量，默认值与deploy.sh中保持一致
+ARG BACKEND_PORT=13091
+EXPOSE ${BACKEND_PORT}
 
-ENV PORT 8000
+ENV PORT ${BACKEND_PORT}
 ENV NODE_ENV production
 
 # 启动后端服务
