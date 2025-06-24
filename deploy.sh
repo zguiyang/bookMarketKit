@@ -18,8 +18,8 @@ DB_NAME="bookmark"
 DOCKER_COMPOSE_FILE="docker-compose.yaml"
 DOCKER_COMPOSE_EXAMPLE="docker-compose.example.yaml"
 ENV_FILE=".env"
-BACKEND_ENV_FILE="backend/.env.deploy"
-FRONTEND_ENV_FILE="apps/web/.env.deploy"
+BACKEND_ENV_FILE="backend/.env.production"
+FRONTEND_ENV_FILE="apps/web/.env.production"
 CREDENTIALS_FILE="bookmark-credentials.txt"
 
 # Port configuration

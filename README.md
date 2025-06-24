@@ -96,8 +96,8 @@ For the easiest setup experience, use our Docker one-click deployment:
 
 - `docker-compose.example.yaml`: Template configuration file
 - `Dockerfile`: Unified multi-stage Dockerfile for the entire Monorepo project
-- `apps/web/.env.deploy`: Frontend environment variables
-- `backend/.env.deploy`: Backend environment variables
+- `apps/web/.env.production`: Frontend environment variables
+- `backend/.env.production`: Backend environment variables
 
 ##### Customizable Variables
 
@@ -109,8 +109,8 @@ The following variables can be customized in the deployment script (`deploy.sh`)
 | `DOCKER_COMPOSE_FILE` | `docker-compose.yaml` | Docker Compose configuration file name |
 | `DOCKER_COMPOSE_EXAMPLE` | `docker-compose.example.yaml` | Template Docker Compose file |
 | `ENV_FILE` | `.env` | Main environment variables file |
-| `BACKEND_ENV_FILE` | `backend/.env.deploy` | Backend environment configuration file |
-| `FRONTEND_ENV_FILE` | `apps/web/.env.deploy` | Frontend environment configuration file |
+| `BACKEND_ENV_FILE` | `backend/.env.production` | Backend environment configuration file |
+| `FRONTEND_ENV_FILE` | `apps/web/.env.production` | Frontend environment configuration file |
 | `CREDENTIALS_FILE` | `bookmark-credentials.txt` | File to store generated credentials |
 | `BACKEND_PORT` | `13091` | Backend service port |
 | `FRONTEND_PORT` | `13090` | Frontend service port |
@@ -221,12 +221,12 @@ You can customize the ports used by the application:
 2. **Manually editing configuration files**:
    - Edit port values in `deploy.sh`
    - Update port mappings in `docker-compose.yaml`
-   - Update environment variables in `.env.deploy` files
+   - Update environment variables in `.env.production` files
 
 ### Troubleshooting
 
 - **Container fails to start**: Check logs with `docker-compose logs [service_name]`
-- **Database connection issues**: Verify environment variables in `.env` and `.env.deploy` files
+- **Database connection issues**: Verify environment variables in `.env` and `.env.production` files
 - **Port conflicts**: Change port mappings in `docker-compose.yaml` if ports are already in use, or use the environment variables as described above
 
 ---

@@ -96,8 +96,8 @@ Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要�
 
 - `docker-compose.example.yaml`：模板配置文件
 - `Dockerfile`：统一的多阶段 Dockerfile，用于构建整个 Monorepo 项目
-- `apps/web/.env.deploy`：前端环境变量
-- `backend/.env.deploy`：后端环境变量
+- `apps/web/.env.production`：前端环境变量
+- `backend/.env.production`：后端环境变量
 
 ##### Monorepo 架构与 Docker 构建
 
@@ -128,7 +128,7 @@ Book Market Kit 是一个面向网页书签收藏、智能分类与内容摘要�
 2. **手动编辑配置文件**：
    - 编辑 `deploy.sh` 中的端口值
    - 更新 `docker-compose.yaml` 中的端口映射
-   - 更新 `.env.deploy` 文件中的环境变量
+   - 更新 `.env.production` 文件中的环境变量
 
 ##### Docker 管理命令
 
@@ -155,7 +155,7 @@ docker-compose down -v
 ##### 常见问题排查
 
 - **容器无法启动**：使用 `docker-compose logs [service_name]` 检查日志
-- **数据库连接问题**：验证 `.env` 和 `.env.deploy` 文件中的环境变量
+- **数据库连接问题**：验证 `.env` 和 `.env.production` 文件中的环境变量
 - **端口冲突**：如果端口已被占用，更改 `docker-compose.yaml` 中的端口映射，或按上述方法使用环境变量
 
 ### 方式二：手动开发环境设置

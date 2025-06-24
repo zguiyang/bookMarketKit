@@ -13,7 +13,7 @@ services:
     ports:
       - '13090:13090'
     env_file:
-      - apps/web/.env.deploy
+      - apps/web/.env.production
     depends_on:
       - backend
     networks:
@@ -32,7 +32,7 @@ services:
     ports:
       - '13091:13091'
     env_file:
-      - backend/.env.deploy
+      - backend/.env.production
     depends_on:
       - mongo
       - redis
