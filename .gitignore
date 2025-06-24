@@ -194,3 +194,4 @@ docker-compose-*.yml
 
 # credentials
 bookmark-credentials.txt
+sensitive-info.txt
