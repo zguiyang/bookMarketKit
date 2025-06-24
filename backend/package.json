@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx watch ./src/app.ts | pino-pretty -t 'yyyy-mm-dd HH:MM:ss' --ignore 'pid,hostname'",
     "start:dev": "cross-env NODE_ENV=development node dist/app.js",
-    "start": "cross-env NODE_ENV=production node dist/app.js",
     "build": "rimraf dist && tsc --build tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
