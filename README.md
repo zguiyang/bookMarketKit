@@ -1,6 +1,6 @@
 # Bookmark
 
-> 🚀 A modern open-source intelligent bookmark management platform, built with Next.js & NestJS.
+> 🚀 A modern open-source intelligent bookmark management platform, built with Next.js & Fastify.
 
 [中文版](./README.zh.md)
 
@@ -24,8 +24,8 @@ Bookmark is a full-stack solution for web bookmark collection, smart categorizat
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS, Zustand, Zod
-- **Backend**: Fastify 5, TypeScript, MongoDB (mongoose), Redis, Zod
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS, React Hook Form, Zod
+- **Backend**: Fastify 5, TypeScript, MongoDB (mongoose), Redis, Zod, Cheerio, OpenGraph Scraper
 
 ---
 

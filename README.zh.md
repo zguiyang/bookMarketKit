@@ -1,6 +1,6 @@
 # Bookmark
 
-> 🚀 一个现代化的开源智能书签管理平台，基于 Next.js & NestJS 构建。
+> 🚀 一个现代化的开源智能书签管理平台，基于 Next.js & Fastify 构建。
 
 [English version](./README.md)
 
@@ -24,8 +24,8 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 
 ## 技术架构
 
-- **前端**：Next.js 15、React 19、TypeScript、Tailwind CSS、Zustand、Zod
-- **后端**：Fastify 5、TypeScript、MongoDB（mongoose）、Redis、Zod
+- **前端**：Next.js 15、React 19、TypeScript、Tailwind CSS、React Hook Form、Zod
+- **后端**：Fastify 5、TypeScript、MongoDB（mongoose）、Redis、Zod、Cheerio、OpenGraph Scraper
 
 ---
 
@@ -36,7 +36,7 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 - **内容摘要**：AI 自动生成网页内容摘要，提取关键信息
 - **多标签系统**：支持为书签添加多个标签，便于筛选
 - **全局搜索**：支持根据名称模糊搜索书签、标签、分类
-- **分类管理**：自定义分类，支持新增、编辑、删除4
+- **分类管理**：自定义分类，支持新增、编辑、删除
 - **响应式设计**：适配桌面与移动端，体验流畅
 
 ---
@@ -229,7 +229,7 @@ docker-compose down -v
    pnpm dev
 
    # 仅启动前端
-   pnpm client:dev
+   pnpm web:dev
 
    # 仅启动后端
    pnpm backend:dev
