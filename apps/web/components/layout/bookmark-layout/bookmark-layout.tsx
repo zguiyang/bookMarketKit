@@ -1,11 +1,13 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useRequest } from 'alova/client';
 import { BookmarkForm, FormValues } from '@/components/bookmark/bookmark-form';
 import { BookmarkImportDialog } from '@/components/bookmark/bookmark-import-dialog';
 import { BookmarkApi } from '@/api';
 import { downloadFile } from '@/lib/utils';
+import { client } from '@/lib/auth/client';
 
 import { Sidebar } from './sidebar';
 import { Header } from './header';
@@ -16,6 +18,9 @@ export interface BookmarkLayoutProps {
 }
 
 export function BookmarkLayout({ children }: BookmarkLayoutProps) {
+  const router = useRouter();
+  const { data: session, isPending } = client.useSession();
+
   const [refreshKey, setRefreshKey] = useState(0);
 
   const [showAddBookmarkForm, setShowAddBookmarkForm] = useState(false);
@@ -52,6 +57,20 @@ export function BookmarkLayout({ children }: BookmarkLayoutProps) {
       downloadFile(result.data.file, result.data.name);
     }
   };
+
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.push('/auth/sign-in');
+    }
+  }, [session, isPending, router]);
+
+  if (isPending) {
+    return <div className="flex items-center justify-center min-h-screen">加载中...</div>;
+  }
+
+  if (!session) {
+    return <div className="flex items-center justify-center min-h-screen">跳转中...</div>;
+  }
 
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">

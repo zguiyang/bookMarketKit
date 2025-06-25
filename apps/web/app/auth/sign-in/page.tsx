@@ -20,9 +20,6 @@ import { LoginFormValues, loginSchema } from './validation';
 
 export default function LoginPage() {
   const router = useRouter();
-  // TODO: 临时处理, 后期优化
-  const isEnableGithubLogin = process.env.NEXT_PUBLIC_GITHUB_LOGIN === '1';
-  const isEnableGoogleLogin = process.env.NEXT_PUBLIC_GOOGLE_LOGIN === '1';
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -121,8 +118,8 @@ export default function LoginPage() {
           </div>
         </div>
         <div className={'mt-2 flex flex-col space-y-4'}>
-          {isEnableGithubLogin && <OAuthButton provider={'github'} />}
-          {isEnableGoogleLogin && <OAuthButton provider={'google'} />}
+          <OAuthButton provider={'github'} />
+          <OAuthButton provider={'google'} />
         </div>
 
         <p className="mt-4 text-center text-sm text-muted-foreground">
