@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { BookmarkForm, FormValues } from './bookmark-form';
-import { UpdateBookmarkBody } from '@bookmark/schemas/src';
+import { UpdateBookmarkBody } from '@bookmark/schemas';
 
 interface BookmarkCardProps {
   bookmark: BookmarkResponse;

@@ -35,13 +35,12 @@ const alovaInstance = createAlova({
       const responseData = response.data as ApiResponse;
 
       if (!responseData.success) {
-        toast.error(responseData.message);
         console.error(responseData.error);
+        toast.error(responseData.message || commonCodeMessages.fail.message);
       }
       return responseData;
     },
     onError(error: AxiosError<ApiResponse>) {
-      console.error('An error occurred', error);
       const responseData = error.response?.data;
       if (responseData) {
         if (responseData.code === CodeEnums.AUTH_LOGIN_EXPIRED) {
