@@ -66,8 +66,8 @@ For the easiest setup experience, use our Docker one-click deployment:
 2. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/bookMarketKit.git
-   cd bookMarketKit
+   git clone https://github.com/zguiyang/bookmark.git
+   cd bookmark
    ```
 
 3. **Run the deployment script**
@@ -78,17 +78,28 @@ For the easiest setup experience, use our Docker one-click deployment:
    ```
 
 4. **Access the application**
-   - Frontend: http://localhost:13090
-   - Backend API: http://localhost:13091
+   - Application: http://localhost:13092 (After deployment with deploy.sh, this is the only address you need to access)
+   - API Documentation: http://localhost:13092/api-docs/
 
-> The deployment script will automatically generate secure passwords for MongoDB and Redis, and will save these credentials to a file named `bookmark-credentials.txt` for your reference.
+   > Note: The backend and frontend services are not directly accessible from outside the Docker network. All traffic is routed through the Nginx proxy on port 13092.
+
+> The deployment script (`deploy.sh`) will automatically perform the following tasks:
+> 
+> - Check for Docker and Docker Compose dependencies
+> - Create necessary configuration files (docker-compose.yaml, .env, etc.)
+> - Generate secure random passwords for MongoDB, Redis, and authentication
+> - Configure environment variables for both frontend and backend services
+> - Build and start all required containers
+> - Save all credentials to a file named `bookmark-credentials.txt` for your reference
+> 
+> **IMPORTANT SECURITY NOTE**: Both the `bookmark-credentials.txt` and `.env` files contain sensitive information including database credentials and authentication secrets. These files are automatically added to `.gitignore` to prevent accidental commits. You should:
 >
-> **IMPORTANT SECURITY NOTE**: The `bookmark-credentials.txt` file contains sensitive information including database credentials and authentication secrets. This file is automatically added to `.gitignore` to prevent accidental commits. You should:
->
-> - Keep a secure backup of this file
-> - Never commit this file to version control
-> - Restrict access to this file on your server
+> - Keep a secure backup of these files
+> - Never commit these files to version control
+> - Restrict access to these files on your server
 > - Consider using a password manager for production credentials
+>
+> The deployment script also creates environment files for both frontend and backend with proper configuration. These files also contain sensitive information and should be properly secured.
 
 #### Docker Deployment Details
 
@@ -114,6 +125,14 @@ The following variables can be customized in the deployment script (`deploy.sh`)
 | `CREDENTIALS_FILE` | `bookmark-credentials.txt` | File to store generated credentials |
 | `BACKEND_PORT` | `13091` | Backend service port |
 | `FRONTEND_PORT` | `13090` | Frontend service port |
+
+**Important Note**: When deploying, pay special attention to the following environment variables:
+- Database connection strings
+- JWT secrets
+- API keys
+- OAuth configuration settings
+
+These variables contain sensitive information and should be properly secured.
 
 You can modify these variables directly in the `deploy.sh` file before running it, or override the port variables using environment variables as described in the [Customizing Ports](#customizing-ports) section.
 
@@ -155,6 +174,24 @@ Application data is stored in Docker volumes:
 4. **HTTPS**:
    - Configure HTTPS in production environments
    - Consider using Nginx as a reverse proxy with SSL
+
+##### OAuth Login Configuration
+
+To enable OAuth login functionality, you need to configure the following environment variables:
+
+1. **Google OAuth**:
+   - `GOOGLE_CLIENT_ID`: Your Google OAuth client ID
+   - `GOOGLE_CLIENT_SECRET`: Your Google OAuth client secret
+   - `GOOGLE_CALLBACK_URL`: The callback URL for Google OAuth (e.g., `http://localhost:13091/auth/google/callback`)
+
+2. **GitHub OAuth**:
+   - `GITHUB_CLIENT_ID`: Your GitHub OAuth client ID
+   - `GITHUB_CLIENT_SECRET`: Your GitHub OAuth client secret
+   - `GITHUB_CALLBACK_URL`: The callback URL for GitHub OAuth (e.g., `http://localhost:13091/auth/github/callback`)
+
+You can obtain these credentials by creating OAuth applications in the respective developer consoles:
+- Google: [Google Cloud Console](https://console.cloud.google.com/)
+- GitHub: [GitHub Developer Settings](https://github.com/settings/developers)
 
 ### Option 2: Manual Development Setup
 
@@ -215,8 +252,11 @@ You can customize the ports used by the application:
 
    ```bash
    # Example: Use custom ports
-   FRONTEND_PORT=4000 BACKEND_PORT=9000 ./deploy.sh
+   NGINX_PORT=8080 FRONTEND_PORT=4000 BACKEND_PORT=9000 ./deploy.sh
    ```
+
+   > Note: After deployment, you will only access the application through the NGINX_PORT (default: 13092).
+   > The FRONTEND_PORT and BACKEND_PORT are only used internally within the Docker network.
 
 2. **Manually editing configuration files**:
    - Edit port values in `deploy.sh`
