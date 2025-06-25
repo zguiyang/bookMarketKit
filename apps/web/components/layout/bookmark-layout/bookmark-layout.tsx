@@ -65,11 +65,28 @@ export function BookmarkLayout({ children }: BookmarkLayoutProps) {
   }, [session, isPending, router]);
 
   if (isPending) {
-    return <div className="flex items-center justify-center min-h-screen">加载中...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+        <div className="w-16 h-16 relative">
+          <div className="absolute inset-0 rounded-full border-4 border-muted animate-pulse"></div>
+          <div className="absolute inset-2 rounded-full border-t-4 border-primary animate-spin"></div>
+        </div>
+        <p className="mt-4 text-lg font-medium text-foreground animate-pulse">加载中...</p>
+      </div>
+    );
   }
 
   if (!session) {
-    return <div className="flex items-center justify-center min-h-screen">跳转中...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background">
+        <div className="flex space-x-1">
+          <div className="w-3 h-3 bg-primary rounded-full animate-bounce"></div>
+          <div className="w-3 h-3 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          <div className="w-3 h-3 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+        </div>
+        <p className="mt-4 text-lg font-medium text-foreground transition-opacity duration-1000 animate-pulse">跳转中...</p>
+      </div>
+    );
   }
 
   return (
