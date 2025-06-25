@@ -1,6 +1,6 @@
-# Contributing to Book Market Kit
+# Contributing to Bookmark
 
-Thank you for considering contributing to Book Market Kit! We welcome all kinds of contributions, including bug reports, feature requests, documentation improvements, and code.
+Thank you for considering contributing to Bookmark! We welcome all kinds of contributions, including bug reports, feature requests, documentation improvements, and code.
 
 ## How to Contribute
 
