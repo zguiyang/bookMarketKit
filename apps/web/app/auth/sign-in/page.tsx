@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 import { Loader2 } from 'lucide-react';
 
@@ -36,7 +37,7 @@ export default function LoginPage() {
   async function onSubmit(data: LoginFormValues) {
     setIsLoading(true);
     try {
-      await client.signIn.email(
+      const { error } = await client.signIn.email(
         {
           email: data.email,
           password: data.password,
@@ -47,6 +48,10 @@ export default function LoginPage() {
           },
         }
       );
+
+      if (error) {
+        toast.error(error.message);
+      }
     } catch (error) {
       console.error(error);
     } finally {

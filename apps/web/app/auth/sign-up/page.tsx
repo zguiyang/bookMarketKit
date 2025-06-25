@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
-
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -31,7 +31,7 @@ export default function RegisterPage() {
   });
   async function onSubmit(data: RegisterFormValues) {
     setIsLoading(true);
-    await client.signUp.email(
+    const { error } = await client.signUp.email(
       {
         email: data.email,
         username: data.username,
@@ -45,6 +45,9 @@ export default function RegisterPage() {
         },
       }
     );
+    if (error) {
+      toast.error(error.message);
+    }
     setIsLoading(false);
   }
 
