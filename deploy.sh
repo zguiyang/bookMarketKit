@@ -27,6 +27,10 @@ BACKEND_PORT=13091
 FRONTEND_PORT=13090
 NGINX_PORT=13092
 
+# better-auth configuration
+# REQUIRED: The base URL for the better-auth service
+BETTER_AUTH_URL="http://localhost:${NGINX_PORT}";
+
 ###########################################
 # Helper Functions
 ###########################################
@@ -162,15 +166,15 @@ DATABASE_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/${DB_NAME
 REDIS_URL=redis://redis:6379
 REDIS_PASSWORD=${REDIS_PASSWORD}
 REDIS_DB=0
-# 通过Nginx代理访问前端
-WEB_URL=http://localhost:${NGINX_PORT}
+BETTER_AUTH_URL=${BETTER_AUTH_URL}
 AUTH_SECRET=${AUTH_SECRET}
 
 # If you need to use OAuth login, configure the following environment variables
 # GITHUB_CLIENT_ID=your_github_client_id
 # GITHUB_CLIENT_SECRET=your_github_client_secret
 # GOOGLE_CLIENT_ID=your_google_client_id
-# GOOGLE_CLIENT_SECRET=your_google_client_secret"
+# GOOGLE_CLIENT_SECRET=your_google_client_secret
+"
 
 create_or_update_file "$BACKEND_ENV_FILE" "Backend environment configuration file" "$BACKEND_ENV_CONTENT"
 
@@ -181,7 +185,9 @@ FRONTEND_ENV_CONTENT="# Frontend Docker Environment Variables
 NEXT_PUBLIC_API_URL=http://localhost:${NGINX_PORT}
 
 # 外部访问使用Nginx代理的地址
-NEXT_PUBLIC_WEB_URL=http://localhost:${NGINX_PORT}"
+NEXT_PUBLIC_WEB_URL=http://localhost:${NGINX_PORT}
+NEXT_PUBLIC_BETTER_AUTH_URL=${BETTER_AUTH_URL}
+"
 
 create_or_update_file "$FRONTEND_ENV_FILE" "Frontend environment configuration file" "$FRONTEND_ENV_CONTENT"
 
