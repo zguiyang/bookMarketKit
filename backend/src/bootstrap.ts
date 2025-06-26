@@ -14,6 +14,8 @@ import authPlugin from './plugins/auth.js';
 import multipartPlugin from './plugins/multipart.js';
 import workerPlugin from './plugins/worker.js';
 
+import env from '@/lib/env.js';
+
 import errorHandler from './middlewares/error-handler.js';
 import notFoundHandler from './middlewares/not-found-handler.js';
 
@@ -42,7 +44,7 @@ app.register(cors, {
       return;
     }
     const hostname = new URL(origin).hostname;
-    const allowedOrigins = ['https://bookmark.9crd.com'];
+    const allowedOrigins = [env.BETTER_AUTH_URL];
 
     // 允许所有本地IP地址（localhost、127.0.0.1）
     if (hostname === 'localhost' || hostname === '127.0.0.1') {

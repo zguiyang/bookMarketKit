@@ -10,6 +10,7 @@ if (process.env.NODE_ENV) {
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).optional(),
 
+  BETTER_AUTH_URL: z.string().min(1),
   DATABASE_URI: z.string().min(1),
 
   REDIS_URL: z.string().min(1),

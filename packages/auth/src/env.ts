@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   DATABASE_URI: z.string().min(1),
-  WEB_URL: z.string().min(1),
+  BETTER_AUTH_URL: z.string().min(1),
   AUTH_SECRET: z.string().min(1),
 
   GITHUB_CLIENT_ID: z.string().optional(),

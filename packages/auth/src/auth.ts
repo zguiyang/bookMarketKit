@@ -52,9 +52,9 @@ const config = {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // 1 day
   },
-  baseURL: env.WEB_URL,
+  baseURL: env.BETTER_AUTH_URL,
   basePath: '/auth',
-  trustedOrigins: [env.WEB_URL],
+  trustedOrigins: [env.BETTER_AUTH_URL],
   advanced: {
     cookiePrefix: 'bookmark',
   },
