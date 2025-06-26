@@ -237,8 +237,12 @@ export FRONTEND_PORT=${FRONTEND_PORT}
 export BACKEND_PORT=${BACKEND_PORT}
 export NGINX_PORT=${NGINX_PORT}
 
+# 设置构建参数
+# 境外服务器不需要特殊网络设置
+export DOCKER_BUILD_ARGS="--build-arg HTTP_PROXY= --build-arg HTTPS_PROXY="
+
 # Start services
-docker-compose up -d --build
+docker-compose up -d --build ${DOCKER_BUILD_ARGS}
 
 # Check if services started successfully
 if [ $? -eq 0 ]; then

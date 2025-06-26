@@ -13,6 +13,9 @@ services:
       - backend
     networks:
       - bookmark-network
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 
   web:
     build:
@@ -24,15 +27,17 @@ services:
         FRONTEND_PORT: ${FRONTEND_PORT:-13090}
     container_name: bookmark-web
     restart: always
-    # 不再直接暴露端口到宿主机，由nginx代理
-    # ports:
-    #   - '13090:13090'
+    ports:
+      - '13090:13090'
     env_file:
       - apps/web/.env.production
     depends_on:
       - backend
     networks:
       - bookmark-network
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 
   backend:
     build:
@@ -44,9 +49,8 @@ services:
         BACKEND_PORT: ${BACKEND_PORT:-13091}
     container_name: bookmark-backend
     restart: always
-    # 不再直接暴露端口到宿主机，由nginx代理
-    # ports:
-    #   - '13091:13091'
+    ports:
+      - '13091:13091'
     env_file:
       - backend/.env.production
     depends_on:
@@ -56,6 +60,9 @@ services:
       # - backend-uploads:/app/backend/uploads
     networks:
       - bookmark-network
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 
   mongo:
     image: mongo:6.0

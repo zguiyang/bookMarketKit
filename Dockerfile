@@ -7,6 +7,12 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm@9.12.3
 
+# Configure npm and pnpm with official registry
+# Using official registry as the server is located outside mainland China
+RUN npm config set registry https://registry.npmjs.org/
+RUN pnpm config set registry https://registry.npmjs.org/
+RUN pnpm config set network-timeout 300000
+
 # Copy package.json files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/
