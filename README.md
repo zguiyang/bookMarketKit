@@ -70,26 +70,37 @@ For the easiest setup experience, use our Docker one-click deployment:
    cd bookmark
    ```
 
-3. **Run the deployment script**
+3. **Run the deployment script to generate configuration files**
 
    ```bash
    chmod +x deploy.sh
    ./deploy.sh
    ```
 
-4. **Access the application**
-   - Application: http://localhost:13092 (After deployment with deploy.sh, this is the only address you need to access)
+4. **Start the application**
+
+   ```bash
+   # Export the environment variables
+   export FRONTEND_PORT=13090
+   export BACKEND_PORT=13091
+   export NGINX_PORT=13092
+
+   # Start the application
+   docker-compose up -d --build
+   ```
+
+5. **Access the application**
+   - Application: http://localhost:13092 (This is the only address you need to access)
    - API Documentation: http://localhost:13092/api-docs/
 
    > Note: The backend and frontend services are not directly accessible from outside the Docker network. All traffic is routed through the Nginx proxy on port 13092.
 
-> The deployment script (`deploy.sh`) will automatically perform the following tasks:
+> The deployment script (`deploy.sh`) will perform the following tasks:
 > 
 > - Check for Docker and Docker Compose dependencies
-> - Create necessary configuration files (docker-compose.yaml, .env, etc.)
+> - Create necessary configuration files (.env, etc.)
 > - Generate secure random passwords for MongoDB, Redis, and authentication
-> - Configure environment variables for both frontend and backend services
-> - Build and start all required containers
+> - Create .env.production files for both frontend and backend services based on their .env.example files
 > - Save all credentials to a file named `bookmark-credentials.txt` for your reference
 > 
 > **IMPORTANT SECURITY NOTE**: Both the `bookmark-credentials.txt` and `.env` files contain sensitive information including database credentials and authentication secrets. These files are automatically added to `.gitignore` to prevent accidental commits. You should:
@@ -98,19 +109,17 @@ For the easiest setup experience, use our Docker one-click deployment:
 > - Never commit these files to version control
 > - Restrict access to these files on your server
 > - Consider using a password manager for production credentials
->
-> The deployment script copies environment files from templates (`web.env.production` and `backend.env.production`) in the root directory to their respective locations in the project. These files contain sensitive information and should be properly secured.
 
 #### Docker Deployment Details
 
 ##### Configuration Files
 
-- `docker-compose.example.yaml`: Template configuration file
+- `docker-compose.yaml`: Docker Compose configuration file
 - `Dockerfile`: Unified multi-stage Dockerfile for the entire Monorepo project
-- `web.env.production`: Template for frontend environment variables
-- `backend.env.production`: Template for backend environment variables
-- `apps/web/.env.production`: Frontend environment variables (generated from template)
-- `backend/.env.production`: Backend environment variables (generated from template)
+- `apps/web/.env.example`: Template for frontend environment variables
+- `backend/.env.example`: Template for backend environment variables
+- `apps/web/.env.production`: Frontend environment variables (generated from .env.example)
+- `backend/.env.production`: Backend environment variables (generated from .env.example)
 
 ##### Customizable Variables
 
@@ -120,7 +129,6 @@ The following variables can be customized in the deployment script (`deploy.sh`)
 |----------|---------------|-------------|
 | `DB_NAME` | `bookmark` | MongoDB database name |
 | `DOCKER_COMPOSE_FILE` | `docker-compose.yaml` | Docker Compose configuration file name |
-| `DOCKER_COMPOSE_EXAMPLE` | `docker-compose.example.yaml` | Template Docker Compose file |
 | `ENV_FILE` | `.env` | Main environment variables file |
 | `BACKEND_ENV_FILE` | `backend/.env.production` | Backend environment configuration file |
 | `FRONTEND_ENV_FILE` | `apps/web/.env.production` | Frontend environment configuration file |
@@ -138,7 +146,7 @@ The following variables can be customized in the deployment script (`deploy.sh`)
 
 These variables contain sensitive information and should be properly secured.
 
-You can modify these variables directly in the template files (`web.env.production` and `backend.env.production`) in the root directory before running the deployment script, or override the port variables using environment variables as described in the [Customizing Ports](#customizing-ports) section.
+You can override the port variables using environment variables as described in the [Customizing Ports](#customizing-ports) section.
 
 ##### Monorepo Architecture and Docker Build
 
@@ -265,12 +273,12 @@ You can customize the ports used by the application:
 2. **Manually editing configuration files**:
    - Edit port values in `deploy.sh`
    - Update port mappings in `docker-compose.yaml`
-   - Update environment variables in `web.env.production` and `backend.env.production` template files in the root directory
+   - Update environment variables in `apps/web/.env.example` and `backend/.env.example` files
 
 ### Troubleshooting
 
 - **Container fails to start**: Check logs with `docker-compose logs [service_name]`
-- **Database connection issues**: Verify environment variables in `.env`, `web.env.production`, and `backend.env.production` template files
+- **Database connection issues**: Verify environment variables in `.env`, `apps/web/.env.production`, and `backend/.env.production` files
 - **Port conflicts**: Change port mappings in `docker-compose.yaml` if ports are already in use, or use the environment variables as described above
 
 ---

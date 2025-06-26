@@ -16,10 +16,11 @@ DB_NAME="bookmark"
 
 # File path configuration
 DOCKER_COMPOSE_FILE="docker-compose.yaml"
-DOCKER_COMPOSE_EXAMPLE="docker-compose.example.yaml"
 ENV_FILE=".env"
 BACKEND_ENV_FILE="backend/.env.production"
 FRONTEND_ENV_FILE="apps/web/.env.production"
+BACKEND_ENV_EXAMPLE="backend/.env.example"
+FRONTEND_ENV_EXAMPLE="apps/web/.env.example"
 CREDENTIALS_FILE="bookmark-credentials.txt"
 
 # Port configuration
@@ -103,23 +104,11 @@ check_dependencies
 # Create necessary configuration files
 echo -e "${YELLOW}Preparing configuration files...${NC}"
 
-# Copy docker-compose configuration
-copy_docker_compose_file() {
-  if [ -f "$DOCKER_COMPOSE_FILE" ]; then
-    if ask_overwrite "$DOCKER_COMPOSE_FILE" "Docker Compose configuration file"; then
-      cp "$DOCKER_COMPOSE_EXAMPLE" "$DOCKER_COMPOSE_FILE"
-      echo -e "${GREEN}✓ Updated $DOCKER_COMPOSE_FILE${NC}"
-    else
-      echo -e "${YELLOW}Keeping existing $DOCKER_COMPOSE_FILE${NC}"
-    fi
-  else
-    cp "$DOCKER_COMPOSE_EXAMPLE" "$DOCKER_COMPOSE_FILE"
-    echo -e "${GREEN}✓ Created $DOCKER_COMPOSE_FILE${NC}"
-  fi
-}
-
-# Copy docker-compose configuration file
-copy_docker_compose_file
+# Check if docker-compose.yaml exists
+if [ ! -f "$DOCKER_COMPOSE_FILE" ]; then
+  echo -e "${RED}Error: $DOCKER_COMPOSE_FILE does not exist. Please make sure it's available in the project root.${NC}"
+  exit 1
+fi
 
 # Generate or read credentials
 generate_or_read_credentials() {
@@ -156,17 +145,41 @@ AUTH_SECRET=${AUTH_SECRET}"
 
 create_or_update_file "$ENV_FILE" "Environment configuration file" "$ENV_CONTENT"
 
-# Process and copy backend environment configuration from template
-process_and_copy_env_file() {
-  local template_file=$1
+# Create environment files from example files
+create_env_file_from_example() {
+  local example_file=$1
   local target_file=$2
   local description=$3
+  local env_vars=$4
+
+  # Check if example file exists
+  if [ ! -f "$example_file" ]; then
+    echo -e "${RED}Error: Example file $example_file does not exist.${NC}"
+    exit 1
+  fi
 
   # Create a temporary file with variables replaced
   local temp_file=$(mktemp)
-  eval "cat <<EOF
-$(cat $template_file)
-EOF" > "$temp_file"
+
+  # Copy the example file to temp file
+  cp "$example_file" "$temp_file"
+
+  # Replace placeholders with actual values
+  for var in $env_vars; do
+    var_name=$(echo $var | cut -d= -f1)
+    var_value=$(echo $var | cut -d= -f2-)
+
+    # Replace placeholders in the format <placeholder> with actual values
+    sed -i.bak "s|<$var_name>|$var_value|g" "$temp_file"
+
+    # Also set environment variables directly
+    if grep -q "^$var_name=" "$temp_file"; then
+      sed -i.bak "s|^$var_name=.*|$var_name=$var_value|g" "$temp_file"
+    fi
+  done
+
+  # Remove backup files created by sed
+  rm -f "$temp_file.bak"
 
   # Copy to target location
   if [ -f "$target_file" ]; then
@@ -185,9 +198,12 @@ EOF" > "$temp_file"
   rm "$temp_file"
 }
 
-# Process and copy environment files from templates
-process_and_copy_env_file "backend.env.production" "$BACKEND_ENV_FILE" "Backend environment configuration file"
-process_and_copy_env_file "web.env.production" "$FRONTEND_ENV_FILE" "Frontend environment configuration file"
+# Create environment files from example files
+BACKEND_ENV_VARS="PORT=$BACKEND_PORT DATABASE_URI=mongodb://$MONGO_USERNAME:$MONGO_PASSWORD@mongo:27017/$DB_NAME?authSource=admin REDIS_PASSWORD=$REDIS_PASSWORD AUTH_SECRET=$AUTH_SECRET"
+create_env_file_from_example "$BACKEND_ENV_EXAMPLE" "$BACKEND_ENV_FILE" "Backend environment configuration file" "$BACKEND_ENV_VARS"
+
+FRONTEND_ENV_VARS="NEXT_PUBLIC_WEB_URL=http://localhost:$NGINX_PORT NEXT_PUBLIC_API_URL=http://localhost:$NGINX_PORT NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:$NGINX_PORT"
+create_env_file_from_example "$FRONTEND_ENV_EXAMPLE" "$FRONTEND_ENV_FILE" "Frontend environment configuration file" "$FRONTEND_ENV_VARS"
 
 # Save credentials to file
 CREDENTIALS_CONTENT="=== Book Market Kit Credentials Information ===
@@ -207,10 +223,10 @@ Please keep this file safe!"
 
 create_or_update_file "$CREDENTIALS_FILE" "Credentials information file" "$CREDENTIALS_CONTENT"
 
-# Display deployment success information
+# Display configuration success information
 show_success_info() {
-  echo -e "\n${GREEN}=== Deployment Successful! ===${NC}"
-  echo -e "Application access addresses:"
+  echo -e "\n${GREEN}=== Configuration Information ===${NC}"
+  echo -e "After starting the application, you can access it at:"
   echo -e "  Web Application: http://localhost:${NGINX_PORT}"
   echo -e "\nDatabase credentials:"
   echo -e "  MongoDB username: ${MONGO_USERNAME}"
@@ -219,34 +235,22 @@ show_success_info() {
   echo -e "  Redis password: ${REDIS_PASSWORD}"
   echo -e "  AUTH_SECRET: ${AUTH_SECRET}"
   echo -e "\nCredentials have been saved to ${CREDENTIALS_FILE} file"
-  echo -e "\nCommon commands:"
+  echo -e "\nCommon docker-compose commands:"
+  echo -e "  Start services: docker-compose up -d"
   echo -e "  View container status: docker-compose ps"
   echo -e "  View logs: docker-compose logs"
   echo -e "  Stop services: docker-compose down"
   echo -e "  Restart services: docker-compose restart"
 }
 
-# Display deployment failure information
-show_failure_info() {
-  echo -e "\n${RED}Deployment failed, please check logs for details.${NC}"
-  echo -e "Use 'docker-compose logs' to view detailed logs."
-  exit 1
-}
 
-echo -e "\n${BLUE}=== Starting to build and launch services ===${NC}"
-echo -e "${YELLOW}This may take a few minutes, please wait patiently...${NC}"
+echo -e "\n${GREEN}=== Configuration completed successfully! ===${NC}"
+echo -e "${YELLOW}To start the application, run the following command:${NC}"
+echo -e "  docker-compose up -d --build"
+echo -e "\n${YELLOW}Before running docker-compose, make sure to export these environment variables:${NC}"
+echo -e "  export FRONTEND_PORT=${FRONTEND_PORT}"
+echo -e "  export BACKEND_PORT=${BACKEND_PORT}"
+echo -e "  export NGINX_PORT=${NGINX_PORT}"
 
-# Export port variables for docker-compose to use
-export FRONTEND_PORT=${FRONTEND_PORT}
-export BACKEND_PORT=${BACKEND_PORT}
-export NGINX_PORT=${NGINX_PORT}
-
-# Start services
-docker-compose up -d --build
-
-# Check if services started successfully
-if [ $? -eq 0 ]; then
-  show_success_info
-else
-  show_failure_info
-fi
+# Show success info
+show_success_info

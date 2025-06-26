@@ -70,26 +70,37 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
    cd bookmark
    ```
 
-3. **运行部署脚本**
+3. **运行部署脚本生成配置文件**
 
    ```bash
    chmod +x deploy.sh
    ./deploy.sh
    ```
 
-4. **访问应用**
-   - 应用：http://localhost:13092 (通过deploy.sh部署后，这是您唯一需要访问的地址)
+4. **启动应用**
+
+   ```bash
+   # 导出环境变量
+   export FRONTEND_PORT=13090
+   export BACKEND_PORT=13091
+   export NGINX_PORT=13092
+
+   # 启动应用
+   docker-compose up -d --build
+   ```
+
+5. **访问应用**
+   - 应用：http://localhost:13092 (这是您唯一需要访问的地址)
    - API文档：http://localhost:13092/api-docs/
 
    > 注意：后端和前端服务无法从Docker网络外部直接访问。所有流量都通过端口13092上的Nginx代理路由。
 
-> 部署脚本（`deploy.sh`）将自动执行以下任务：
+> 部署脚本（`deploy.sh`）将执行以下任务：
 > 
 > - 检查 Docker 和 Docker Compose 依赖
-> - 创建必要的配置文件（docker-compose.yaml、.env 等）
+> - 创建必要的配置文件（.env 等）
 > - 为 MongoDB、Redis 和身份验证生成安全的随机密码
-> - 为前端和后端服务配置环境变量
-> - 构建并启动所有必需的容器
+> - 根据前端和后端目录中的 .env.example 文件创建 .env.production 文件
 > - 将所有凭据保存到名为 `bookmark-credentials.txt` 的文件中供您参考
 > 
 > **重要安全提示**：`bookmark-credentials.txt` 和 `.env` 文件都包含敏感信息，包括数据库凭据和认证密钥。这些文件已自动添加到 `.gitignore` 中以防止意外提交。您应该：
@@ -98,19 +109,17 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 > - 切勿将这些文件提交到版本控制系统
 > - 限制服务器上对这些文件的访问权限
 > - 考虑使用密码管理器来管理生产环境的凭据
->
-> 部署脚本会从根目录的模板文件（`web.env.production` 和 `backend.env.production`）复制环境配置到项目的相应位置。这些文件包含敏感信息，应妥善保管。
 
 #### Docker 部署详情
 
 ##### 配置文件
 
-- `docker-compose.example.yaml`：模板配置文件
+- `docker-compose.yaml`：Docker Compose 配置文件
 - `Dockerfile`：统一的多阶段 Dockerfile，用于构建整个 Monorepo 项目
-- `web.env.production`：前端环境变量模板
-- `backend.env.production`：后端环境变量模板
-- `apps/web/.env.production`：前端环境变量（从模板生成）
-- `backend/.env.production`：后端环境变量（从模板生成）
+- `apps/web/.env.example`：前端环境变量模板
+- `backend/.env.example`：后端环境变量模板
+- `apps/web/.env.production`：前端环境变量（从 .env.example 生成）
+- `backend/.env.production`：后端环境变量（从 .env.example 生成）
 
 ##### 可自定义变量
 
@@ -120,7 +129,6 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 |----------|---------------|-------------|
 | `DB_NAME` | `bookmark` | MongoDB 数据库名称 |
 | `DOCKER_COMPOSE_FILE` | `docker-compose.yaml` | Docker Compose 配置文件名 |
-| `DOCKER_COMPOSE_EXAMPLE` | `docker-compose.example.yaml` | 模板 Docker Compose 文件 |
 | `ENV_FILE` | `.env` | 主环境变量文件 |
 | `BACKEND_ENV_FILE` | `backend/.env.production` | 后端环境配置文件 |
 | `FRONTEND_ENV_FILE` | `apps/web/.env.production` | 前端环境配置文件 |
@@ -170,7 +178,7 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 2. **手动编辑配置文件**：
    - 编辑 `deploy.sh` 中的端口值
    - 更新 `docker-compose.yaml` 中的端口映射
-   - 更新根目录中的 `web.env.production` 和 `backend.env.production` 模板文件中的环境变量
+   - 更新 `apps/web/.env.example` 和 `backend/.env.example` 文件中的环境变量
 
 ##### Docker 管理命令
 
@@ -197,7 +205,7 @@ docker-compose down -v
 ##### 常见问题排查
 
 - **容器无法启动**：使用 `docker-compose logs [service_name]` 检查日志
-- **数据库连接问题**：验证 `.env`、`web.env.production` 和 `backend.env.production` 模板文件中的环境变量
+- **数据库连接问题**：验证 `.env`、`apps/web/.env.production` 和 `backend/.env.production` 文件中的环境变量
 - **端口冲突**：如果端口已被占用，更改 `docker-compose.yaml` 中的端口映射，或按上述方法使用环境变量
 
 ##### OAuth 登录配置
