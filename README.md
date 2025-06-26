@@ -77,7 +77,24 @@ For the easiest setup experience, use our Docker one-click deployment:
    ./deploy.sh
    ```
 
-4. **Start the application**
+4. **Configure the environment files**
+
+   After running the deployment script, you need to manually configure the generated .env.production files:
+
+   ```bash
+   # Edit the backend environment file
+   nano backend/.env.production
+
+   # Edit the frontend environment file
+   nano apps/web/.env.production
+   ```
+
+   Make sure to configure any necessary settings, especially:
+   - OAuth credentials (GitHub, Google) in the backend configuration
+   - Any custom API endpoints or authentication URLs
+   - Other application-specific settings
+
+5. **Start the application**
 
    ```bash
    # Start the application

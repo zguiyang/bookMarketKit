@@ -226,7 +226,7 @@ create_or_update_file "$CREDENTIALS_FILE" "Credentials information file" "$CREDE
 # Display configuration success information
 show_success_info() {
   echo -e "\n${GREEN}=== Configuration Information ===${NC}"
-  echo -e "After starting the application, you can access it at:"
+  echo -e "After configuring the environment files and starting the application, you can access it at:"
   echo -e "  Web Application: http://localhost:${NGINX_PORT}"
   echo -e "\nDatabase credentials:"
   echo -e "  MongoDB username: ${MONGO_USERNAME}"
@@ -235,6 +235,9 @@ show_success_info() {
   echo -e "  Redis password: ${REDIS_PASSWORD}"
   echo -e "  AUTH_SECRET: ${AUTH_SECRET}"
   echo -e "\nCredentials have been saved to ${CREDENTIALS_FILE} file"
+  echo -e "\n${YELLOW}Important:${NC} Remember to configure the generated environment files before starting the application:"
+  echo -e "  - ${BLUE}backend/.env.production${NC}: Configure OAuth credentials and other backend settings"
+  echo -e "  - ${BLUE}apps/web/.env.production${NC}: Configure frontend settings if needed"
   echo -e "\nCommon docker-compose commands:"
   echo -e "  Start services: docker-compose up -d"
   echo -e "  View container status: docker-compose ps"
@@ -245,7 +248,10 @@ show_success_info() {
 
 
 echo -e "\n${GREEN}=== Configuration completed successfully! ===${NC}"
-echo -e "${YELLOW}To start the application, run the following command:${NC}"
+echo -e "${YELLOW}Before starting the application, please review and configure the generated environment files:${NC}"
+echo -e "  ${BLUE}backend/.env.production${NC} - Configure OAuth credentials and other backend settings"
+echo -e "  ${BLUE}apps/web/.env.production${NC} - Configure frontend settings if needed"
+echo -e "\n${YELLOW}After configuring the environment files, start the application with:${NC}"
 echo -e "  docker-compose up -d --build"
 
 # Show success info

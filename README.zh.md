@@ -77,7 +77,24 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
    ./deploy.sh
    ```
 
-4. **启动应用**
+4. **配置环境文件**
+
+   运行部署脚本后，您需要手动配置生成的 .env.production 文件：
+
+   ```bash
+   # 编辑后端环境文件
+   nano backend/.env.production
+
+   # 编辑前端环境文件
+   nano apps/web/.env.production
+   ```
+
+   确保配置所有必要的设置，特别是：
+   - OAuth 凭据（GitHub、Google）在后端配置中
+   - 任何自定义 API 端点或认证 URL
+   - 其他应用程序特定设置
+
+5. **启动应用**
 
    ```bash
    # 启动应用
