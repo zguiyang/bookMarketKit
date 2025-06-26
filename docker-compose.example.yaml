@@ -13,10 +13,6 @@ services:
       - backend
     networks:
       - bookmark-network
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
-
   web:
     build:
       context: .
@@ -35,9 +31,6 @@ services:
       - backend
     networks:
       - bookmark-network
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
 
   backend:
     build:
@@ -60,9 +53,6 @@ services:
       # - backend-uploads:/app/backend/uploads
     networks:
       - bookmark-network
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
 
   mongo:
     image: mongo:6.0
