@@ -99,7 +99,7 @@ For the easiest setup experience, use our Docker one-click deployment:
 > - Restrict access to these files on your server
 > - Consider using a password manager for production credentials
 >
-> The deployment script also creates environment files for both frontend and backend with proper configuration. These files also contain sensitive information and should be properly secured.
+> The deployment script copies environment files from templates (`web.env.production` and `backend.env.production`) in the root directory to their respective locations in the project. These files contain sensitive information and should be properly secured.
 
 #### Docker Deployment Details
 
@@ -107,8 +107,10 @@ For the easiest setup experience, use our Docker one-click deployment:
 
 - `docker-compose.example.yaml`: Template configuration file
 - `Dockerfile`: Unified multi-stage Dockerfile for the entire Monorepo project
-- `apps/web/.env.production`: Frontend environment variables
-- `backend/.env.production`: Backend environment variables
+- `web.env.production`: Template for frontend environment variables
+- `backend.env.production`: Template for backend environment variables
+- `apps/web/.env.production`: Frontend environment variables (generated from template)
+- `backend/.env.production`: Backend environment variables (generated from template)
 
 ##### Customizable Variables
 
@@ -136,7 +138,7 @@ The following variables can be customized in the deployment script (`deploy.sh`)
 
 These variables contain sensitive information and should be properly secured.
 
-You can modify these variables directly in the `deploy.sh` file before running it, or override the port variables using environment variables as described in the [Customizing Ports](#customizing-ports) section.
+You can modify these variables directly in the template files (`web.env.production` and `backend.env.production`) in the root directory before running the deployment script, or override the port variables using environment variables as described in the [Customizing Ports](#customizing-ports) section.
 
 ##### Monorepo Architecture and Docker Build
 
@@ -263,12 +265,12 @@ You can customize the ports used by the application:
 2. **Manually editing configuration files**:
    - Edit port values in `deploy.sh`
    - Update port mappings in `docker-compose.yaml`
-   - Update environment variables in `.env.production` files
+   - Update environment variables in `web.env.production` and `backend.env.production` template files in the root directory
 
 ### Troubleshooting
 
 - **Container fails to start**: Check logs with `docker-compose logs [service_name]`
-- **Database connection issues**: Verify environment variables in `.env` and `.env.production` files
+- **Database connection issues**: Verify environment variables in `.env`, `web.env.production`, and `backend.env.production` template files
 - **Port conflicts**: Change port mappings in `docker-compose.yaml` if ports are already in use, or use the environment variables as described above
 
 ---

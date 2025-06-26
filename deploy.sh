@@ -27,10 +27,6 @@ BACKEND_PORT=13091
 FRONTEND_PORT=13090
 NGINX_PORT=13092
 
-# better-auth configuration
-# REQUIRED: The base URL for the better-auth service
-BETTER_AUTH_URL="http://localhost:${NGINX_PORT}";
-
 ###########################################
 # Helper Functions
 ###########################################
@@ -39,7 +35,7 @@ BETTER_AUTH_URL="http://localhost:${NGINX_PORT}";
 ask_overwrite() {
   local file=$1
   local description=$2
-  
+
   if [ -f "$file" ]; then
     echo -e "${YELLOW}$description already exists.${NC}"
     read -p "Overwrite? (y/n): " choice
@@ -61,7 +57,7 @@ generate_random_password() {
 # Check if necessary dependencies are installed
 check_dependencies() {
   echo -e "${BLUE}=== Book Market Kit Docker Deployment Script ===${NC}\n"
-  
+
   # Check if Docker is installed
   if ! command -v docker &> /dev/null; then
     echo -e "${RED}Error: Docker is not installed. Please install Docker first.${NC}"
@@ -84,7 +80,7 @@ create_or_update_file() {
   local file=$1
   local description=$2
   local content=$3
-  
+
   if [ -f "$file" ]; then
     if ask_overwrite "$file" "$description"; then
       echo "$content" > "$file"
@@ -129,7 +125,7 @@ copy_docker_compose_file
 generate_or_read_credentials() {
   # Default credentials
   MONGO_USERNAME="root"
-  
+
   # If keeping existing file, read passwords from it to maintain consistency
   if [ -f "$ENV_FILE" ] && ! ask_overwrite "$ENV_FILE" "Environment configuration file"; then
     # Read passwords from existing .env file
@@ -160,36 +156,38 @@ AUTH_SECRET=${AUTH_SECRET}"
 
 create_or_update_file "$ENV_FILE" "Environment configuration file" "$ENV_CONTENT"
 
-# Prepare backend environment configuration
-BACKEND_ENV_CONTENT="PORT=${BACKEND_PORT}
-DATABASE_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo:27017/${DB_NAME}?authSource=admin
-REDIS_URL=redis://redis:6379
-REDIS_PASSWORD=${REDIS_PASSWORD}
-REDIS_DB=0
-BETTER_AUTH_URL=${BETTER_AUTH_URL}
-AUTH_SECRET=${AUTH_SECRET}
+# Process and copy backend environment configuration from template
+process_and_copy_env_file() {
+  local template_file=$1
+  local target_file=$2
+  local description=$3
 
-# If you need to use OAuth login, configure the following environment variables
-# GITHUB_CLIENT_ID=your_github_client_id
-# GITHUB_CLIENT_SECRET=your_github_client_secret
-# GOOGLE_CLIENT_ID=your_google_client_id
-# GOOGLE_CLIENT_SECRET=your_google_client_secret
-"
+  # Create a temporary file with variables replaced
+  local temp_file=$(mktemp)
+  eval "cat <<EOF
+$(cat $template_file)
+EOF" > "$temp_file"
 
-create_or_update_file "$BACKEND_ENV_FILE" "Backend environment configuration file" "$BACKEND_ENV_CONTENT"
+  # Copy to target location
+  if [ -f "$target_file" ]; then
+    if ask_overwrite "$target_file" "$description"; then
+      cp "$temp_file" "$target_file"
+      echo -e "${GREEN}✓ Updated $description${NC}"
+    else
+      echo -e "${YELLOW}Keeping existing $description${NC}"
+    fi
+  else
+    cp "$temp_file" "$target_file"
+    echo -e "${GREEN}✓ Created $description${NC}"
+  fi
 
-# Prepare frontend environment configuration
-FRONTEND_ENV_CONTENT="# Frontend Docker Environment Variables
+  # Remove temporary file
+  rm "$temp_file"
+}
 
-# API URL - 通过Nginx代理访问后端API
-NEXT_PUBLIC_API_URL=http://localhost:${NGINX_PORT}
-
-# 外部访问使用Nginx代理的地址
-NEXT_PUBLIC_WEB_URL=http://localhost:${NGINX_PORT}
-NEXT_PUBLIC_BETTER_AUTH_URL=${BETTER_AUTH_URL}
-"
-
-create_or_update_file "$FRONTEND_ENV_FILE" "Frontend environment configuration file" "$FRONTEND_ENV_CONTENT"
+# Process and copy environment files from templates
+process_and_copy_env_file "backend.env.production" "$BACKEND_ENV_FILE" "Backend environment configuration file"
+process_and_copy_env_file "web.env.production" "$FRONTEND_ENV_FILE" "Frontend environment configuration file"
 
 # Save credentials to file
 CREDENTIALS_CONTENT="=== Book Market Kit Credentials Information ===

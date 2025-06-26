@@ -99,7 +99,7 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 > - 限制服务器上对这些文件的访问权限
 > - 考虑使用密码管理器来管理生产环境的凭据
 >
-> 部署脚本还会为前端和后端创建具有适当配置的环境文件。这些文件同样包含敏感信息，应妥善保管。
+> 部署脚本会从根目录的模板文件（`web.env.production` 和 `backend.env.production`）复制环境配置到项目的相应位置。这些文件包含敏感信息，应妥善保管。
 
 #### Docker 部署详情
 
@@ -107,12 +107,14 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 
 - `docker-compose.example.yaml`：模板配置文件
 - `Dockerfile`：统一的多阶段 Dockerfile，用于构建整个 Monorepo 项目
-- `apps/web/.env.production`：前端环境变量
-- `backend/.env.production`：后端环境变量
+- `web.env.production`：前端环境变量模板
+- `backend.env.production`：后端环境变量模板
+- `apps/web/.env.production`：前端环境变量（从模板生成）
+- `backend/.env.production`：后端环境变量（从模板生成）
 
 ##### 可自定义变量
 
-以下变量可以在部署脚本（`deploy.sh`）中自定义：
+以下是部署脚本中使用的变量，您可以根据需要进行自定义：
 
 | 变量 | 默认值 | 描述 |
 |----------|---------------|-------------|
@@ -168,7 +170,7 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 2. **手动编辑配置文件**：
    - 编辑 `deploy.sh` 中的端口值
    - 更新 `docker-compose.yaml` 中的端口映射
-   - 更新 `.env.production` 文件中的环境变量
+   - 更新根目录中的 `web.env.production` 和 `backend.env.production` 模板文件中的环境变量
 
 ##### Docker 管理命令
 
@@ -195,7 +197,7 @@ docker-compose down -v
 ##### 常见问题排查
 
 - **容器无法启动**：使用 `docker-compose logs [service_name]` 检查日志
-- **数据库连接问题**：验证 `.env` 和 `.env.production` 文件中的环境变量
+- **数据库连接问题**：验证 `.env`、`web.env.production` 和 `backend.env.production` 模板文件中的环境变量
 - **端口冲突**：如果端口已被占用，更改 `docker-compose.yaml` 中的端口映射，或按上述方法使用环境变量
 
 ##### OAuth 登录配置
