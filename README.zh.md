@@ -80,11 +80,6 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 4. **启动应用**
 
    ```bash
-   # 导出环境变量
-   export FRONTEND_PORT=13090
-   export BACKEND_PORT=13091
-   export NGINX_PORT=13092
-
    # 启动应用
    docker-compose up -d --build
    ```
@@ -133,8 +128,6 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 | `BACKEND_ENV_FILE` | `backend/.env.production` | 后端环境配置文件 |
 | `FRONTEND_ENV_FILE` | `apps/web/.env.production` | 前端环境配置文件 |
 | `CREDENTIALS_FILE` | `bookmark-credentials.txt` | 存储生成凭据的文件 |
-| `BACKEND_PORT` | `13091` | 后端服务端口 |
-| `FRONTEND_PORT` | `13090` | 前端服务端口 |
 | `BETTER_AUTH_URL` | - | **必填** - 应用访问地址，用于系统的用户验证 |
 
 **重要提示**：在部署时，请特别注意以下环境变量：
@@ -162,23 +155,6 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 - `redis-data`：Redis 数据
 - `backend-uploads`：上传的文件
 
-##### 自定义端口
-
-您可以自定义应用程序使用的端口：
-
-1. **在部署时使用环境变量**：
-   ```bash
-   # 示例：使用自定义端口
-   NGINX_PORT=8080 FRONTEND_PORT=4000 BACKEND_PORT=9000 ./deploy.sh
-   ```
-
-   > 注意：部署后，您将只能通过NGINX_PORT（默认：13092）访问应用程序。
-   > FRONTEND_PORT和BACKEND_PORT仅在Docker网络内部使用。
-
-2. **手动编辑配置文件**：
-   - 编辑 `deploy.sh` 中的端口值
-   - 更新 `docker-compose.yaml` 中的端口映射
-   - 更新 `apps/web/.env.example` 和 `backend/.env.example` 文件中的环境变量
 
 ##### Docker 管理命令
 
@@ -206,7 +182,7 @@ docker-compose down -v
 
 - **容器无法启动**：使用 `docker-compose logs [service_name]` 检查日志
 - **数据库连接问题**：验证 `.env`、`apps/web/.env.production` 和 `backend/.env.production` 文件中的环境变量
-- **端口冲突**：如果端口已被占用，更改 `docker-compose.yaml` 中的端口映射，或按上述方法使用环境变量
+- **端口冲突**：如果默认端口（13090、13091、13092）已被占用，您需要修改 `docker-compose.yaml` 中的端口映射
 
 ##### OAuth 登录配置
 

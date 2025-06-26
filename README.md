@@ -80,11 +80,6 @@ For the easiest setup experience, use our Docker one-click deployment:
 4. **Start the application**
 
    ```bash
-   # Export the environment variables
-   export FRONTEND_PORT=13090
-   export BACKEND_PORT=13091
-   export NGINX_PORT=13092
-
    # Start the application
    docker-compose up -d --build
    ```
@@ -133,8 +128,6 @@ The following variables can be customized in the deployment script (`deploy.sh`)
 | `BACKEND_ENV_FILE` | `backend/.env.production` | Backend environment configuration file |
 | `FRONTEND_ENV_FILE` | `apps/web/.env.production` | Frontend environment configuration file |
 | `CREDENTIALS_FILE` | `bookmark-credentials.txt` | File to store generated credentials |
-| `BACKEND_PORT` | `13091` | Backend service port |
-| `FRONTEND_PORT` | `13090` | Frontend service port |
 | `BETTER_AUTH_URL` | - | **Required** - Application access URL used for user authentication |
 
 **Important Note**: When deploying, pay special attention to the following environment variables:
@@ -145,8 +138,6 @@ The following variables can be customized in the deployment script (`deploy.sh`)
 - OAuth configuration settings
 
 These variables contain sensitive information and should be properly secured.
-
-You can override the port variables using environment variables as described in the [Customizing Ports](#customizing-ports) section.
 
 ##### Monorepo Architecture and Docker Build
 
@@ -256,30 +247,12 @@ docker-compose up -d --build
 docker-compose down -v
 ```
 
-### Customizing Ports
-
-You can customize the ports used by the application:
-
-1. **Using environment variables during deployment**:
-
-   ```bash
-   # Example: Use custom ports
-   NGINX_PORT=8080 FRONTEND_PORT=4000 BACKEND_PORT=9000 ./deploy.sh
-   ```
-
-   > Note: After deployment, you will only access the application through the NGINX_PORT (default: 13092).
-   > The FRONTEND_PORT and BACKEND_PORT are only used internally within the Docker network.
-
-2. **Manually editing configuration files**:
-   - Edit port values in `deploy.sh`
-   - Update port mappings in `docker-compose.yaml`
-   - Update environment variables in `apps/web/.env.example` and `backend/.env.example` files
 
 ### Troubleshooting
 
 - **Container fails to start**: Check logs with `docker-compose logs [service_name]`
 - **Database connection issues**: Verify environment variables in `.env`, `apps/web/.env.production`, and `backend/.env.production` files
-- **Port conflicts**: Change port mappings in `docker-compose.yaml` if ports are already in use, or use the environment variables as described above
+- **Port conflicts**: If the default ports (13090, 13091, 13092) are already in use, you'll need to modify the port mappings in `docker-compose.yaml`
 
 ---
 

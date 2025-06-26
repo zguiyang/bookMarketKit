@@ -247,10 +247,6 @@ show_success_info() {
 echo -e "\n${GREEN}=== Configuration completed successfully! ===${NC}"
 echo -e "${YELLOW}To start the application, run the following command:${NC}"
 echo -e "  docker-compose up -d --build"
-echo -e "\n${YELLOW}Before running docker-compose, make sure to export these environment variables:${NC}"
-echo -e "  export FRONTEND_PORT=${FRONTEND_PORT}"
-echo -e "  export BACKEND_PORT=${BACKEND_PORT}"
-echo -e "  export NGINX_PORT=${NGINX_PORT}"
 
 # Show success info
 show_success_info
