@@ -8,7 +8,7 @@ import { CodeEnums, commonCodeMessages } from '@bookmark/code-definitions';
 import { toast } from 'sonner';
 
 const alovaInstance = createAlova({
-  baseURL: `${process.env.NEXT_PUBLIC_WEB_URL}/api`,
+  baseURL: '/api',
   timeout: 60000,
   cacheFor: null,
   statesHook: reactHook,

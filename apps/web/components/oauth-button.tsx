@@ -35,7 +35,7 @@ export function OAuthButton({ provider, children, className = '', ...props }: OA
       setIsLoading(true);
       await client.signIn.social({
         provider,
-        callbackURL: `${process.env.NEXT_PUBLIC_WEB_URL}/bookmarks`,
+        callbackURL: `${window.location.origin}/bookmarks`,
       });
       setIsLoading(false);
     } catch (error) {
