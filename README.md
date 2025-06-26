@@ -125,8 +125,10 @@ The following variables can be customized in the deployment script (`deploy.sh`)
 | `CREDENTIALS_FILE` | `bookmark-credentials.txt` | File to store generated credentials |
 | `BACKEND_PORT` | `13091` | Backend service port |
 | `FRONTEND_PORT` | `13090` | Frontend service port |
+| `BETTER_AUTH_URL` | - | **Required** - Application access URL used for user authentication |
 
 **Important Note**: When deploying, pay special attention to the following environment variables:
+- `BETTER_AUTH_URL`: Required for user authentication, must be set to the application's access address
 - Database connection strings
 - JWT secrets
 - API keys

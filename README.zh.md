@@ -125,8 +125,10 @@ Bookmark 是一个面向网页书签收藏、智能分类与内容摘要场景�
 | `CREDENTIALS_FILE` | `bookmark-credentials.txt` | 存储生成凭据的文件 |
 | `BACKEND_PORT` | `13091` | 后端服务端口 |
 | `FRONTEND_PORT` | `13090` | 前端服务端口 |
+| `BETTER_AUTH_URL` | - | **必填** - 应用访问地址，用于系统的用户验证 |
 
 **重要提示**：在部署时，请特别注意以下环境变量：
+- `BETTER_AUTH_URL`：必须配置用于系统的用户验证，此地址就是应用的访问地址
 - 数据库连接字符串
 - JWT 密钥
 - API 密钥
