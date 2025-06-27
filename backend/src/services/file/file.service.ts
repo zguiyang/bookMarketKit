@@ -1,8 +1,9 @@
-import { FastifyInstance } from 'fastify';
-import { MultipartFile } from '@fastify/multipart';
+import type { FastifyInstance } from 'fastify';
+import type { MultipartFile } from '@fastify/multipart';
 import * as path from 'path';
-import { FileResponse, UploadFileBody, UploadStatusEnums, StorageTypeEnums } from '@bookmark/schemas';
-import { uploadCodeMessages } from '@bookmark/code-definitions';
+import type { FileResponse, UploadFileBody } from '~shared/schemas';
+import { UploadStatusEnums, StorageTypeEnums } from '~shared/schemas';
+import { uploadCodeMessages } from '~shared/code-definitions';
 import { BusinessError } from '@/lib/business-error.js';
 import { FileModel } from '@/models/file.model.js';
 import * as fileUtil from '@/utils/file.js';

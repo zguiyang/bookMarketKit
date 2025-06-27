@@ -1,8 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
-import { FileResponse, UploadStatusEnums, UploadBizTypeEnums, StorageTypeEnums } from '@bookmark/schemas';
-import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin.js';
-import { commonTransform } from '@/shared/mongoose/common-transform.js';
-import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type.js';
+import { type FileResponse, UploadStatusEnums, uploadBizTypes, StorageTypeEnums } from '~shared/schemas';
+import leanTransformPlugin from '@/utils/mongoose/leanTransformPlugin';
+import { commonTransform } from '@/utils/mongoose/common-transform';
+import type { CreateDocument, CreateLeanDocument } from '@/utils/mongoose/mongoose-type';
 
 export type IFileDocument = CreateDocument<FileResponse, 'user'>;
 
@@ -38,7 +38,7 @@ const FileSchema = new Schema<IFileDocument>(
     bizType: {
       type: String,
       required: true,
-      enum: [UploadBizTypeEnums.AVATAR, UploadBizTypeEnums.BOOKMARK],
+      enum: [uploadBizTypes.AVATAR, uploadBizTypes.BOOKMARK],
     },
     storageType: {
       type: String,

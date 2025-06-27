@@ -1,9 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
-import { CategoryResponse } from '@bookmark/schemas';
+import type { CategoryResponse } from '~shared/schemas';
 
-import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin.js';
-import { commonTransform } from '@/shared/mongoose/common-transform.js';
-import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type.js';
+import leanTransformPlugin from '@/utils/mongoose/leanTransformPlugin.js';
+import { commonTransform } from '@/utils/mongoose/common-transform.js';
+import type { CreateDocument, CreateLeanDocument } from '@/utils/mongoose/mongoose-type.js';
 
 // Mongoose 文档类型
 export type IBookmarkCategoryDocument = CreateDocument<CategoryResponse, 'user' | 'parent'>;

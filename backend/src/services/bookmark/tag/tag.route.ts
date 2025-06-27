@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { TagService } from './tag.service.js';
-import { CreateTagBody, UpdateTagBody, TagIdParam } from '@bookmark/schemas';
+import type { CreateTagBody, UpdateTagBody, TagIdParam } from '~shared/schemas/bookmark';
 import { tagSchemas } from './tag.schema.js';
 
 export default async function tagRoutes(fastify: FastifyInstance) {

@@ -4,7 +4,7 @@ import cors from '@fastify/cors';
 import sensiblePlugin from '@fastify/sensible';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { serializerCompiler, validatorCompiler, ZodTypeProvider } from 'fastify-type-provider-zod';
+import { serializerCompiler, validatorCompiler, type ZodTypeProvider } from 'fastify-type-provider-zod';
 
 import envPlugin from './plugins/env.js';
 import DBPlugin from './plugins/db.js';

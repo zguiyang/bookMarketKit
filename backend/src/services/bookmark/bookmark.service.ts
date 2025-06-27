@@ -1,7 +1,7 @@
 import { omit } from 'lodash-es';
-import { Types, FilterQuery } from 'mongoose';
+import { Types, type FilterQuery } from 'mongoose';
 import escapeStringRegexp from 'escape-string-regexp';
-import {
+import type {
   BookmarkResponse,
   BookmarkListResponse,
   BookmarkPageListResponse,
@@ -11,15 +11,16 @@ import {
   SetFavoriteBody,
   SetPinnedBody,
   BookmarkPageListQuery,
-  BookmarkPinnedEnum,
   BookmarkSearchResponse,
   BookmarkImportBody,
   BookmarkImportResponse,
-} from '@bookmark/schemas';
+} from '~shared/schemas';
+import {  BookmarkPinnedEnum } from '~shared/schemas/bookmark'
 import { QueueConfig } from '@/config/constant.config.js';
-import { BookmarkModel, IBookmarkDocument, IBookmarkLean } from '@/models/bookmark/index.js';
+import { BookmarkModel } from '@/models/bookmark/index.js';
+import type { IBookmarkDocument, IBookmarkLean } from '@/models/bookmark/index.js';
 import { BusinessError } from '@/lib/business-error.js';
-import { bookmarkCodeMessages } from '@bookmark/code-definitions';
+import { bookmarkCodeMessages } from '~shared/code-definitions';
 import { getPaginateOptions } from '@/utils/query-params.js';
 import { isValidUrl } from '@/utils/url.js';
 import { parseHtmlBookmarks } from '@/lib/bookmark-parser.js';
@@ -27,7 +28,7 @@ import QueueLib from '@/lib/queue.js';
 import { TagService } from './tag/tag.service.js';
 import { CategoryService } from './category/category.service.js';
 import { WebsiteMetaService } from '@/services/website/website-meta.service.js';
-import { BookmarkFetchTask } from '@/types/queue.interface.js';
+import type { BookmarkFetchTask } from '@/types/queue.interface.js';
 
 export class BookmarkService {
   constructor(

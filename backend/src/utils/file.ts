@@ -2,7 +2,7 @@ import * as fs from 'fs/promises';
 import * as fse from 'fs-extra/esm';
 import * as path from 'path';
 import * as mime from 'mime-types';
-import { MultipartFile } from '@fastify/multipart';
+import type { MultipartFile } from '@fastify/multipart';
 import * as uploadCfg from '@/config/upload.config.js';
 
 /**

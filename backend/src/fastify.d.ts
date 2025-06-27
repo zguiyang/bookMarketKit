@@ -1,5 +1,5 @@
-import type { SessionUser } from '@bookmark/auth';
-import type { AuthType } from '@bookmark/auth';
+import type { SessionUser } from '~shared/auth';
+import type { AuthType } from '~shared/auth';
 import type { FastifyInstance as OriginalFastifyInstance } from 'fastify';
 import type { EnvConfig } from '@/lib/env.js';
 import { WorkerManager } from '@/workers/core/worker-manager.js';

@@ -1,20 +1,22 @@
 {
-  "name": "bookmark",
+  "name": "fast-develop-framework",
   "version": "1.0.0",
-  "description": "书签管理平台",
+  "description": "一个基于fastify + nuxt的快速开发框架",
   "private": true,
   "scripts": {
-    "web:dev": "pnpm --filter web dev",
-    "backend:dev": "pnpm --filter backend dev",
+    "web:dev": "pnpm --filter ./web dev",
+    "backend:dev": "pnpm --filter ./backend dev",
     "format": "prettier --write .",
-    "lint": "pnpm --filter web lint && pnpm --filter backend lint",
-    "build:packages": "pnpm --filter @bookmark/schemas build && pnpm --filter @bookmark/auth build && pnpm --filter @bookmark/code-definitions build",
-    "dev:packages": "pnpm --filter @bookmark/schemas dev & pnpm --filter @bookmark/auth dev & pnpm --filter @bookmark/code-definitions dev"
+    "lint:web": "pnpm --filter ./web lint",
+    "lint:backend": "pnpm --filter ./backend lint",
+    "lint:fix": "pnpm run lint:fix:web && pnpm run lint:fix:backend",
+    "lint:fix:web": "pnpm --filter ./web lint:fix",
+    "lint:fix:backend": "pnpm --filter ./backend lint:fix"
   },
   "keywords": [
-    "bookmark"
+    "fast-develop-framework"
   ],
-  "author": "",
+  "author": "JoyZhao",
   "license": "ISC",
   "engines": {
     "node": ">=18.0.0",
@@ -23,11 +25,22 @@
   "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
   "devDependencies": {
     "@eslint/js": "^9.26.0",
+    "@types/node": "^24.0.4",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "3.5.3",
     "tsup": "^8.5.0",
     "typescript": "^5",
-    "typescript-eslint": "^8.32.0"
+    "@eslint/eslintrc": "^3.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "typescript-eslint": "^8.20.0"
+  },
+  "dependencies": {
+    "better-auth": "^1.2.10",
+    "mongodb": "^6.17.0",
+    "zod": "^3.25.67"
   }
 }

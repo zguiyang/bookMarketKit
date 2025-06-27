@@ -1,11 +1,11 @@
-import type { SessionUser } from '@bookmark/auth';
+import type { SessionUser } from '~shared/auth';
 
-import { FastifyRequest } from 'fastify';
+import type { FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
 import { fromNodeHeaders } from 'better-auth/node';
-import { auth } from '@bookmark/auth';
-import { authCodeMessages } from '@bookmark/code-definitions';
-import { BusinessError } from '@/lib/business-error.js';
+import { authInstance } from '~shared/auth/instance';
+import { authCodeMessages } from '~shared/code-definitions/code-messages';
+import { BusinessError } from '@/lib/business-error';
 
 export default fp(async (fastify) => {
   fastify.decorateRequest<SessionUser | null>('currentUser', null);
@@ -15,7 +15,7 @@ export default fp(async (fastify) => {
       // Authentication routes do not require validation
       return;
     }
-    const authSession = await auth.api.getSession({
+    const authSession = await authInstance.api.getSession({
       headers: fromNodeHeaders(request.headers),
     });
 
@@ -31,7 +31,7 @@ export default fp(async (fastify) => {
   }
 
   try {
-    fastify.decorate('auth', auth);
+    fastify.decorate('auth', authInstance);
   } catch (err: any) {
     fastify.log.error(`Auth Plugin Error: ${err.message}`, err);
   }

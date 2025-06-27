@@ -1,9 +1,9 @@
 import type { FastifyInstance } from 'fastify';
-import type { UploadFileBody } from '@bookmark/schemas';
+import type { UploadFileBody } from '~shared/schemas';
 
 import { FileService } from './file.service.js';
 import { fileSchemas } from './file.schema.js';
-import { uploadCodeMessages } from '@bookmark/code-definitions';
+import { uploadCodeMessages } from '~shared/code-definitions';
 import { BusinessError } from '@/lib/business-error.js';
 
 export default async function userRoutes(fastify: FastifyInstance) {

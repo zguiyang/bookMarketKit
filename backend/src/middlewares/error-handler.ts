@@ -1,9 +1,9 @@
-import { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
+import type { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import { isNumber } from 'lodash-es';
 import { Error as MongooseError } from 'mongoose';
 import { BusinessError } from '@/lib/business-error.js';
-import { commonCodeMessages, mongooseCodeMessages } from '@bookmark/code-definitions';
-import type { ApiResponse } from '@bookmark/schemas';
+import { commonCodeMessages, mongooseCodeMessages } from '~shared/code-definitions/code-messages';
+import type { ApiResponse } from '~shared/schemas';
 
 /**
  * 统一错误响应格式

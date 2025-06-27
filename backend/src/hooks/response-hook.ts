@@ -1,14 +1,10 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import type { ApiResponse } from '@bookmark/schemas';
-import { commonCodeMessages } from '@bookmark/code-definitions';
+import type { ApiResponse } from '~shared/schemas';
+import { commonCodeMessages } from '~shared/code-definitions/code-messages';
 
 function isApiResponse(obj: any): obj is Partial<ApiResponse> {
-  return (
-    obj &&
-    typeof obj === 'object' &&
-    obj !== null &&
-    ('code' in obj || 'message' in obj || 'data' in obj || 'success' in obj)
-  );
+  return (obj &&
+    typeof obj === 'object' && true && ('code' in obj || 'message' in obj || 'data' in obj || 'success' in obj));
 }
 
 /**

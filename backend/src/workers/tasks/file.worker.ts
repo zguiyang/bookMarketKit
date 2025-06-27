@@ -1,10 +1,11 @@
 import { CronJob } from 'cron';
-import { FilterQuery } from 'mongoose';
+import type { FilterQuery } from 'mongoose';
 import path from 'path';
 
 import * as uploadCfg from '@/config/upload.config.js';
-import { FileModel, IFileDocument } from '@/models/file.model.js';
-import { StorageTypeEnums } from '@bookmark/schemas';
+import { FileModel } from '@/models/file.model.js';
+import type { IFileDocument } from '@/models/file.model.js';
+import { StorageTypeEnums } from '~shared/schemas';
 import { getMongoConnection, closeMongoConnection } from '@/lib/mongo-connection.js';
 import * as fileUtil from '@/utils/file.js';
 import { BaseWorker } from '../core/base-worker.js';

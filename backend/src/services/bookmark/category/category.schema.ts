@@ -1,4 +1,4 @@
-import { FastifySchema } from 'fastify';
+import type { FastifySchema } from 'fastify';
 import { z } from 'zod';
 import {
   createCategoryBodySchema,
@@ -6,7 +6,7 @@ import {
   categoryResponseSchema,
   categoryListResponseSchema,
   categoryIdParamSchema,
-} from '@bookmark/schemas';
+} from '~shared/schemas/bookmark';
 
 export const categorySchemas: {
   [key: string]: FastifySchema;

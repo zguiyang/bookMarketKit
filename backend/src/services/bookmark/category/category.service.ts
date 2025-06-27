@@ -2,14 +2,16 @@ import type { FilterQuery, UpdateQuery } from 'mongoose';
 import escapeStringRegexp from 'escape-string-regexp';
 import {
   CategoryModel,
+} from '@/models/bookmark';
+import type {
   IBookmarkCategoryDocument,
   IBookmarkCategoryLean,
   IBookmarkTagDocument,
-} from '@/models/bookmark/index.js';
-import { CreateCategoryBody, UpdateCategoryBody, CategoryResponse } from '@bookmark/schemas';
+} from '@/models/bookmark';
+import type { CreateCategoryBody, UpdateCategoryBody, CategoryResponse } from '~shared/schemas';
 import { omit } from 'lodash-es';
 import { BusinessError } from '@/lib/business-error.js';
-import { bookmarkCategoryCodeMessages } from '@bookmark/code-definitions';
+import { bookmarkCategoryCodeMessages } from '~shared/code-definitions';
 
 export class CategoryService {
   constructor() {}

@@ -1,4 +1,4 @@
-import { FastifySchema } from 'fastify';
+import type { FastifySchema } from 'fastify';
 import { z } from 'zod';
 import {
   createTagBodySchema,
@@ -6,7 +6,7 @@ import {
   tagResponseSchema,
   tagListResponseSchema,
   tagIdParamSchema,
-} from '@bookmark/schemas';
+} from '~shared/schemas/bookmark';
 
 export const tagSchemas: {
   [key: string]: FastifySchema;

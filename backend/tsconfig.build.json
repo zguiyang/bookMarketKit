@@ -1,20 +1,24 @@
 {
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "moduleResolution": "Bundler",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
     "target": "esnext",
     "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": false,
     "outDir": "dist",
     "sourceMap": true,
-    "types": ["node"],
+    "removeComments": true,
+
+    "types": ["node", "vitest"],
+    "lib": ["esnext"],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"],
+      "~shared/*": ["../shared/*"]
     }
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true,
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["tests/**/*", "**/*.test.ts", "**/*.spec.ts", "**/__tests__/**/*", "src/mocks/**/*", "vitest.config.ts"]

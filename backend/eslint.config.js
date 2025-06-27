@@ -1,24 +1,12 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
-import { defineConfig } from 'eslint/config';
+import { createNodeConfig } from '../eslint.base.config.mjs';
 
-export default defineConfig([
-  { ignores: ['**/node_modules/**', '**/dist/**', '**/*.d.ts'] },
-  { files: ['**/*.{js,mjs,cjs,ts}'], plugins: { js }, extends: ['js/recommended'] },
-  { files: ['**/*.{js,mjs,cjs,ts}'], languageOptions: { globals: globals.node } },
-  tseslint.configs.recommended,
+export default [
+  ...createNodeConfig(),
+  // Backend 特定的规则
   {
+    files: ['**/*.{js,mjs,cjs,ts}'],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          varsIgnorePattern: '^_',
-          argsIgnorePattern: '^_',
-        },
-      ],
+      // 可以在这里添加 backend 特有的规则
     },
   },
-]);
+];

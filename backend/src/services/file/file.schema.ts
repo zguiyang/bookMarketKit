@@ -1,4 +1,4 @@
-import { uploadParamsSchema, fileResponseSchema } from '@bookmark/schemas';
+import { uploadParamsSchema, fileResponseSchema } from '~shared/schemas';
 
 export const fileSchemas = {
   add: {

@@ -1,4 +1,4 @@
-import { FastifySchema } from 'fastify';
+import type { FastifySchema } from 'fastify';
 import { z } from 'zod';
 import {
   createBookmarkBodySchema,
@@ -16,7 +16,7 @@ import {
   bookmarkCollectionResponseSchema,
   bookmarkImportBodySchema,
   bookmarkImportResponseSchema,
-} from '@bookmark/schemas';
+} from '~shared/schemas/bookmark';
 
 export const bookmarkSchemas: {
   [key: string]: FastifySchema;

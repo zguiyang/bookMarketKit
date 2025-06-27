@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import {
+import type {
   CreateBookmarkBody,
   UpdateBookmarkBody,
   BookmarkIdParam,
@@ -9,10 +9,10 @@ import {
   BookmarkSearchQuery,
   BookmarkPageListQuery,
   BookmarkImportBody,
-} from '@bookmark/schemas';
+} from '~shared/schemas';
 import { bookmarkSchemas } from './bookmark.schema.js';
 import { TagService } from './tag/tag.service.js';
-import { CategoryService } from './category/category.service.js';
+import { CategoryService } from './category/category.service';
 import { WebsiteMetaService } from '../website/website-meta.service.js';
 import { BookmarkService } from './bookmark.service.js';
 

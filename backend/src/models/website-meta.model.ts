@@ -1,8 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
-import { WebsiteMetaModelSchema, WebsiteMetaFetchEnums } from '@bookmark/schemas';
-import leanTransformPlugin from '@/shared/mongoose/leanTransformPlugin.js';
-import { CreateDocument, CreateLeanDocument } from '@/shared/mongoose/mongoose-type.js';
-import { commonTransform } from '@/shared/mongoose/common-transform.js';
+import { type WebsiteMetaModelSchema, WebsiteMetaFetchEnums } from '~shared/schemas';
+import leanTransformPlugin from '@/utils/mongoose/leanTransformPlugin';
+import type { CreateDocument, CreateLeanDocument } from '@/utils/mongoose/mongoose-type';
+import { commonTransform } from '@/utils/mongoose/common-transform';
 
 export type IWebsiteMetaDocument = CreateDocument<WebsiteMetaModelSchema, 'bookmark'>;
 export type IWebsiteMetaLeanDocument = CreateLeanDocument<WebsiteMetaModelSchema>;

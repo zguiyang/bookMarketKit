@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import type { ApiResponse } from '@bookmark/schemas';
+import type { ApiResponse } from '~shared/schemas';
 
 export default function notFoundHandler(request: FastifyRequest, reply: FastifyReply) {
   const response: ApiResponse = {

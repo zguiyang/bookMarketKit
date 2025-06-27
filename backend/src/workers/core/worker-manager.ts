@@ -1,7 +1,7 @@
 import { Worker } from 'worker_threads';
 import path from 'path';
 import fs from 'fs/promises';
-import { FastifyInstance, FastifyBaseLogger } from 'fastify';
+import type { FastifyInstance, FastifyBaseLogger } from 'fastify';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

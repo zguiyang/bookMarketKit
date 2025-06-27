@@ -1,4 +1,4 @@
-import { WebsiteMetaCreateBody, WebsiteMetaUpdateBody, WebsiteMetaResponse } from '@bookmark/schemas';
+import  type { WebsiteMetaCreateBody, WebsiteMetaUpdateBody, WebsiteMetaResponse } from '~shared/schemas';
 import { WebsiteMetaModel } from '@/models/website-meta.model.js';
 
 export class WebsiteMetaService {

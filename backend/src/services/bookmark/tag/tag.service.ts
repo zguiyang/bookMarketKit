@@ -1,10 +1,12 @@
 import type { FilterQuery, UpdateQuery } from 'mongoose';
 import escapeStringRegexp from 'escape-string-regexp';
-import { TagModel, IBookmarkTagDocument, IBookmarkTagLean } from '@/models/bookmark/index.js';
-import { CreateTagBody, UpdateTagBody, TagResponse } from '@bookmark/schemas';
+import type { IBookmarkTagDocument, IBookmarkTagLean } from '@/models/bookmark/index.js';
+import type { CreateTagBody, UpdateTagBody, TagResponse } from '~shared/schemas';
+
+import { TagModel } from '@/models/bookmark/index.js';
 import { omit } from 'lodash-es';
 import { BusinessError } from '@/lib/business-error.js';
-import { bookmarkTagCodeMessages } from '@bookmark/code-definitions';
+import { bookmarkTagCodeMessages } from '~shared/code-definitions';
 
 export class TagService {
   constructor() {}

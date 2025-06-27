@@ -1,5 +1,6 @@
-import { PaginatedRequest, PaginationDirectionEnum } from '@bookmark/schemas';
-import { SortOrder } from 'mongoose';
+import type { PaginatedRequest } from '~shared/schemas';
+import { PaginationDirectionEnum } from  '~shared/schemas';
+import type { SortOrder } from 'mongoose';
 
 /**
  * Filter invalid values (null, undefined, empty string) from an object
